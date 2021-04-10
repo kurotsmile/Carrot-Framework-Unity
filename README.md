@@ -16,6 +16,7 @@ Các chức năng chủ yếu của Framework gồm:
 +Máy ảnh carrot, quản lý danh sách ảnh đã chụp
 
 - Phụ:
+
 +Chuyển đối tượng thành chuổi Json
 +Chuyển chuổi Json thành đối tượng
 +Ghi file đơn giản
