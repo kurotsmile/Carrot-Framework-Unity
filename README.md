@@ -25,3 +25,10 @@ CameraPro:
 -Camera:Chụp ảnh
 -Photo Editor:Trình chỉnh sửa ảnh
 -Photo List:Trình xem ảnh
+
+Theme:
+-color Theme:Chọn màu chủ đạo
+-List Theme:bộ sưu tập chủ đề cho ứng dụng
+-Customer Theme:Thiết kế bộ chủ đề riên tùy biến
+-List Color:Danh sách màu sắc
+-Mix Color:Trộn màu
