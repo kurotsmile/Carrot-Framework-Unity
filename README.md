@@ -2,7 +2,7 @@
 Tạo Template và plugin để làm game dễ dàng hơn, với các giao diện tự thiết kế cùng với nhiều chức năng hỗ trợ đa nền tảng
 
 Main:
--Rate:Đánh giá ứng dụng
+-Rate:Đánh giá ứng dụng\n
 -Share:Chia sẻ ứng dụng
 -App other:Gợi ý các ứng dụng khác
 
