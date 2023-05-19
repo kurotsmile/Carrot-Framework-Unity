@@ -16,3 +16,12 @@ Function:
 -Log:Xem lịch xử hoặt động của ứng dụng
 
 User:
+-Login:Đăng nhập
+-Regiter:Đăng ký
+-Updateinfo:Cập nhật thông tin
+-ViewInfo:Xem thông tin
+
+CameraPro:
+-Camera:Chụp ảnh
+-Photo Editor:Trình chỉnh sửa ảnh
+-Photo List:Trình xem ảnh
