@@ -1,0 +1,541 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2170989522667865307
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6536030612568361458}
+  - component: {fileID: 7977285874268033645}
+  m_Layer: 0
+  m_Name: Carrot_Sound_bk_music_test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6536030612568361458
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2170989522667865307}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5170736565810424379}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &7977285874268033645
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2170989522667865307}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1 &3722175154688039608
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5434342677335770954}
+  - component: {fileID: 7774974848483370864}
+  m_Layer: 0
+  m_Name: Carrot_Sound_Click
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5434342677335770954
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3722175154688039608}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5170736565810424379}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &7774974848483370864
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3722175154688039608}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: b946c0e1344876d4d83aace333c03774, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1 &5170736565810424376
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5170736565810424379}
+  - component: {fileID: 5170736565810424378}
+  - component: {fileID: 292901969}
+  - component: {fileID: 1069686049}
+  - component: {fileID: 4614701476662799586}
+  - component: {fileID: 1438298178766269817}
+  - component: {fileID: 4645516730937484055}
+  - component: {fileID: 1244711569507986795}
+  - component: {fileID: 3353702974751351471}
+  m_Layer: 0
+  m_Name: Carrot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5170736565810424379
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170736565810424376}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5434342677335770954}
+  - {fileID: 6536030612568361458}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5170736565810424378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170736565810424376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99072c8f0c1c9014fa8cd890c4a3da76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  host_app: 1
+  model_app: 1
+  os_app: 0
+  store_public: 0
+  type_app: 0
+  pay_app: 0
+  type_rate: 0
+  type_ads: 0
+  type_control: 0
+  path_php_file_action: app_mobile/carrot_framework/app.php
+  link_share_app: https://carrotstore.com
+  WindowUWP_ProductId: 
+  Carrotstore_AppId: 
+  color_highlight:
+    serializedVersion: 2
+    rgba: 4284334079
+  check_lost_internet: 0
+  auto_open_rate_store: 1
+  img_btn_login: {fileID: 0}
+  emp_show_lang: {fileID: 0}
+  index_inapp_remove_ads: -1
+  index_inapp_buy_bk_music: -1
+  setting_lang: 1
+  setting_login: 1
+  setting_rank: 1
+  setting_vibrate: 1
+  setting_soundtrack: 1
+  setting_theme: 1
+  click_show_ads: 5
+  show_banner_ads_start: 1
+  emp_btn_remove_ads: []
+  id_ads_Interstitial_android: 
+  id_ads_Banner_android: 
+  id_ads_Rewarded_android: 
+  id_ads_Interstitial_ios: 
+  id_ads_Banner_ios: 
+  id_ads_Rewarded_ios: 
+  ads_vungle_game_id_window: 
+  ads_vungle_interstitial_placement_id: 
+  ads_vungle_rewarded_placement_id: 
+  lang: {fileID: 292901969}
+  user: {fileID: 4645516730937484055}
+  shop: {fileID: 1069686049}
+  ads: {fileID: 1438298178766269817}
+  game: {fileID: 4614701476662799586}
+  camera_pro: {fileID: 1244711569507986795}
+  location: {fileID: 3353702974751351471}
+  window_msg_prefab: {fileID: 1750426150788012, guid: 064e59bc4fa60ed48b452c77919d6473, type: 3}
+  window_loading_prefab: {fileID: 2632683814581162851, guid: af7a7fddea11b0b4ca4aa617dd48a44e, type: 3}
+  window_exit_prefab: {fileID: 2646574534074554939, guid: 93cb11e1d2cdb424f9711d3b049a4eb9, type: 3}
+  window_share_prefab: {fileID: 8931901680464516206, guid: 5352021e1d7360346a888c6a18453013, type: 3}
+  window_rate_prefab: {fileID: 4367381263703764290, guid: b42cce79f5a6d0645a1d345529f520a2, type: 3}
+  window_box_prefab: {fileID: 8069877992500042153, guid: 3da1e2ad199493144a25cd7c1a4766c1, type: 3}
+  window_input_prefab: {fileID: 8647905767766004373, guid: 469ef270088c30d499ca92f137fb16aa, type: 3}
+  window_photoshop_prefab: {fileID: 5526278223078399678, guid: 4570a9d1de7c1f54e898fe9b557e10a0, type: 3}
+  carrot_btn_prefab: {fileID: 3002890018135523355, guid: 784c412c7c4cc1443b97d64918aca0c5, type: 3}
+  icon_carrot: {fileID: 21300000, guid: b63a8f4bccedbd24b9953bf74ea47451, type: 3}
+  icon_carrot_all_category: {fileID: 21300000, guid: 5d155587204a0194cb1e4c182869be45, type: 3}
+  icon_carrot_app: {fileID: 21300000, guid: 56eda39d357752945af264dde61b3ced, type: 3}
+  icon_carrot_game: {fileID: 21300000, guid: 25a8ff83e06a17f4eab6b33f7bbc519a, type: 3}
+  icon_carrot_search: {fileID: 21300000, guid: e185f71bd1cc76747a92e664dac2a0db, type: 3}
+  icon_carrot_write: {fileID: 21300000, guid: a8703811f3779d54aa57bb9b3030dc86, type: 3}
+  icon_carrot_gamepad: {fileID: 21300000, guid: 8f29873cdd38a194790278f8021b620a, type: 3}
+  icon_carrot_bug: {fileID: 21300000, guid: 5bb9d70cb18087049837e41781771ff1, type: 3}
+  icon_carrot_d_pad: {fileID: 21300000, guid: 7b81c630983811c44a91a5fab124b448, type: 3}
+  icon_carrot_ads: {fileID: 21300000, guid: 9afe00141c4eca446807e1efdaa3c4ca, type: 3}
+  icon_carrot_link: {fileID: 21300000, guid: bf275863fc69c6b41a9be320169630bc, type: 3}
+  icon_carrot_download: {fileID: 21300000, guid: b66cfc6d22476ec4c95d3cb80c7d35b5, type: 3}
+  sp_icon_setting: {fileID: 21300000, guid: 20db880507d35dc4281aa788c7c1bcd4, type: 3}
+  sp_icon_dev: {fileID: 21300000, guid: 187cb1daeb2f68a449e986807e2a20e3, type: 3}
+  icon_carrot_gamepad_off: {fileID: 21300000, guid: 548bbc991b0d77448bf18397067e51f1, type: 3}
+  icon_carrot_gamepad_on: {fileID: 21300000, guid: 25a8ff83e06a17f4eab6b33f7bbc519a, type: 3}
+  icon_lost_internet: {fileID: 21300000, guid: d2201876ae5060e48babd277eb80364d, type: 3}
+  carrot_lost_internet: {fileID: 0}
+  sp_icon_sound_on: {fileID: 21300000, guid: 092f5fc30a7cf2347b2617fc9a203ebc, type: 3}
+  sp_icon_sound_off: {fileID: 21300000, guid: ab93f6b2b56464a4f930ae97811fe4eb, type: 3}
+  sp_icon_rate: {fileID: 21300000, guid: 5cc0fd50727cafa499771e568cabf7a7, type: 3}
+  sp_icon_share: {fileID: 21300000, guid: 50324046bf2a646458da8873d1e5512e, type: 3}
+  sp_icon_more_app: {fileID: 21300000, guid: b63a8f4bccedbd24b9953bf74ea47451, type: 3}
+  sp_icon_removeads: {fileID: 21300000, guid: eb9e76cc22734774383be6f6ca12facc, type: 3}
+  sp_icon_restore: {fileID: 21300000, guid: 2990826caa9580d4d8b955690d62687b, type: 3}
+  sp_icon_del_data: {fileID: 21300000, guid: aa33c4a3c7174104eb0e1ce1e74fb4c3, type: 3}
+  sp_icon_bk_music: {fileID: 21300000, guid: 96ba5e279fa55d940b8c504e0a405161, type: 3}
+  sp_icon_vibrate_on: {fileID: 21300000, guid: d454c596f4484b440932afa111b1d17b, type: 3}
+  sp_icon_vibrate_off: {fileID: 21300000, guid: bc7987e3f8f1f4144b8b786670b0994e, type: 3}
+  sp_icon_theme_color: {fileID: 21300000, guid: c690de2972df1ca4fb0f27724ea0eb32, type: 3}
+  sp_icon_picker_color: {fileID: 21300000, guid: 0a382b6beac8e7f43a80a538c365428f, type: 3}
+  sound_click: {fileID: 7774974848483370864}
+--- !u!114 &292901969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170736565810424376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e09a5f528c36bd6498f9329fceaa3cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 9bd1e7727a244544ab15ee615563fbe3, type: 3}
+  sp_lang_default_en: {fileID: 21300000, guid: fd3ddd56f67037743944df25913247a7, type: 3}
+  item_lang_prefab: {fileID: 3295163290087316851, guid: c63b56fcfb838f94ebb1a6aa7f73ea01, type: 3}
+  key: []
+  emp_val: []
+--- !u!114 &1069686049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170736565810424376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 149ae561177ad474082a5bedb11882b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4614701476662799586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170736565810424376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 239fc7ee2d0c26149aa88874caacd560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon_list_music_game: {fileID: 21300000, guid: 96ba5e279fa55d940b8c504e0a405161, type: 3}
+  icon_free_music_game: {fileID: 21300000, guid: fd01247be9ba67b49bdb2720deefe5bc, type: 3}
+  icon_buy_music_game: {fileID: 21300000, guid: 14d9cfee3bc91d74091d7370486c78f9, type: 3}
+  icon_pause_music_game: {fileID: 21300000, guid: 4bd87f00c1468be45b1a98b7695b371f, type: 3}
+  icon_play_music_game: {fileID: 21300000, guid: 443cdc4ae6c8a30479b118a6e35aadee, type: 3}
+  icon_waiting_music_game: {fileID: 21300000, guid: d716d72d584e1c5479acf98e5b6a0e22, type: 3}
+  sound_bk_game_test: {fileID: 7977285874268033645}
+  obj_gamepad_prefab: {fileID: 3088375454328611850, guid: da7ed5c1b98a17642b7ba6477c695bb1, type: 3}
+  icon_top_player: {fileID: 21300000, guid: 2e78053b6ff70004d8ac3db19e5b85c4, type: 3}
+  item_top_player_prefab: {fileID: 9017743497284892556, guid: 28f16e3fd80edf542a874c4de0865342, type: 3}
+  icon_rank_player:
+  - {fileID: 191776466, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 1824322730, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: -387310037, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 819588914, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 24563803, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 1498617873, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 1380233350, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 1690791974, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: -951256485, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 424866336, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 1630661498, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: -1166193441, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+--- !u!114 &1438298178766269817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170736565810424376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2243a549f9620c7419f374fbd545d2e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  window_ads_prefab: {fileID: 7528647998446531272, guid: b8f60ea6adef9c746baa8327ecef6318, type: 3}
+--- !u!114 &4645516730937484055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170736565810424376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5325301532b1b843a26721e008bcad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon_user_login_true: {fileID: 21300000, guid: 41608187babc5ee4391b9b31bbecbbbc, type: 3}
+  icon_user_login_false: {fileID: 21300000, guid: 754b3bab866dcbc4b8db6fa388bf48c3, type: 3}
+  window_login_prefab: {fileID: 7208411555534302970, guid: 97f7a7f0c121e2a43b4194851c8879c5, type: 3}
+  window_lost_password_prefab: {fileID: 1600005713708756242, guid: 59f4433053a457a4da45b4917323f81b, type: 3}
+  icon_user_register: {fileID: 21300000, guid: 9660ed7fe36e1b14ba7d40ac2c46de8b, type: 3}
+  icon_user_edit: {fileID: 21300000, guid: b4e92c014b049034c867d4bccc3bea7b, type: 3}
+  icon_user_info: {fileID: 21300000, guid: 99da3a4d2d2948544a1d55af85b60f3d, type: 3}
+  icon_user_logout: {fileID: 21300000, guid: 3c3af017ee959024885b09d5cc86689f, type: 3}
+  icon_user_done: {fileID: 21300000, guid: fd01247be9ba67b49bdb2720deefe5bc, type: 3}
+  icon_user_change_password: {fileID: 21300000, guid: 26ca8fd801b015c4ab5591268c1981d8, type: 3}
+  item_user_info_prefab: {fileID: 6389688184306931984, guid: 8076775166360a74fa8c104f19da2464, type: 3}
+  item_user_edit_prefab: {fileID: 2410954875035196610, guid: f824733ba9eba8a41b163b899eaf24fb, type: 3}
+  color_edit:
+    serializedVersion: 2
+    rgba: 4291552511
+  color_logout:
+    serializedVersion: 2
+    rgba: 4292993535
+  color_change_password:
+    serializedVersion: 2
+    rgba: 4294960580
+  list_field_user_login: []
+  list_field_user_info: []
+  box_info_item_prefab: {fileID: 346399769378897854, guid: 5c76e0e7f1ec6f749989da9d070de244, type: 3}
+--- !u!114 &1244711569507986795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170736565810424376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d7bcc004fb3c0479ced11eded4a3e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  window_camera_prefab: {fileID: 5526278223078399678, guid: bf93105bd558aad4298f2d999c12777f, type: 3}
+  window_photoshop_prefab: {fileID: 5526278223078399678, guid: 4570a9d1de7c1f54e898fe9b557e10a0, type: 3}
+  prefab_item_list_img: {fileID: 6742574292218062837, guid: 0cb5453e9f9221e408506c790d8780b7, type: 3}
+--- !u!114 &3353702974751351471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170736565810424376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bf8625654ef7cf4ca15bfabfa9c003b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  latA: 0
+  lonA: 0
