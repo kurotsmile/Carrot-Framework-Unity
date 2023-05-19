@@ -10,6 +10,7 @@ UI:
 -Box List:Danh sách các đối tượng theo dạnh danh sách
 -Box Gird:Danh sách các đối tượng theo dạng lưới
 -Theme:Thay đổi các gói giao diện tùy biến với sở thích người dùng
+-Create Setting:Tạo cài đặt theo từng nghĩa cảnh của ứng dụng
 
 Function:
 -Location: Lấy vị trí hiện tại và trả về tên địa điểm
