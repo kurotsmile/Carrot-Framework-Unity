@@ -37,6 +37,11 @@ namespace Carrot
         {
             this.img_icon.sprite = sp_icon;
         }
+
+        public void set_label(string s_txt)
+        {
+            this.txt_val.text = s_txt;
+        }
     }
 
 }

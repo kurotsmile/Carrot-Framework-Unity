@@ -45,4 +45,14 @@ public class App_Test : MonoBehaviour
     {
         this.carrot.show_msg("Get Location", "latitude:" + info.latitude+ ",longitude:" + info.longitude, Carrot.Msg_Icon.Success);
     }
+
+    public void btn_setting()
+    {
+        this.carrot.Create_Setting();
+    }
+
+    public void btn_msg()
+    {
+        this.carrot.show_msg("App test", "Test Msg",Carrot.Msg_Icon.Alert);
+    }
 }

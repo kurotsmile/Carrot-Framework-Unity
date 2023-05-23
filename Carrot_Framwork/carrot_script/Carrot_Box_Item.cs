@@ -1,10 +1,20 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Carrot
 {
-    public enum Box_Item_Type {box_nomal,box_value_txt,box_value_input, box_value_slider, box_value_dropdown}
+    public enum Box_Item_Type {
+        box_nomal,
+        box_value_txt,
+        box_value_input,
+        box_number_input,
+        box_email_input,
+        box_password_input,
+        box_value_slider,
+        box_value_dropdown
+    }
 
     public class Carrot_Box_Item : MonoBehaviour
     {
@@ -13,17 +23,25 @@ namespace Carrot
         public Text txt_name;
         public Text txt_tip;
         public Text txt_val;
+        public Text txt_placeholder_tip;
         public InputField inp_val;
         public Dropdown dropdown_val;
         public Slider slider_val;
         public Transform area_all_btn_extension;
         public GameObject item_extension_prefab;
 
+        private Carrot carrot;
         private UnityAction act_click=null;
         private string s_lang_title;
         private string s_lang_tip;
         private bool is_change = false;
         private Box_Item_Type type=Box_Item_Type.box_nomal;
+        private Carrot_Box_Btn_Item btn_password_visible;
+
+        public void on_load(Carrot cr)
+        {
+            this.carrot = cr;
+        }
 
         public void check_type()
         {
@@ -48,6 +66,35 @@ namespace Carrot
                 if (type == Box_Item_Type.box_value_input)
                 {
                     this.inp_val.gameObject.SetActive(true);
+                    this.txt_placeholder_tip.text = PlayerPrefs.GetString("inp_tip", "Enter your data here ...");
+                    Destroy(this.GetComponent<Button>());
+                }
+
+                if (type == Box_Item_Type.box_number_input)
+                {
+                    this.inp_val.gameObject.SetActive(true);
+                    this.inp_val.contentType = InputField.ContentType.IntegerNumber;
+                    this.txt_placeholder_tip.text = PlayerPrefs.GetString("inp_tip", "Enter your data here ...");
+                    Destroy(this.GetComponent<Button>());
+                }
+
+                if (type == Box_Item_Type.box_email_input)
+                {
+                    this.inp_val.gameObject.SetActive(true);
+                    this.inp_val.contentType = InputField.ContentType.EmailAddress;
+                    this.txt_placeholder_tip.text = PlayerPrefs.GetString("inp_tip", "Enter your data here ...");
+                    Destroy(this.GetComponent<Button>());
+                }
+
+                if (type == Box_Item_Type.box_password_input)
+                {
+                    this.inp_val.gameObject.SetActive(true);
+                    this.inp_val.contentType = InputField.ContentType.Password;
+                    this.txt_placeholder_tip.text = PlayerPrefs.GetString("inp_tip", "Enter your data here ...");
+                    btn_password_visible = this.create_item();
+                    btn_password_visible.set_icon(this.carrot.icon_carrot_visible_off);
+                    btn_password_visible.set_color(this.carrot.color_highlight);
+                    btn_password_visible.set_act(this.on_or_off_visible_password);
                     Destroy(this.GetComponent<Button>());
                 }
 
@@ -156,10 +203,23 @@ namespace Carrot
             this.check_type();
         }
 
+        public void set_type(string s_type)
+        {
+            if (s_type == "1") this.type = Box_Item_Type.box_value_input;
+            if (s_type == "3") this.type = Box_Item_Type.box_password_input;
+            if (s_type == "4") this.type = Box_Item_Type.box_number_input;
+            if (s_type == "5") this.type = Box_Item_Type.box_email_input;
+            if (s_type == "2") this.type = Box_Item_Type.box_value_dropdown;
+            this.check_type();
+        }
+
         public void set_val(string s_val)
         {
             if(this.type==Box_Item_Type.box_value_txt) this.txt_val.text = s_val;
             if(this.type==Box_Item_Type.box_value_input) this.inp_val.text = s_val;
+            if(this.type==Box_Item_Type.box_password_input) this.inp_val.text = s_val;
+            if(this.type==Box_Item_Type.box_number_input) this.inp_val.text = s_val;
+            if(this.type==Box_Item_Type.box_email_input) this.inp_val.text = s_val;
             if (this.type == Box_Item_Type.box_value_dropdown) this.dropdown_val.value = int.Parse(s_val);
             if (this.type == Box_Item_Type.box_value_slider) this.slider_val.value = int.Parse(s_val);
         }
@@ -168,6 +228,9 @@ namespace Carrot
         {
             if (this.type == Box_Item_Type.box_value_txt) return this.txt_val.text;
             if (this.type == Box_Item_Type.box_value_input) return this.inp_val.text;
+            if (this.type == Box_Item_Type.box_password_input) return this.inp_val.text;
+            if (this.type == Box_Item_Type.box_number_input) return this.inp_val.text;
+            if (this.type == Box_Item_Type.box_email_input) return this.inp_val.text;
             if (this.type == Box_Item_Type.box_value_dropdown) return this.dropdown_val.value.ToString();
             if (this.type == Box_Item_Type.box_value_slider) return this.slider_val.value.ToString();
             return "";
@@ -176,6 +239,37 @@ namespace Carrot
         public void set_fill_color(Color32 color_fill)
         {
             this.img_fill_bar.color = color_fill;
+        }
+
+        public void on_or_off_visible_password()
+        {
+            if (this.inp_val.contentType == InputField.ContentType.Password)
+            {
+                this.inp_val.contentType = InputField.ContentType.Standard;
+                this.btn_password_visible.set_icon(this.carrot.icon_carrot_visible_on);
+            }
+            else
+            {
+                this.inp_val.contentType = InputField.ContentType.Password;
+                this.btn_password_visible.set_icon(this.carrot.icon_carrot_visible_off);
+            } 
+        }
+
+        public void set_val_dropdown(IList list_val, IList list_en,int index_sel)
+        {
+            if (this.type == Box_Item_Type.box_value_dropdown)
+            {
+                this.dropdown_val.ClearOptions();
+                for(int i=0;i< list_val.Count; i++)
+                {
+                    string val =list_val[i].ToString();
+                    string val_en = list_en[i].ToString();
+                    string s_val = PlayerPrefs.GetString(val, val_en);
+                    this.dropdown_val.options.Add(new Dropdown.OptionData(s_val));
+                }
+                this.dropdown_val.value = index_sel;
+                this.dropdown_val.RefreshShownValue();
+            }
         }
     }
 }

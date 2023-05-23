@@ -7,6 +7,7 @@ namespace Carrot
 {
     public class Carrot_location : MonoBehaviour
     {
+        public string key_api;
         public float latA, lonA;
 
         private Carrot_Window_Loading box_loading;
@@ -66,7 +67,7 @@ namespace Carrot
 
         public string get_address()
         {
-            string s_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+this.lonA+","+this.latA+ "&key=AIzaSyCcYpVI8I4osXUeqWkPe-nPrakxNnaND5I";
+            string s_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+this.lonA+","+this.latA+ "&key="+this.key_api;
             WWWForm frm_location = this.GetComponent<Carrot>().frm_act("get_location");
             this.GetComponent<Carrot>().send(frm_location, act_get_location_address);
             return s_url;

@@ -21,6 +21,7 @@ namespace Carrot
         public GameObject box_list_item_prefab;
         public GameObject box_grid_item_prefab;
         public GameObject box_item_group_prefab;
+        public GameObject box_item_panel_btn_prefab;
         public Button btn_close;
         public Carrot_UI UI;
         private UnityAction act_close = null;
@@ -158,6 +159,7 @@ namespace Carrot
                 box_item_new.check_type();
                 box_item_new.txt_tip.color = this.carrot.color_highlight;
             }
+            box_item_new.on_load(this.carrot);
             box_item_new.name = s_name;
             return box_item_new;
         }
@@ -167,6 +169,13 @@ namespace Carrot
             Carrot_Box_Item box_item_new = this.create_item(s_name);
             box_item_new.transform.SetAsFirstSibling();
             return box_item_new;
+        }
+
+        public Carrot_Box_Btn_Panel create_panel_btn()
+        {
+            GameObject obj_panel_btn = this.add_item(this.box_item_panel_btn_prefab);
+            Carrot_Box_Btn_Panel panel_btn = obj_panel_btn.GetComponent<Carrot_Box_Btn_Panel>();
+            return panel_btn;
         }
 
         public Carrot_Box_Item create_item_of_index(string s_name = "Item_Box",int index_Sibling=0)

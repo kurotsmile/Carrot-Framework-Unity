@@ -183,6 +183,7 @@ MonoBehaviour:
   txt_name: {fileID: 2753827811973326444}
   txt_tip: {fileID: 7894328002808289802}
   txt_val: {fileID: 4837836948824913538}
+  txt_placeholder_tip: {fileID: 386331546121706786}
   inp_val: {fileID: 4429551147244729401}
   dropdown_val: {fileID: 8697804407287302223}
   slider_val: {fileID: 4580965105679059667}

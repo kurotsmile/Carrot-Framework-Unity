@@ -9,7 +9,7 @@ namespace Carrot
     public class Carrot_User : MonoBehaviour
     {
         private Carrot carrot;
-        private Carrot_Box box_info_user;
+        private Carrot_Box box_list;
         private On_event_change event_after_login_user;
 
         private string s_data_user_login;
@@ -46,6 +46,8 @@ namespace Carrot
         public List<GameObject> list_field_user_login;
         public List<GameObject> list_field_user_info;
         public GameObject box_info_item_prefab;
+
+        
 
         public void load(Carrot carrot)
         {
@@ -145,15 +147,15 @@ namespace Carrot
         public void show_info_user_by_data(IDictionary data_user_obj)
         {
             IList list_info_user = (IList)data_user_obj["list_info"];
-            this.box_info_user = this.carrot.Create_Box(PlayerPrefs.GetString("acc_info", "Account Information"), this.icon_user_info);
-            this.box_info_user.name = "Window Account Information";
+            this.box_list = this.carrot.Create_Box(PlayerPrefs.GetString("acc_info", "Account Information"), this.icon_user_info);
+            this.box_list.name = "Window Account Information";
             for (int i = 0; i < list_info_user.Count; i++)
             {
                 IDictionary data_user = (IDictionary)list_info_user[i];
                 if (data_user["val"].ToString() != "")
                 {
                     GameObject item_user_info = Instantiate(this.item_user_info_prefab);
-                    item_user_info.transform.SetParent(box_info_user.area_all_item);
+                    item_user_info.transform.SetParent(box_list.area_all_item);
                     item_user_info.transform.localScale = new Vector3(1f, 1f, 1f);
                     item_user_info.transform.localPosition = new Vector3(item_user_info.transform.localPosition.x, item_user_info.transform.localPosition.y, 0f);
                     item_user_info.transform.localRotation = Quaternion.Euler(Vector3.zero);
@@ -179,30 +181,30 @@ namespace Carrot
                 }
             }
 
-            for (int i = 0; i < this.list_field_user_info.Count; i++) box_info_user.add_item(this.list_field_user_info[i]).GetComponent<Carrot_Box_Item>().set_act(this.list_field_user_info[i].GetComponent<Carrot_Box_Item>().get_act_click());
+            for (int i = 0; i < this.list_field_user_info.Count; i++) box_list.add_item(this.list_field_user_info[i]).GetComponent<Carrot_Box_Item>().set_act(this.list_field_user_info[i].GetComponent<Carrot_Box_Item>().get_act_click());
 
             if (s_id_user_login == data_user_obj["user_id"].ToString())
             {
-                for (int i = 0; i < this.list_field_user_login.Count; i++) box_info_user.add_item(this.list_field_user_login[i]).GetComponent<Carrot_Box_Item>().set_act(this.list_field_user_login[i].GetComponent<Carrot_Box_Item>().get_act_click());
+                for (int i = 0; i < this.list_field_user_login.Count; i++) box_list.add_item(this.list_field_user_login[i]).GetComponent<Carrot_Box_Item>().set_act(this.list_field_user_login[i].GetComponent<Carrot_Box_Item>().get_act_click());
 
                 this.add_field_user_func(this.icon_user_edit, PlayerPrefs.GetString("acc_edit", "Update info"), PlayerPrefs.GetString("acc_edit_tip", "Click this button to update your account information"), this.color_edit, "edit");
                 this.add_field_user_func(this.icon_user_change_password, PlayerPrefs.GetString("acc_change_pass", "Change Password"), PlayerPrefs.GetString("acc_change_pass_tip", "Click here to change the login password"), this.color_change_password, "show_change_password");
                 this.add_field_user_func(this.icon_user_logout, PlayerPrefs.GetString("logout", "Logout"), PlayerPrefs.GetString("logout_tip", "Click here to sign out of your account"), this.color_logout, "logout");
             }
 
-            if (data_user_obj["avatar"].ToString() != "") this.carrot.get_img(data_user_obj["avatar"].ToString(), box_info_user.img_icon);
+            if (data_user_obj["avatar"].ToString() != "") this.carrot.get_img(data_user_obj["avatar"].ToString(), box_list.img_icon);
 
             if (this.carrot.type_control != TypeControl.None)
             {
-                this.carrot.game.set_list_button_gamepad_console(box_info_user.GetComponent<Carrot_UI>().get_list_btn());
-                this.carrot.game.set_scrollRect_gamepad_consoles(box_info_user.GetComponent<Carrot_UI>().scrollRect);
+                this.carrot.game.set_list_button_gamepad_console(box_list.GetComponent<Carrot_UI>().get_list_btn());
+                this.carrot.game.set_scrollRect_gamepad_consoles(box_list.GetComponent<Carrot_UI>().scrollRect);
             }
         }
 
         public void add_field_user_func(Sprite icon, string s_name, string s_tip, Color32 color_func, string act)
         {
             GameObject item_user_info = Instantiate(this.item_user_info_prefab);
-            item_user_info.transform.SetParent(this.box_info_user.area_all_item);
+            item_user_info.transform.SetParent(this.box_list.area_all_item);
             item_user_info.transform.localScale = new Vector3(1f, 1f, 1f);
             item_user_info.transform.localPosition = new Vector3(item_user_info.transform.localPosition.x, item_user_info.transform.localPosition.y, 0f);
             item_user_info.transform.localRotation = Quaternion.Euler(Vector3.zero);
@@ -220,7 +222,7 @@ namespace Carrot
 
         private void add_field_user_edit(string s_id_name, string s_title, string s_type, string s_val)
         {
-            GameObject item_edit = this.box_info_user.add_item(this.item_user_edit_prefab);
+            GameObject item_edit = this.box_list.add_item(this.item_user_edit_prefab);
             item_edit.name = "field_update";
             item_edit.transform.localScale = new Vector3(1f, 1f, 1f);
             item_edit.transform.localPosition = new Vector3(item_edit.transform.localPosition.x, item_edit.transform.localPosition.y, 0f);
@@ -245,7 +247,7 @@ namespace Carrot
         {
             GameObject item_edit = Instantiate(this.item_user_edit_prefab);
             item_edit.name = "field_update";
-            item_edit.transform.SetParent(this.box_info_user.area_all_item);
+            item_edit.transform.SetParent(this.box_list.area_all_item);
             item_edit.transform.localScale = new Vector3(1f, 1f, 1f);
             item_edit.transform.localPosition = new Vector3(item_edit.transform.localPosition.x, item_edit.transform.localPosition.y, 0f);
             item_edit.transform.localRotation = Quaternion.Euler(Vector3.zero);
@@ -258,15 +260,15 @@ namespace Carrot
 
         private void act_show_user_register(string data)
         {
-            this.box_info_user=this.carrot.Create_Box(PlayerPrefs.GetString("register", "Sign up for an account"), this.icon_user_register);
+            this.box_list = this.carrot.Create_Box(PlayerPrefs.GetString("register", "Sign up for an account"), this.icon_user_register);
             IDictionary obj_reg = (IDictionary)Json.Deserialize(data);
             IList list_info_reg = (IList)obj_reg["list_info"];
             this.show_field_update_by_data(list_info_reg, true);
             this.add_field_user_func(this.icon_user_done, PlayerPrefs.GetString("done", "Done"), PlayerPrefs.GetString("done_tip", "After filling out the above information or click this button to complete"), this.color_change_password, "register_user");
             if (this.carrot.type_control != TypeControl.None)
             {
-                this.carrot.game.set_list_button_gamepad_console(box_info_user.GetComponent<Carrot_UI>().get_list_btn());
-                this.carrot.game.set_scrollRect_gamepad_consoles(box_info_user.GetComponent<Carrot_UI>().scrollRect);
+                this.carrot.game.set_list_button_gamepad_console(box_list.GetComponent<Carrot_UI>().get_list_btn());
+                this.carrot.game.set_scrollRect_gamepad_consoles(box_list.GetComponent<Carrot_UI>().scrollRect);
             }
         }
 
@@ -303,20 +305,20 @@ namespace Carrot
         {
             if (s_act == "logout")
             {
-                this.box_info_user.close();
+                this.box_list.close();
                 this.delete_data_user_login();
                 this.carrot.show_login();
             }
             if (s_act == "register_user") this.register_user();
             if (s_act == "edit")
             {
-                this.box_info_user.close();
+                this.box_list.close();
                 this.show_update_info_user();
             }
             if (s_act == "update_user") this.update_user();
             if (s_act == "show_change_password")
             {
-                this.box_info_user.close();
+                this.box_list.close();
                 this.show_change_password();
             }
             if (s_act == "done_change_password") this.done_change_password();
@@ -328,7 +330,7 @@ namespace Carrot
             WWWForm frm_change_password = this.carrot.frm_act("change_password");
             frm_change_password.AddField("user_id", s_id_user_login);
             frm_change_password.AddField("user_lang", this.get_lang_user_login());
-            foreach (Transform child_field in this.box_info_user.area_all_item)
+            foreach (Transform child_field in this.box_list.area_all_item)
             {
                 if (child_field.gameObject.name == "field_update")
                 {
@@ -344,7 +346,7 @@ namespace Carrot
             IDictionary obj_user = (IDictionary)Json.Deserialize(data);
             if (obj_user["error"].ToString() == "0")
             {
-                this.box_info_user.close();
+                this.box_list.close();
                 this.carrot.show_msg(PlayerPrefs.GetString("acc_change_pass", "Change Password"), PlayerPrefs.GetString(obj_user["msg"].ToString(), obj_user["msg_en"].ToString()), Msg_Icon.Success);
                 this.delete_data_user_login();
             }
@@ -356,22 +358,22 @@ namespace Carrot
 
         private void show_change_password()
         {
-            this.box_info_user = this.carrot.Create_Box(PlayerPrefs.GetString("acc_change_pass", "Change password"), this.icon_user_change_password);
+            this.box_list = this.carrot.Create_Box(PlayerPrefs.GetString("acc_change_pass", "Change password"), this.icon_user_change_password);
             if (this.s_password_user_login != "") this.add_field_user_edit("password", PlayerPrefs.GetString("inp_pass_current", "Enter your current password"), "3", "");
             this.add_field_user_edit("password_new", PlayerPrefs.GetString("inp_pass_new", "Enter your new password"), "3", "");
             this.add_field_user_edit("password_re_new", PlayerPrefs.GetString("inp_pass_rep_new", "Re -enter your new password"), "3", "");
             this.add_field_user_func(this.icon_user_done, PlayerPrefs.GetString("done", "Done"), PlayerPrefs.GetString("done_tip", "Click here to complete the password change"), this.color_change_password, "done_change_password");
             if (this.carrot.type_control != TypeControl.None)
             {
-                this.carrot.game.set_list_button_gamepad_console(box_info_user.GetComponent<Carrot_UI>().get_list_btn());
-                this.carrot.game.set_scrollRect_gamepad_consoles(box_info_user.GetComponent<Carrot_UI>().scrollRect);
+                this.carrot.game.set_list_button_gamepad_console(box_list.GetComponent<Carrot_UI>().get_list_btn());
+                this.carrot.game.set_scrollRect_gamepad_consoles(box_list.GetComponent<Carrot_UI>().scrollRect);
             }
         }
 
         private void register_user()
         {
             WWWForm frm = this.carrot.frm_act("register");
-            foreach (Transform child_field in this.box_info_user.area_all_item)
+            foreach (Transform child_field in this.box_list.area_all_item)
             {
                 if (child_field.gameObject.name == "field_update")
                 {
@@ -387,7 +389,7 @@ namespace Carrot
             IDictionary obj_user = (IDictionary)Json.Deserialize(data);
             if (obj_user["error"].ToString() == "0")
             {
-                this.box_info_user.close();
+                this.box_list.close();
                 this.carrot.show_msg(PlayerPrefs.GetString("register", "Register Account"), PlayerPrefs.GetString(obj_user["msg"].ToString(), obj_user["msg_en"].ToString()), Msg_Icon.Success);
             }
             else
@@ -401,7 +403,7 @@ namespace Carrot
             WWWForm frm = this.carrot.frm_act("update_account");
             frm.AddField("user_id", s_id_user_login);
             frm.AddField("user_lang", this.get_lang_user_login());
-            foreach (Transform child_field in this.box_info_user.area_all_item)
+            foreach (Transform child_field in this.box_list.area_all_item)
             {
                 if (child_field.gameObject.name == "field_update")
                 {
@@ -423,7 +425,7 @@ namespace Carrot
             IDictionary obj_user = (IDictionary)Json.Deserialize(data);
             if (obj_user["error"].ToString() == "0")
             {
-                this.box_info_user.close();
+                this.box_list.close();
                 Carrot_Window_Msg msg=this.carrot.show_msg(PlayerPrefs.GetString("acc_edit", "Update Account"), PlayerPrefs.GetString(obj_user["msg"].ToString(), obj_user["msg_en"].ToString()), Msg_Icon.Success);
                 this.set_data_user_login(obj_user);
                 msg.add_btn_msg(PlayerPrefs.GetString("acc_info", "Account Information"), this.show_user_cur_info);
@@ -440,7 +442,7 @@ namespace Carrot
         {
             this.is_change_avatar = false;
             this.data_avatar_user = null;
-            this.box_info_user = this.carrot.Create_Box(PlayerPrefs.GetString("acc_edit", "Update Account"), this.icon_user_edit);
+            this.box_list = this.carrot.Create_Box(PlayerPrefs.GetString("acc_edit", "Update Account"), this.icon_user_edit);
             IDictionary obj_user = (IDictionary)Json.Deserialize(this.s_data_user_login);
             IList list_field = (IList)obj_user["list_info"];
             this.add_field_user_edit("avatar", PlayerPrefs.GetString("user_avatar", "Avatar"), "6", "");
@@ -449,8 +451,8 @@ namespace Carrot
 
             if (this.carrot.type_control != TypeControl.None)
             {
-                this.carrot.game.set_list_button_gamepad_console(box_info_user.GetComponent<Carrot_UI>().get_list_btn());
-                this.carrot.game.set_scrollRect_gamepad_consoles(box_info_user.GetComponent<Carrot_UI>().scrollRect);
+                this.carrot.game.set_list_button_gamepad_console(box_list.GetComponent<Carrot_UI>().get_list_btn());
+                this.carrot.game.set_scrollRect_gamepad_consoles(box_list.GetComponent<Carrot_UI>().scrollRect);
             }
         }
 
@@ -533,6 +535,105 @@ namespace Carrot
             box_item_new.txt_tip.color = this.carrot.color_highlight;
             box_item_new.name = s_name;
             return box_item_new;
+        }
+
+        [ContextMenu("show_register")]
+        public void show_register()
+        {
+            this.carrot.send(this.carrot.frm_act("show_register"), act_show_register);
+        }
+
+        private void act_show_register(string s_data)
+        {
+            this.box_list=this.carrot.Create_Box();
+            this.box_list.set_icon(this.icon_user_register);
+            this.box_list.set_title(PlayerPrefs.GetString("register", "Register Account"));
+
+            IDictionary data_info = (IDictionary)Json.Deserialize(s_data);
+            IList list_info = (IList) data_info["list_info"];
+
+            foreach(IDictionary item_info in list_info)
+            {
+                string s_id = item_info["id_name"].ToString();
+                string s_title = item_info["title"].ToString();
+                string s_title_en = item_info["title_en"].ToString();
+                string s_val = item_info["val"].ToString();
+                string s_type_field = item_info["type_update"].ToString();
+                string s_icon = "";
+
+                if(item_info["icon"]!=null) s_icon=item_info["icon"].ToString();
+                string s_title_show = PlayerPrefs.GetString(s_title, s_title_en);
+
+                Carrot_Box_Item item_reg = this.box_list.create_item(s_id);
+
+                string s_id_icon = "icon_" + s_id;
+                Sprite icon_item = this.carrot.get_tool().get_sprite_to_playerPrefs(s_id_icon);
+                if (icon_item != null)
+                    item_reg.set_icon_white(icon_item);
+                else {
+                    if (s_icon != "") this.carrot.get_img_and_save_playerPrefs(s_icon, item_reg.img_icon, s_id_icon);
+                    else item_reg.set_icon(this.icon_user_info);
+                }
+
+                item_reg.set_title(s_title_show);
+                item_reg.set_tip(s_title_en);
+                item_reg.set_type(s_type_field);
+                item_reg.set_val(s_val);
+
+                if (item_info["val_update"] != null)
+                {
+                    IList list_val = (IList)item_info["val_update"];
+                    IList list_val_en = (IList)item_info["val_update_en"];
+                    item_reg.set_val_dropdown(list_val, list_val_en,int.Parse(item_info["val"].ToString()));
+                }
+            }
+
+            Carrot_Box_Btn_Panel panel_btn= this.box_list.create_panel_btn();
+
+            Carrot_Button_Item  btn_done=panel_btn.create_btn("btn_done");
+            btn_done.set_icon(this.carrot.icon_carrot_done);
+            btn_done.set_label(PlayerPrefs.GetString("done", "Done"));
+            btn_done.set_label_color(Color.white);
+            btn_done.set_bk_color(this.carrot.color_highlight);
+            btn_done.set_act_click(act_done_register);
+
+            Carrot_Button_Item btn_canel = panel_btn.create_btn("btn_cancel");
+            btn_canel.set_icon(this.carrot.icon_carrot_cancel);
+            btn_canel.set_label(PlayerPrefs.GetString("cancel", "Cancel"));
+            btn_canel.set_label_color(Color.white);
+            btn_canel.set_bk_color(this.carrot.color_highlight);
+            btn_canel.set_act_click(act_close_box);
+        }
+
+        private void act_close_box()
+        {
+            if (this.box_list != null) this.box_list.close();
+        }
+
+        private void act_done_register()
+        {
+            WWWForm frm_reg = this.carrot.frm_act("register");
+            foreach(Transform child in this.box_list.area_all_item)
+            {
+                if (child.GetComponent<Carrot_Box_Item>())
+                {
+                    Carrot_Box_Item item_reg = child.GetComponent<Carrot_Box_Item>();
+                    string s_key = item_reg.name;
+                    string s_val = item_reg.get_val();
+                    frm_reg.AddField(s_key,s_val);
+                }
+            }
+            this.carrot.send(frm_reg, act_done_register_success, act_done_register_fail);
+        }
+
+        private void act_done_register_success(string s_data)
+        {
+            this.carrot.show_msg(PlayerPrefs.GetString("register", "Register Account"), s_data,Msg_Icon.Success);
+        }
+
+        private void act_done_register_fail(string s_error)
+        {
+            this.carrot.show_msg(PlayerPrefs.GetString("register", "Register Account"), s_error,Msg_Icon.Error);
         }
     }
 }

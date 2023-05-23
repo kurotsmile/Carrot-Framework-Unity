@@ -273,6 +273,7 @@ GameObject:
   - component: {fileID: 4645516730937484055}
   - component: {fileID: 1244711569507986795}
   - component: {fileID: 3353702974751351471}
+  - component: {fileID: 6474188085226842489}
   m_Layer: 0
   m_Name: Carrot
   m_TagString: Untagged
@@ -356,6 +357,7 @@ MonoBehaviour:
   game: {fileID: 4614701476662799586}
   camera_pro: {fileID: 1244711569507986795}
   location: {fileID: 3353702974751351471}
+  theme: {fileID: 6474188085226842489}
   window_msg_prefab: {fileID: 1750426150788012, guid: 064e59bc4fa60ed48b452c77919d6473, type: 3}
   window_loading_prefab: {fileID: 2632683814581162851, guid: af7a7fddea11b0b4ca4aa617dd48a44e, type: 3}
   window_exit_prefab: {fileID: 2646574534074554939, guid: 93cb11e1d2cdb424f9711d3b049a4eb9, type: 3}
@@ -381,6 +383,10 @@ MonoBehaviour:
   sp_icon_dev: {fileID: 21300000, guid: 187cb1daeb2f68a449e986807e2a20e3, type: 3}
   icon_carrot_gamepad_off: {fileID: 21300000, guid: 548bbc991b0d77448bf18397067e51f1, type: 3}
   icon_carrot_gamepad_on: {fileID: 21300000, guid: 25a8ff83e06a17f4eab6b33f7bbc519a, type: 3}
+  icon_carrot_done: {fileID: 21300000, guid: fd01247be9ba67b49bdb2720deefe5bc, type: 3}
+  icon_carrot_cancel: {fileID: 21300000, guid: 1c48fd66d0a61544181c1560678904d9, type: 3}
+  icon_carrot_visible_off: {fileID: 21300000, guid: 17ae478c8ad27084f9c054e22c327da7, type: 3}
+  icon_carrot_visible_on: {fileID: 21300000, guid: ac9d915922ceada42bb68b217b9e4f9d, type: 3}
   icon_lost_internet: {fileID: 21300000, guid: d2201876ae5060e48babd277eb80364d, type: 3}
   carrot_lost_internet: {fileID: 0}
   sp_icon_sound_on: {fileID: 21300000, guid: 092f5fc30a7cf2347b2617fc9a203ebc, type: 3}
@@ -537,5 +543,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bf8625654ef7cf4ca15bfabfa9c003b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  key_api: AIzaSyCcYpVI8I4osXUeqWkPe-nPrakxNnaND5I
   latA: 0
   lonA: 0
+--- !u!114 &6474188085226842489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170736565810424376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687169fc80c58b645a5dacde47b4554f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

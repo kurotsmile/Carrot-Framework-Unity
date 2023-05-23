@@ -102,6 +102,7 @@ namespace Carrot
         public Carrot_game game;
         public Carrot_camera camera_pro;
         public Carrot_location location;
+        public Carrot_Theme theme;
 
         [Header("Panel Obj")]
         public GameObject window_msg_prefab;
@@ -131,6 +132,10 @@ namespace Carrot
         public Sprite sp_icon_dev;
         public Sprite icon_carrot_gamepad_off;
         public Sprite icon_carrot_gamepad_on;
+        public Sprite icon_carrot_done;
+        public Sprite icon_carrot_cancel;
+        public Sprite icon_carrot_visible_off;
+        public Sprite icon_carrot_visible_on;
 
         [Header("Lost Internet")]
         private bool is_online_internet=true;
@@ -186,7 +191,10 @@ namespace Carrot
             this.shop.onCarrotPaySuccess += this.carrot_by_success;
             this.shop.onCarrotRestoreSuccess += this.carrot_restore_success;
             this.ads.load(this);
+            this.theme.on_load(this);
+
             if (this.type_app == TypeApp.Game) this.ads.onRewardedSuccess += this.GetComponent<Carrot_game>().onRewardedSuccess;
+            this.ads.onRewardedSuccess += this.theme.onRewardedSuccess;
             
             this.carrot_list_app = new Carrot_list_app(this);
             this.list_Window = new List<GameObject>();
@@ -770,7 +778,7 @@ namespace Carrot
             if(this.is_sound)
                 item_setting_sound.set_icon(this.sp_icon_sound_on);
             else
-                item_setting_sound.set_icon(this.sp_icon_sound_on);
+                item_setting_sound.set_icon(this.sp_icon_sound_off);
             item_setting_sound.set_title(PlayerPrefs.GetString("sound_app", "Sound"));
             item_setting_sound.set_tip(PlayerPrefs.GetString("sound_app_tip", "On or Off Sound click"));
             item_setting_sound.set_lang_data("sound_app", "sound_app_tip");
@@ -852,8 +860,11 @@ namespace Carrot
 
             if (this.setting_theme == Setting_Option.Show)
             {
-                Carrot_Box_Item item_setthing_theme = box_setting.create_item("theme");
-                item_setthing_theme.set_icon(this.sp_icon_bk_music);
+                Carrot_Box_Item item_setting_theme = box_setting.create_item("theme");
+                item_setting_theme.set_icon(this.sp_icon_theme_color);
+                item_setting_theme.set_title("Choose a color theme");
+                item_setting_theme.set_tip("Change the main color theme of the app");
+                item_setting_theme.set_act(() => this.theme.show_list_theme());
             }
 
             Carrot_Box_Item item_setting_rate = box_setting.create_item("rate");
@@ -925,20 +936,22 @@ namespace Carrot
 
         private void change_status_sound(Carrot_Box_Item item_status_sound)
         {
-            item_status_sound.set_change_status(true);
             if (this.is_sound)
             {
                 item_status_sound.set_icon(this.sp_icon_sound_off);
-                this.set_status_sound(false);
+                PlayerPrefs.SetInt("is_sound", 1);
+                this.is_sound = false;
                 if (this.type_app == TypeApp.Game) this.game.get_audio_source_bk().Stop();
             }
             else
             {
                 item_status_sound.set_icon(this.sp_icon_sound_on);
-                this.set_status_sound(true);
+                PlayerPrefs.SetInt("is_sound", 0);
+                this.is_sound = true;
                 this.play_sound_click();
                 if (this.type_app == TypeApp.Game) this.game.get_audio_source_bk().Play();
-            }   
+            }
+            item_status_sound.set_change_status(true);
         }
 
         private void change_status_vibrate(Carrot_Box_Item item_status_vibrate)
@@ -985,20 +998,6 @@ namespace Carrot
         public bool get_status_vibrate()
         {
             return this.is_vibrate;
-        }
-
-        public void set_status_sound(bool is_sound_status)
-        {
-            if (is_sound_status)
-            {
-                PlayerPrefs.SetInt("is_sound", 0);
-                this.is_sound = true;
-            }
-            else
-            {
-                PlayerPrefs.SetInt("is_sound", 1);
-                this.is_sound = false;
-            }
         }
 
         public Color32 get_color_highlight_blur(int fade = 10)
