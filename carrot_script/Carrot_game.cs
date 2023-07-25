@@ -1,5 +1,6 @@
 using Firebase.Extensions;
 using Firebase.Firestore;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -613,6 +614,34 @@ namespace Carrot
             frm_update_scores.AddField("id_user", this.carrot.user.get_id_user_login());
             frm_update_scores.AddField("lang_user", this.carrot.user.get_lang_user_login());
             //this.carrot.send_hide(frm_update_scores);
+            this.carrot.show_loading();
+            CollectionReference RateDbRef = this.carrot.db.Collection("app");
+            DocumentReference RankRef = RateDbRef.Document(this.carrot.Carrotstore_AppId);
+            RankRef.GetSnapshotAsync().ContinueWithOnMainThread((task) => {
+                var snapshot = task.Result;
+                if (snapshot.Exists)
+                {
+                    this.carrot.hide_loading();
+                    IDictionary app = snapshot.ToDictionary();
+                    IList rank = (IList)app["rank"];
+                    Carrot_Rate_data rate = new Carrot_Rate_data();
+                    rate.date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ");
+                    Carrot_Rate_user_data user_login = new Carrot_Rate_user_data();
+                    user_login.name = this.carrot.user.get_data_user_login("name");
+                    user_login.id = this.carrot.user.get_id_user_login();
+                    user_login.lang = this.carrot.user.get_lang_user_login();
+                    user_login.avatar = this.carrot.user.get_data_user_login("avatar");
+                    rate.user = user_login;
+
+                    Dictionary<string, object> UpdateData = new Dictionary<string, object> { { "rank", rank } };
+                    RankRef.UpdateAsync(UpdateData);
+                    this.carrot.show_msg(PlayerPrefs.GetString("send_feedback", "Send Feedback"), PlayerPrefs.GetString("rate_thanks", "Send your comments to the successful developer. Thanks for your feedback!"), Msg_Icon.Success);
+                }
+                else
+                {
+                    this.carrot.log(String.Format("Document {0} does not exist!", snapshot.Id));
+                }
+            });
         }
         #endregion
     }

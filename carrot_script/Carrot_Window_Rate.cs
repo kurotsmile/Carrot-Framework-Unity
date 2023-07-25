@@ -105,8 +105,9 @@ namespace Carrot
                 {
                     this.carrot.hide_loading();
                     IDictionary app= snapshot.ToDictionary();
-                    IList rates =(IList) app["rates"];
-                    this.carrot.log("Rates " + rates.Count);
+                    IList rates;
+                    if (app["rates"] != null) rates = (IList)app["rates"];
+                    else rates = new List<IDictionary>();
 
                     this.index_star_feedback++;
                     Carrot_Rate_data rate = new Carrot_Rate_data();
@@ -160,29 +161,32 @@ namespace Carrot
                 if (snapshot.Exists)
                 {
                     IDictionary data_app = snapshot.ToDictionary();
-                    IList rates = (IList)data_app["rates"];
-                    for (int i = 0; i < rates.Count; i++)
+                    if (data_app["rates"] != null)
                     {
-                        IDictionary rate = (IDictionary)rates[i];
-                        if (rate["user"] != null)
+                        IList rates = (IList)data_app["rates"];
+                        for (int i = 0; i < rates.Count; i++)
                         {
-                            IDictionary rate_user = (IDictionary)rate["user"];
-                            if (rate_user["id"].ToString() == user_id_login)
+                            IDictionary rate = (IDictionary)rates[i];
+                            if (rate["user"] != null)
                             {
-                                index_rate_edit = i;
-                                if (rate["comment"]!=null)
+                                IDictionary rate_user = (IDictionary)rate["user"];
+                                if (rate_user["id"].ToString() == user_id_login)
                                 {
-                                    inp_review_feedback.text= rate["comment"].ToString();
-                                }
+                                    index_rate_edit = i;
+                                    if (rate["comment"] != null)
+                                    {
+                                        inp_review_feedback.text = rate["comment"].ToString();
+                                    }
 
-                                if (rate["star"]!= null)
-                                {
-                                    int index_star = int.Parse(rate["star"].ToString());
-                                    btn_sel_rate(index_star);
-                                }
+                                    if (rate["star"] != null)
+                                    {
+                                        int index_star = int.Parse(rate["star"].ToString());
+                                        btn_sel_rate(index_star);
+                                    }
 
-                                carrot.log("Co ma " + i + ":" + user_id_login);
-                                break;
+                                    carrot.log("Co ma " + i + ":" + user_id_login);
+                                    break;
+                                }
                             }
                         }
                     }
