@@ -1,3 +1,5 @@
+using Firebase.Extensions;
+using Firebase.Firestore;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,6 +69,31 @@ namespace Carrot
         {
             //act_show_list_music_game
             this.box_setting_item_bkmusic = item_setting;
+            Query AudioQuery = this.carrot.db.Collection("audio");
+            AudioQuery.Limit(20);
+            AudioQuery.GetSnapshotAsync().ContinueWithOnMainThread(task => {
+                QuerySnapshot capitalQuerySnapshot = task.Result;
+
+                if (task.IsFaulted) this.carrot.log(task.Exception.Message);
+
+                if (task.IsCompleted)
+                {
+                    if (capitalQuerySnapshot.Count > 0)
+                    {
+                        List<IDictionary> list_bk_music = new List<IDictionary>();
+                        foreach (DocumentSnapshot documentSnapshot in capitalQuerySnapshot.Documents)
+                        {
+                            IDictionary audio = documentSnapshot.ToDictionary();
+                            audio["id"] = documentSnapshot.Id;
+                            list_bk_music.Add(audio);
+                        };
+                    }
+                    else
+                    {
+                        this.carrot.show_msg("Background music games", "There are no songs in the list");
+                    }
+                }
+            });
         }
 
         private void act_show_list_music_game(string s_data)
