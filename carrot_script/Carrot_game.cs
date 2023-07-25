@@ -67,7 +67,6 @@ namespace Carrot
         #region Background Music Game
         public void show_list_music_game(Carrot_Box_Item item_setting=null)
         {
-            //act_show_list_music_game
             this.box_setting_item_bkmusic = item_setting;
             Query AudioQuery = this.carrot.db.Collection("audio");
             AudioQuery.Limit(20);
@@ -78,15 +77,88 @@ namespace Carrot
 
                 if (task.IsCompleted)
                 {
+                    
                     if (capitalQuerySnapshot.Count > 0)
                     {
-                        List<IDictionary> list_bk_music = new List<IDictionary>();
+                        
+                        List<IDictionary> list_music = new List<IDictionary>();
                         foreach (DocumentSnapshot documentSnapshot in capitalQuerySnapshot.Documents)
                         {
                             IDictionary audio = documentSnapshot.ToDictionary();
-                            audio["id"] = documentSnapshot.Id;
-                            list_bk_music.Add(audio);
+                            list_music.Add(audio);
                         };
+                        this.carrot.log("show_list_music_game from server..." + list_music.Count);
+
+                        if(this.sound_bk_game!=null) this.sound_bk_game.Stop();
+                        if (this.box_list_music_game != null) this.box_list_music_game.close();
+                        this.box_list_music_game = this.carrot.Create_Box("carrot_list_bk_music");
+                        box_list_music_game.set_title("Background music games");
+                        box_list_music_game.set_icon(this.icon_list_music_game);
+                        box_list_music_game.set_act_before_closing(this.act_close_list_music);
+  
+                        this.list_link_music_bk = new List<string>();
+                        this.item_bk_music_play = null;
+                        this.id_select_play_bk_music = "";
+                        this.id_buy_bk_music_temp = "";
+                        this.index_buy_music_link_temp = -1;
+
+       
+                        for (int i = 0; i < list_music.Count; i++)
+                        {
+                            IDictionary item_data_music = (IDictionary)list_music[i];
+
+                            Carrot_Box_Item item_music_bk = this.box_list_music_game.create_item("item_bk_music_" + i);
+                            item_music_bk.set_icon(this.icon_list_music_game);
+                            item_music_bk.set_title(item_data_music["name"].ToString());
+                            this.list_link_music_bk.Add(item_data_music["mp3"].ToString());
+
+                            var index_link = i;
+                            var id_bk_music = item_data_music["id"].ToString();
+                            Carrot_Box_Btn_Item btn_play = item_music_bk.create_item();
+                            btn_play.set_icon(this.icon_play_music_game);
+                            btn_play.set_color(this.carrot.color_highlight);
+                            btn_play.set_act(() => this.play_item_music_background_game(item_music_bk, index_link, id_bk_music));
+
+                            bool is_buy = false;
+
+                            if (item_data_music["buy"].ToString() == "0") is_buy = false;
+                            else is_buy = true;
+
+                            if (is_buy)
+                            {
+                                if (PlayerPrefs.GetInt("is_buy_bk_" + item_data_music["id"].ToString(), 0) == 1) is_buy = false;
+                            }
+
+                            if (is_buy)
+                            {
+                                Carrot_Box_Btn_Item btn_buy = item_music_bk.create_item();
+                                btn_buy.set_icon(this.icon_buy_music_game);
+                                btn_buy.set_color(this.carrot.color_highlight);
+                                btn_buy.set_act(() => this.act_buy_music_bk(id_bk_music, index_link));
+                                item_music_bk.set_tip("Please buy to use this track");
+                                item_music_bk.set_act(() => this.act_buy_music_bk(id_bk_music, index_link));
+
+                                if (this.carrot.id_ads_Rewarded_android != "" || this.carrot.id_ads_Rewarded_ios != "")
+                                {
+                                    Carrot_Box_Btn_Item btn_ads = item_music_bk.create_item();
+                                    btn_ads.set_icon(this.carrot.icon_carrot_ads);
+                                    btn_ads.set_color(this.carrot.color_highlight);
+                                    btn_ads.set_act(() => this.act_watch_ads_to_music_bk(id_bk_music, index_link));
+                                }
+                            }
+                            else
+                            {
+                                item_music_bk.set_tip("Free");
+                                item_music_bk.set_act(() => this.act_change_bk_music_game(id_bk_music, index_link));
+                            }
+
+                            this.box_list_music_game.update_color_table_row();
+                        }
+                        if (this.carrot.type_control != TypeControl.None)
+                        {
+                            this.set_list_button_gamepad_console(box_list_music_game.UI.get_list_btn());
+                            this.set_scrollRect_gamepad_consoles(box_list_music_game.UI.scrollRect);
+                        }
                     }
                     else
                     {
@@ -96,88 +168,15 @@ namespace Carrot
             });
         }
 
-        private void act_show_list_music_game(string s_data)
-        {
-            this.sound_bk_game.Stop();
-            this.box_list_music_game = this.carrot.Create_Box("carrot_list_bk_music");
-            box_list_music_game.set_title("Background music games");
-            box_list_music_game.set_icon(this.icon_list_music_game);
-            box_list_music_game.set_act_before_closing(this.act_close_list_music);
-            IList list_music = (IList)Json.Deserialize(s_data);
-
-            this.list_link_music_bk = new List<string>();
-            this.item_bk_music_play = null;
-            this.id_select_play_bk_music = "";
-            this.id_buy_bk_music_temp = "";
-            this.index_buy_music_link_temp = -1;
-
-            for (int i = 0; i < list_music.Count; i++)
-            {
-                IDictionary item_data_music = (IDictionary)list_music[i];
-
-                Carrot_Box_Item item_music_bk = this.box_list_music_game.create_item("item_bk_music_" + i);
-                item_music_bk.set_icon(this.icon_list_music_game);
-                item_music_bk.set_title(item_data_music["name"].ToString());
-                this.list_link_music_bk.Add(item_data_music["link"].ToString());
-
-                var index_link = i;
-                var id_bk_music = item_data_music["id"].ToString();
-                Carrot_Box_Btn_Item btn_play = item_music_bk.create_item();
-                btn_play.set_icon(this.icon_play_music_game);
-                btn_play.set_color(this.carrot.color_highlight);
-                btn_play.set_act(() => this.play_item_music_background_game(item_music_bk, index_link, id_bk_music));
-
-                bool is_buy = false;
-
-                if (item_data_music["buy"].ToString() == "0") is_buy = false;
-                else is_buy = true;
-
-                if (is_buy)
-                {
-                    if (PlayerPrefs.GetInt("is_buy_bk_" + item_data_music["id"].ToString(), 0) == 1) is_buy = false;
-                }
-
-                if (is_buy)
-                {
-                    Carrot_Box_Btn_Item btn_buy = item_music_bk.create_item();
-                    btn_buy.set_icon(this.icon_buy_music_game);
-                    btn_buy.set_color(this.carrot.color_highlight);
-                    btn_buy.set_act(()=>this.act_buy_music_bk(id_bk_music,index_link));
-                    item_music_bk.set_tip("Please buy to use this track");
-                    item_music_bk.set_act(() => this.act_buy_music_bk(id_bk_music,index_link));
-
-                    if (this.carrot.id_ads_Rewarded_android!=""|| this.carrot.id_ads_Rewarded_ios != "")
-                    {
-                        Carrot_Box_Btn_Item btn_ads = item_music_bk.create_item();
-                        btn_ads.set_icon(this.carrot.icon_carrot_ads);
-                        btn_ads.set_color(this.carrot.color_highlight);
-                        btn_ads.set_act(() => this.act_watch_ads_to_music_bk(id_bk_music, index_link));
-                    }
-                }
-                else
-                {
-                    item_music_bk.set_tip("Free");
-                    item_music_bk.set_act(() => this.act_change_bk_music_game(id_bk_music,index_link));
-                }
-
-                this.box_list_music_game.update_color_table_row();
-            }
-            if (this.carrot.type_control != TypeControl.None)
-            {
-                this.set_list_button_gamepad_console(box_list_music_game.UI.get_list_btn());
-                this.set_scrollRect_gamepad_consoles(box_list_music_game.UI.scrollRect);
-            }
-        }
-
         private void act_close_list_music()
         {
             this.id_buy_bk_music_temp = "";
             this.index_buy_music_link_temp = -1;
             this.sound_bk_game_test.Stop();
             if(this.carrot.get_status_sound())
-                this.sound_bk_game.Play();
+                if(this.sound_bk_game!=null) this.sound_bk_game.Play();
             else
-                this.sound_bk_game.Stop();
+                if(this.sound_bk_game!=null) this.sound_bk_game.Stop();
         }
 
         public void play_item_music_background_game(Carrot_Box_Item item_muic_bk,int index_links,string id_music_bk)
@@ -297,8 +296,11 @@ namespace Carrot
 
                 if (www.result == UnityWebRequest.Result.Success)
                 {
-                    this.sound_bk_game.clip = DownloadHandlerAudioClip.GetContent(www);
-                    this.sound_bk_game.Play();
+                    if (this.sound_bk_game != null)
+                    {
+                        this.sound_bk_game.clip = DownloadHandlerAudioClip.GetContent(www);
+                        this.sound_bk_game.Play();
+                    }
                 }
             }
         }

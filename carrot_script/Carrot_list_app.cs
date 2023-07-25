@@ -258,7 +258,7 @@ namespace Carrot
             if (this.type == carrot_app_type.all)
             {
                 if (this.carrot.s_data_json_carrotapp_all_temp == "")
-                    this.act_load_app_where_exit_by_query(this.carrot.db.Collection("app"));
+                    this.act_load_app_where_exit_by_query(this.carrot.db.Collection("app").Limit(20));
                 else
                     this.act_load_app_where_exit_by_s_data(this.carrot.s_data_json_carrotapp_all_temp);
             }
@@ -266,8 +266,7 @@ namespace Carrot
             if (this.type == carrot_app_type.app)
             {
                 if (this.carrot.s_data_json_carrotapp_app_temp == "")
-                    this.act_load_app_where_exit_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "app"));
-
+                    this.act_load_app_where_exit_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "app").Limit(20));
                 else
                     this.act_load_app_where_exit_by_s_data(this.carrot.s_data_json_carrotapp_app_temp);
             }
@@ -275,8 +274,7 @@ namespace Carrot
             if (this.type == carrot_app_type.game)
             {
                 if (this.carrot.s_data_json_carrotapp_game_temp == "")
-
-                    this.act_load_app_where_exit_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "game"));
+                    this.act_load_app_where_exit_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "game").Limit(20));
                 else
                     this.act_load_app_where_exit_by_s_data(this.carrot.s_data_json_carrotapp_game_temp);
             }

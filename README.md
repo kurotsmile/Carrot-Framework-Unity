@@ -4,40 +4,6 @@ Tạo Template và plugin để làm game dễ dàng hơn, với các giao diệ
 ## Các chức năng chính
 Các chức năng viết ra nhằm mục đích phục vụi làm game trong hệ thống carrot dễ dàng để thiết lập trên tất cả các game và ứng dụng. Dễ dàng cập nhật. Không can thiệp sâu vào hệ điều hành các nền tảng
 
-### Hỗ trợ store App:
-* Rate:Đánh giá ứng dụng
-* Share:Chia sẻ ứng dụng
-* App other:Gợi ý các ứng dụng khác
-
-### UI Hỗ trợ giao diện App:
-* Box List:Danh sách các đối tượng theo dạnh danh sách
-* Box Gird:Danh sách các đối tượng theo dạng lưới
-* Theme:Thay đổi các gói giao diện tùy biến với sở thích người dùng
-* Create Setting:Tạo cài đặt theo từng nghĩa cảnh của ứng dụng
-
-### Function:
-* Location: Lấy vị trí hiện tại và trả về tên địa điểm
-* Log:Xem lịch xử hoặt động của ứng dụng
-
-### User:
-* Login:Đăng nhập
-* Regiter:Đăng ký
-* Updateinfo:Cập nhật thông tin
-* ViewInfo:Xem thông tin
-
-### CameraPro:
-* Camera:Chụp ảnh
-* Photo Editor:Trình chỉnh sửa ảnh
-* Photo List:Trình xem ảnh
-
-### Theme:
-* color Theme:Chọn màu chủ đạo
-* List Theme:bộ sưu tập chủ đề cho ứng dụng
-* Customer Theme:Thiết kế bộ chủ đề riên tùy biến
-* List Color:Danh sách màu sắc
-* Mix Color:Trộn màu
-## Các chức năng chính
-
 ### store App:
 - **Rate**:Đánh giá ứng dụng
 - **Share**:Chia sẻ ứng dụng
@@ -83,4 +49,3 @@ Các chức năng viết ra nhằm mục đích phục vụi làm game trong h�
 ### Ads
 - **View Ads**:Xem quảng cáo Admob,Carrot,Vungle
 - **Reward advertising**:Xem quảng cáo để nhận phần thưởng
-
