@@ -2125,7 +2125,7 @@ RectTransform:
   m_Children:
   - {fileID: 8456213679421182265}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2253,6 +2253,7 @@ MonoBehaviour:
   is_not_destroy: 0
   emp_theme:
   - {fileID: 8679227903794813603}
+  emp_theme_txt: []
   area_btns:
   - {fileID: 7293703079305615205}
   - {fileID: 3358652099480869146}

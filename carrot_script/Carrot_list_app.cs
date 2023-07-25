@@ -53,9 +53,11 @@ namespace Carrot
                         this.load_list_by_query(this.carrot.db.Collection("app"));
                     else
                         load_list_by_s_data(this.s_data_carrotapp_all);
-                }  
+                }
                 else
+                {
                     load_list_by_s_data(this.carrot.s_data_json_carrotapp_all_temp);
+                }
             }
 
             if (this.type == carrot_app_type.app)
@@ -63,9 +65,13 @@ namespace Carrot
                 if (this.carrot.s_data_json_carrotapp_app_temp == "")
                 {
                     if (this.carrot.is_online())
+                    {
                         this.load_list_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "app"));
+                    }
                     else
+                    {
                         load_list_by_s_data(this.s_data_carrotapp_app);
+                    }    
                 } 
                 else
                     load_list_by_s_data(this.carrot.s_data_json_carrotapp_app_temp);
@@ -76,18 +82,27 @@ namespace Carrot
                 if (this.carrot.s_data_json_carrotapp_game_temp == "")
                 {
                     if (this.carrot.is_online())
+                    {
                         this.load_list_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "game"));
+                    }
                     else
+                    {
                         load_list_by_s_data(this.s_data_carrotapp_game);
-                } 
+                    }  
+                }
                 else
+                {
                     load_list_by_s_data(this.carrot.s_data_json_carrotapp_game_temp);
+                }
+                    
             }
         }
 
         private void load_list_by_query(Query AppQuery)
         {
             this.carrot.log("load_list_by_query (" + this.type + ")");
+            AppQuery = AppQuery.WhereEqualTo("status", "publish");
+            AppQuery.Limit(20);
             AppQuery.GetSnapshotAsync().ContinueWithOnMainThread(task => {
                 QuerySnapshot AppQuerySnapshot = task.Result;
 
@@ -133,7 +148,7 @@ namespace Carrot
                             PlayerPrefs.SetString("s_data_carrotapp_game", this.s_data_carrotapp_game);
                         }
 
-                        if (this.carrot.type_control != TypeControl.None)
+                        if (this.carrot.type_control != TypeControl.None) 
                         {
                             this.carrot.game.set_list_button_gamepad_console(this.list_btn_gamepad);
                             this.box_list_app.update_gamepad_cosonle_control();

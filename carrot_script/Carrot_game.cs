@@ -67,17 +67,22 @@ namespace Carrot
         #region Background Music Game
         public void show_list_music_game(Carrot_Box_Item item_setting=null)
         {
+            this.carrot.show_loading();
             this.box_setting_item_bkmusic = item_setting;
             Query AudioQuery = this.carrot.db.Collection("audio");
             AudioQuery.Limit(20);
             AudioQuery.GetSnapshotAsync().ContinueWithOnMainThread(task => {
                 QuerySnapshot capitalQuerySnapshot = task.Result;
 
-                if (task.IsFaulted) this.carrot.log(task.Exception.Message);
+                if (task.IsFaulted)
+                {
+                    this.carrot.hide_loading();
+                    this.carrot.log(task.Exception.Message);
+                }
 
                 if (task.IsCompleted)
                 {
-                    
+                    this.carrot.hide_loading();
                     if (capitalQuerySnapshot.Count > 0)
                     {
                         

@@ -44,7 +44,8 @@ namespace Carrot
         public GameObject button_rate_feeedback;
         public Image[] img_star_feedback;
         public InputField inp_review_feedback;
-        private int index_star_feedback;   
+        private int index_star_feedback;
+        private int index_rate_edit = -1;
         public void load(Carrot carrot)
         {
             this.carrot = carrot;
@@ -95,22 +96,45 @@ namespace Carrot
         public void btn_submit_rate_feedback()
         {
             if (this.index_star_feedback == -1 && this.inp_review_feedback.text.Trim() == "") return;
-
+            this.carrot.show_loading();
             CollectionReference RateDbRef = this.carrot.db.Collection("app");
             DocumentReference RateRef = RateDbRef.Document(this.carrot.Carrotstore_AppId);
-            Carrot_Rate_data rate = new Carrot_Rate_data();
-            rate.comment = this.inp_review_feedback.text;
-            rate.star = this.index_star_feedback.ToString();
-            rate.date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ");
-            Carrot_Rate_user_data user_login = new Carrot_Rate_user_data();
-            user_login.name = this.carrot.user.get_data_user_login("name");
-            user_login.id = this.carrot.user.get_id_user_login();
-            user_login.lang = this.carrot.user.get_lang_user_login();
-            user_login.avatar = this.carrot.user.get_data_user_login("avatar");
-            rate.user = user_login;
-            Dictionary<string, object> UpdateData = new Dictionary<string, object>{{"rates",rate}};
-            RateRef.UpdateAsync(UpdateData);
-            this.carrot.show_msg(PlayerPrefs.GetString("send_feedback", "Send Feedback"), PlayerPrefs.GetString("rate_thanks", "Send your comments to the successful developer. Thanks for your feedback!"), Msg_Icon.Success);
+            RateRef.GetSnapshotAsync().ContinueWithOnMainThread((task)=> {
+                var snapshot = task.Result;
+                if (snapshot.Exists)
+                {
+                    this.carrot.hide_loading();
+                    IDictionary app= snapshot.ToDictionary();
+                    IList rates =(IList) app["rates"];
+                    this.carrot.log("Rates " + rates.Count);
+
+                    this.index_star_feedback++;
+                    Carrot_Rate_data rate = new Carrot_Rate_data();
+                    rate.comment = this.inp_review_feedback.text;
+                    rate.star = this.index_star_feedback.ToString();
+                    rate.date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ");
+                    Carrot_Rate_user_data user_login = new Carrot_Rate_user_data();
+                    user_login.name = this.carrot.user.get_data_user_login("name");
+                    user_login.id = this.carrot.user.get_id_user_login();
+                    user_login.lang = this.carrot.user.get_lang_user_login();
+                    user_login.avatar = this.carrot.user.get_data_user_login("avatar");
+                    rate.user = user_login;
+
+                    if (this.index_rate_edit!=-1)
+                        rates[this.index_rate_edit] = rate;
+                    else
+                        rates.Add(rate);
+
+                    this.carrot.log("Index rate:" + this.index_rate_edit);
+                    Dictionary<string, object> UpdateData = new Dictionary<string, object> {{ "rates", rates }};
+                    RateRef.UpdateAsync(UpdateData);
+                    this.carrot.show_msg(PlayerPrefs.GetString("send_feedback", "Send Feedback"), PlayerPrefs.GetString("rate_thanks", "Send your comments to the successful developer. Thanks for your feedback!"), Msg_Icon.Success);
+                }
+                else
+                {
+                    this.carrot.log(String.Format("Document {0} does not exist!", snapshot.Id));
+                }
+            });
         }
 
         public void btn_sel_rate(int index_star)
@@ -128,23 +152,38 @@ namespace Carrot
         private void load_rate_by_user()
         {
             string user_id_login = this.carrot.user.get_id_user_login();
-            DocumentReference AppRateRef =this.carrot.db.Collection("app").Document(this.carrot.Carrotstore_AppId);
+            this.index_rate_edit = -1;
+            DocumentReference AppRateRef = this.carrot.db.Collection("app").Document(this.carrot.Carrotstore_AppId);
             AppRateRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
             {
-                DocumentSnapshot snapshot = task.Result;
+                var snapshot = task.Result;
                 if (snapshot.Exists)
                 {
-                    IDictionary data_app=snapshot.ToDictionary();
-                    IList rates =(IList) data_app["rates"];
-                    for(int i = 0; i < rates.Count; i++)
+                    IDictionary data_app = snapshot.ToDictionary();
+                    IList rates = (IList)data_app["rates"];
+                    for (int i = 0; i < rates.Count; i++)
                     {
-                        IDictionary rate =(IDictionary) rates[i];
-                        IDictionary rate_user =(IDictionary) rate["user"];
-                        if (rate_user["id"].ToString() == user_id_login)
+                        IDictionary rate = (IDictionary)rates[i];
+                        if (rate["user"] != null)
                         {
-                            this.inp_review_feedback.text = rate["comment"].ToString();
-                            int index_star = int.Parse(rate["star"].ToString());
-                            this.btn_sel_rate(index_star);
+                            IDictionary rate_user = (IDictionary)rate["user"];
+                            if (rate_user["id"].ToString() == user_id_login)
+                            {
+                                index_rate_edit = i;
+                                if (rate["comment"]!=null)
+                                {
+                                    inp_review_feedback.text= rate["comment"].ToString();
+                                }
+
+                                if (rate["star"]!= null)
+                                {
+                                    int index_star = int.Parse(rate["star"].ToString());
+                                    btn_sel_rate(index_star);
+                                }
+
+                                carrot.log("Co ma " + i + ":" + user_id_login);
+                                break;
+                            }
                         }
                     }
                 }
