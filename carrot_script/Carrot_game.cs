@@ -607,13 +607,6 @@ namespace Carrot
         public void update_scores_player(int scores,int type=0)
         {
             if (this.carrot.user.get_id_user_login() == "") return;
-            WWWForm frm_update_scores = this.carrot.frm_act("update_scores_player");
-            frm_update_scores.AddField("id_app", this.carrot.Carrotstore_AppId);
-            frm_update_scores.AddField("scores", scores);
-            frm_update_scores.AddField("type", type);
-            frm_update_scores.AddField("id_user", this.carrot.user.get_id_user_login());
-            frm_update_scores.AddField("lang_user", this.carrot.user.get_lang_user_login());
-            //this.carrot.send_hide(frm_update_scores);
             this.carrot.show_loading();
             CollectionReference RateDbRef = this.carrot.db.Collection("app");
             DocumentReference RankRef = RateDbRef.Document(this.carrot.Carrotstore_AppId);
@@ -623,8 +616,13 @@ namespace Carrot
                 {
                     this.carrot.hide_loading();
                     IDictionary app = snapshot.ToDictionary();
-                    IList rank = (IList)app["rank"];
+                    IList rank;
+                    if (app["rank"] != null) rank = (IList)app["rank"];
+                    else rank = new List<IDictionary>();
+
                     Carrot_Rate_data rate = new Carrot_Rate_data();
+                    rate.comment = type.ToString();
+                    rate.star = scores.ToString();
                     rate.date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ");
                     Carrot_Rate_user_data user_login = new Carrot_Rate_user_data();
                     user_login.name = this.carrot.user.get_data_user_login("name");
@@ -633,6 +631,7 @@ namespace Carrot
                     user_login.avatar = this.carrot.user.get_data_user_login("avatar");
                     rate.user = user_login;
 
+                    rank.Add(rate);
                     Dictionary<string, object> UpdateData = new Dictionary<string, object> { { "rank", rank } };
                     RankRef.UpdateAsync(UpdateData);
                     this.carrot.show_msg(PlayerPrefs.GetString("send_feedback", "Send Feedback"), PlayerPrefs.GetString("rate_thanks", "Send your comments to the successful developer. Thanks for your feedback!"), Msg_Icon.Success);
