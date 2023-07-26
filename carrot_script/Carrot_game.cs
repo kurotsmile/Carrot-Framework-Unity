@@ -551,9 +551,76 @@ namespace Carrot
 
         public void Show_List_Top_player()
         {
-            WWWForm frm_rank = this.carrot.frm_act("list_top_player");
-            frm_rank.AddField("id_app",this.carrot.Carrotstore_AppId);
-            //act_success_list_top_player
+            this.carrot.show_loading();
+            DocumentReference AppRankRef = this.carrot.db.Collection("app").Document(this.carrot.Carrotstore_AppId);
+            AppRankRef.GetSnapshotAsync().ContinueWithOnMainThread(task => {
+                var snapshot = task.Result;
+                if (task.IsFaulted)
+                {
+                    this.carrot.hide_loading();
+                    this.carrot.log(task.Exception.Message);
+                }
+
+                if (task.IsCompleted)
+                {
+                    this.carrot.hide_loading();
+                    if (snapshot.Exists)
+                    {
+                        IDictionary data_app = snapshot.ToDictionary();
+                        if (data_app["rank"] != null)
+                        {
+                            IList list_rank = (IList)data_app["rank"];
+
+                            Carrot_Box Box_top_palyer = this.carrot.Create_Box();
+                            Box_top_palyer.set_icon(this.icon_top_player);
+                            Box_top_palyer.set_title("Player rankings");
+
+                            string id_user_cur = this.carrot.user.get_id_user_login();
+                            for (int i = 0; i < list_rank.Count; i++)
+                            {
+                                IDictionary data_rank = (IDictionary)list_rank[i];
+                                IDictionary data_user = (IDictionary)data_rank["user"];
+                                var user_id= data_user["id"].ToString();
+                                var user_lang= data_user["lang"].ToString();
+                                GameObject obj_item_player_top = Instantiate(this.item_top_player_prefab);
+                                obj_item_player_top.transform.SetParent(Box_top_palyer.area_all_item);
+                                obj_item_player_top.transform.localPosition = new Vector3(obj_item_player_top.transform.localPosition.x, obj_item_player_top.transform.localPosition.y, 0f);
+                                obj_item_player_top.transform.localScale = new Vector3(1f, 1f, 1f);
+                                obj_item_player_top.transform.localRotation = Quaternion.identity;
+                                Carrot_Item_top_player top_player = obj_item_player_top.GetComponent<Carrot_Item_top_player>();
+                                top_player.txt_user_name.text = data_user["name"].ToString();
+                                top_player.txt_user_scores.text = data_rank["scores"].ToString();
+                                top_player.user_id = data_user["id"].ToString();
+                                top_player.user_lang = data_user["lang"].ToString();
+                                if (i < this.icon_rank_player.Length)
+                                {
+                                    top_player.img_rank.gameObject.SetActive(true);
+                                    top_player.img_rank.sprite = this.icon_rank_player[i];
+                                }
+                                else
+                                {
+                                    top_player.img_rank.gameObject.SetActive(false);
+                                }
+                                if (id_user_cur == top_player.user_id) top_player.GetComponent<Image>().color = this.carrot.get_color_highlight_blur(100);
+                                Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_" + top_player.user_id);
+                                if (sp_avatar != null)
+                                {
+                                    top_player.img_user.sprite = sp_avatar;
+                                    top_player.img_user.color = Color.white;
+                                }
+                                else
+                                    this.carrot.get_img_and_save_playerPrefs(data_user["avatar"].ToString(), top_player.img_user, "avatar_user_" + top_player.user_id);
+
+                                top_player.set_act_click(()=>this.carrot.user.show_user_by_id(user_id, user_lang));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this.carrot.show_msg("Player rankings", "There are no ranks in the list");
+                    }
+                }
+            });
         }
 
         private void act_success_list_top_player(string s_data)

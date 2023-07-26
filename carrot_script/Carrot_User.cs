@@ -155,9 +155,9 @@ namespace Carrot
                 info_avatar.set_icon(this.carrot.icon_carrot_avatar);
                 info_avatar.set_title(PlayerPrefs.GetString("user_avatar", "Avatar"));
                 info_avatar.set_tip(data_user["avatar"].ToString());
-                Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("carrot_user_avatar");
+                Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_"+data_user["id"]);
                 if (sp_avatar != null) info_avatar.set_icon_white(sp_avatar);
-                else this.carrot.get_img_and_save_playerPrefs(data_user["avatar"].ToString(), info_avatar.img_icon, "carrot_user_avatar");
+                else this.carrot.get_img_and_save_playerPrefs(data_user["avatar"].ToString(), info_avatar.img_icon, "avatar_user_"+data_user["id"]);
             }
 
             Carrot_Box_Item info_name = this.box_list.create_item("info_name");
@@ -658,7 +658,22 @@ namespace Carrot
 
         public void show_user_by_id(string s_id_user, string s_lang_user)
         {
-
+            DocumentReference UserRef = this.carrot.db.Collection("user-"+s_lang_user).Document(s_id_user);
+            UserRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+            {
+                var snapshot = task.Result;
+                if (snapshot.Exists)
+                {
+                    IDictionary data_user = snapshot.ToDictionary();
+                    data_user["id"] = snapshot.Id;
+                    this.show_info_user_by_data(data_user);
+                }
+                else
+                {
+                    this.carrot.show_msg(PlayerPrefs.GetString("acc_info", "Account Information"), "Account not found", Msg_Icon.Alert);
+                }
+                
+            });
         }
 
         public void show_user_by_id(string s_id_user, string s_lang_user, UnityAction<string> act_after)

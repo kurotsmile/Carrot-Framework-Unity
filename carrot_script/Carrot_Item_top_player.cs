@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Carrot
@@ -12,9 +13,16 @@ namespace Carrot
         public string user_id;
         public string user_lang;
 
+        private UnityAction act_click=null;
+
         public void click()
         {
-            GameObject.Find("Carrot").GetComponent<Carrot>().user.show_user_by_id(this.user_id, this.user_lang);
+            if (this.act_click != null) this.act_click.Invoke();
+        }
+
+        public void set_act_click(UnityAction act_click)
+        {
+            this.act_click = act_click;
         }
     }
 }
