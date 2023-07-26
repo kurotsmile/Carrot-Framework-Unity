@@ -310,7 +310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99072c8f0c1c9014fa8cd890c4a3da76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  host_app: 1
+  localhost: localhost:8082
   model_app: 1
   os_app: 0
   store_public: 0
@@ -393,8 +393,8 @@ MonoBehaviour:
   icon_carrot_address: {fileID: 21300000, guid: 22d21ea8dc1037f498cca0bd8d3fe0c3, type: 3}
   icon_carrot_avatar: {fileID: 21300000, guid: 26117a546c2b06445b81097d129f4df5, type: 3}
   icon_carrot_sex: {fileID: 21300000, guid: 70cc62a2713c9314989c8ca5252c1d8c, type: 3}
-  icon_carrot_sex_boy: {fileID: 21300000, guid: 193281141b87eb74d80f6a22097d53e7, type: 3}
-  icon_carrot_sex_girl: {fileID: 21300000, guid: f69c71104e56d2c4cbb492034b54c81e, type: 3}
+  icon_carrot_sex_boy: {fileID: 21300000, guid: 6208b510c5037644b89a34a5213990f9, type: 3}
+  icon_carrot_sex_girl: {fileID: 21300000, guid: 55538982356e0ef4cb5bc2459757b329, type: 3}
   icon_carrot_location: {fileID: 21300000, guid: 2192c1071baa57e45b5dbf180d701056, type: 3}
   icon_carrot_database: {fileID: 21300000, guid: 58edc83812032a14399057ee06a50fc3, type: 3}
   carrot_lost_internet: {fileID: 0}
