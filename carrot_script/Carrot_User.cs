@@ -165,37 +165,49 @@ namespace Carrot
             info_name.set_title(PlayerPrefs.GetString("user_name","Full name"));
             info_name.set_tip(data_user["name"].ToString());
 
-            if (data_user["email"].ToString() != "")
+            if (data_user["email"] != null)
             {
-                Carrot_Box_Item info_email = this.box_list.create_item("info_email");
-                info_email.set_icon(this.carrot.icon_carrot_mail);
-                info_email.set_title("Email box (Email)");
-                info_email.set_tip(data_user["email"].ToString());
+                if (data_user["email"].ToString() != "")
+                {
+                    Carrot_Box_Item info_email = this.box_list.create_item("info_email");
+                    info_email.set_icon(this.carrot.icon_carrot_mail);
+                    info_email.set_title("Email box (Email)");
+                    info_email.set_tip(data_user["email"].ToString());
+                }
             }
 
-            Carrot_Box_Item info_sex = this.box_list.create_item("info_sex");
-            info_sex.set_icon(this.carrot.icon_carrot_sex);
-            info_sex.set_title(PlayerPrefs.GetString("user_sex", "Gender"));
-            if(data_user["sex"].ToString()=="0")
-                info_sex.set_tip(PlayerPrefs.GetString("user_sex_boy", "Boy"));
-            else
-                info_sex.set_tip(PlayerPrefs.GetString("user_sex_girl", "Girl"));
-
-            if (data_user["phone"].ToString() != "")
+            if (data_user["sex"] != null)
             {
-                Carrot_Box_Item info_phone = this.box_list.create_item("info_phone");
-                info_phone.set_icon(this.carrot.icon_carrot_phone);
-                info_phone.set_title(PlayerPrefs.GetString("user_phone", "Phone number"));
-                info_phone.set_tip(data_user["phone"].ToString());
+                Carrot_Box_Item info_sex = this.box_list.create_item("info_sex");
+                info_sex.set_icon(this.carrot.icon_carrot_sex);
+                info_sex.set_title(PlayerPrefs.GetString("user_sex", "Gender"));
+                if (data_user["sex"].ToString() == "0")
+                    info_sex.set_tip(PlayerPrefs.GetString("user_sex_boy", "Boy"));
+                else
+                    info_sex.set_tip(PlayerPrefs.GetString("user_sex_girl", "Girl"));
             }
 
-            IDictionary us_address = (IDictionary)data_user["address"];
-            if (us_address["name"].ToString() != "")
+            if (data_user["phone"]!=null)
             {
-                Carrot_Box_Item info_address = this.box_list.create_item("info_address");
-                info_address.set_icon(this.carrot.icon_carrot_address);
-                info_address.set_title(PlayerPrefs.GetString("user_address", "Your address"));
-                info_address.set_tip(us_address["name"].ToString());
+                if (data_user["phone"].ToString() != "")
+                {
+                    Carrot_Box_Item info_phone = this.box_list.create_item("info_phone");
+                    info_phone.set_icon(this.carrot.icon_carrot_phone);
+                    info_phone.set_title(PlayerPrefs.GetString("user_phone", "Phone number"));
+                    info_phone.set_tip(data_user["phone"].ToString());
+                }
+            }
+
+            if (data_user["address"] != null)
+            {
+                IDictionary us_address = (IDictionary)data_user["address"];
+                if (us_address["name"].ToString() != "")
+                {
+                    Carrot_Box_Item info_address = this.box_list.create_item("info_address");
+                    info_address.set_icon(this.carrot.icon_carrot_address);
+                    info_address.set_title(PlayerPrefs.GetString("user_address", "Your address"));
+                    info_address.set_tip(us_address["name"].ToString());
+                }
             }
 
             Carrot_Box_Item info_status = this.box_list.create_item("info_status");

@@ -106,8 +106,8 @@ namespace Carrot
                     this.carrot.hide_loading();
                     IDictionary app= snapshot.ToDictionary();
                     IList rates;
-                    if (app["rates"] != null) rates = (IList)app["rates"];
-                    else rates = new List<IDictionary>();
+                    if (app["rates"] != null) rates=(IList)app["rates"];
+                    else rates =(IList)Json.Deserialize("[]");
 
                     this.index_star_feedback++;
                     Carrot_Rate_data rate = new Carrot_Rate_data();

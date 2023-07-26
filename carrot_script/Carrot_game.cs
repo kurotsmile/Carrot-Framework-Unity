@@ -11,6 +11,19 @@ using UnityEngine.UI;
 
 namespace Carrot
 {
+    [FirestoreData]
+    public struct Carrot_rank_data
+    {
+        [FirestoreProperty]
+        public Carrot_Rate_user_data user { get; set; }
+        [FirestoreProperty]
+        public string type { get; set; }
+        [FirestoreProperty]
+        public string scores { get; set; }
+        [FirestoreProperty]
+        public string date { get; set; }
+    }
+
     public class Carrot_game : MonoBehaviour
     {
         private Carrot carrot;
@@ -607,7 +620,6 @@ namespace Carrot
         public void update_scores_player(int scores,int type=0)
         {
             if (this.carrot.user.get_id_user_login() == "") return;
-            this.carrot.show_loading();
             CollectionReference RateDbRef = this.carrot.db.Collection("app");
             DocumentReference RankRef = RateDbRef.Document(this.carrot.Carrotstore_AppId);
             RankRef.GetSnapshotAsync().ContinueWithOnMainThread((task) => {
@@ -618,23 +630,22 @@ namespace Carrot
                     IDictionary app = snapshot.ToDictionary();
                     IList rank;
                     if (app["rank"] != null) rank = (IList)app["rank"];
-                    else rank = new List<IDictionary>();
+                    else rank = (IList)Json.Deserialize("[]");
 
-                    Carrot_Rate_data rate = new Carrot_Rate_data();
-                    rate.comment = type.ToString();
-                    rate.star = scores.ToString();
-                    rate.date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ");
+                    Carrot_rank_data rank_item = new Carrot_rank_data();
+                    rank_item.type = type.ToString();
+                    rank_item.scores = scores.ToString();
+                    rank_item.date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ");
                     Carrot_Rate_user_data user_login = new Carrot_Rate_user_data();
                     user_login.name = this.carrot.user.get_data_user_login("name");
                     user_login.id = this.carrot.user.get_id_user_login();
                     user_login.lang = this.carrot.user.get_lang_user_login();
                     user_login.avatar = this.carrot.user.get_data_user_login("avatar");
-                    rate.user = user_login;
+                    rank_item.user = user_login;
 
-                    rank.Add(rate);
+                    rank.Add(rank_item);
                     Dictionary<string, object> UpdateData = new Dictionary<string, object> { { "rank", rank } };
                     RankRef.UpdateAsync(UpdateData);
-                    this.carrot.show_msg(PlayerPrefs.GetString("send_feedback", "Send Feedback"), PlayerPrefs.GetString("rate_thanks", "Send your comments to the successful developer. Thanks for your feedback!"), Msg_Icon.Success);
                 }
                 else
                 {
