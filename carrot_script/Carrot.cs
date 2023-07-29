@@ -37,7 +37,6 @@ namespace Carrot
         private string s_os;
         private string s_store;
         public string collection_document_lang;
-        public string path_php_file_action;
         public string WindowUWP_ProductId;
         public string Carrotstore_AppId;
         public Color32 color_highlight;
