@@ -25,6 +25,7 @@ namespace Carrot
     {
         [Header("Config App")]
         public string localhost = "localhost:8082";
+        public string mainhost = "https://carrotstore.web.app";
         public ModelApp model_app;
         public OS os_app;
         public Store store_public;
@@ -37,7 +38,6 @@ namespace Carrot
         private string s_store;
         public string collection_document_lang;
         public string path_php_file_action;
-        public string link_share_app;
         public string WindowUWP_ProductId;
         public string Carrotstore_AppId;
         public Color32 color_highlight;
@@ -298,6 +298,7 @@ namespace Carrot
             this.play_sound_click();
             GameObject window_share=this.create_window(this.window_share_prefab);
             window_share.GetComponent<Carrot_Window_Share>().load(this);
+            window_share.GetComponent<Carrot_Window_Share>().inp_link_share.text =this.mainhost+"?p=app&id="+this.Carrotstore_AppId;
         }
 
         public void show_share(string link_customer,string s_share_tip)

@@ -71,7 +71,7 @@ namespace Carrot
 
         private void act_rate()
         {
-            if (this.carrot.type_rate == TypeRate.Link_Share_CarrotApp) Application.OpenURL(this.carrot.link_share_app);
+            if (this.carrot.type_rate == TypeRate.Link_Share_CarrotApp) Application.OpenURL(this.carrot.mainhost+"?p=app&id" +this.carrot.Carrotstore_AppId);
             if (this.carrot.type_rate == TypeRate.Market_Android) Application.OpenURL("market://details?id=" + Application.identifier);
             if (this.carrot.type_rate == TypeRate.Ms_Windows_Store) Application.OpenURL("ms-windows-store://review/?ProductId=" + this.carrot.WindowUWP_ProductId);
             if (this.carrot.type_rate == TypeRate.Amazon_app_store) Application.OpenURL("amzn://apps/android?p=" + Application.identifier);
@@ -183,8 +183,6 @@ namespace Carrot
                                         int index_star = int.Parse(rate["star"].ToString());
                                         btn_sel_rate(index_star);
                                     }
-
-                                    carrot.log("Co ma " + i + ":" + user_id_login);
                                     break;
                                 }
                             }

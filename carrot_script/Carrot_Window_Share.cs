@@ -23,7 +23,6 @@ namespace Carrot
             this.carrot = carrot;
             this.s_data_json_share = PlayerPrefs.GetString("s_data_json_share");
             this.txt_share_tip.text = PlayerPrefs.GetString("share_tip", "Choose the platform below to share this great app with your friends or others");
-            this.inp_link_share.text = this.carrot.link_share_app;
             this.UI.set_theme(this.carrot.color_highlight);
             if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.UI.get_list_btn());
             if (this.carrot.is_online())

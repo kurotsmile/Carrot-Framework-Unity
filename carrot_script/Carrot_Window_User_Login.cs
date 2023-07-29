@@ -114,7 +114,6 @@ namespace Carrot
 
         public void check_mode_login()
         {
-            Debug.Log("check_mode_login");
             if (this.is_model_login_email)
             {
                 this.inp_login_username.text = PlayerPrefs.GetString("login_username_mail");
