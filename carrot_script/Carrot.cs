@@ -188,12 +188,15 @@ namespace Carrot
 
         public void Load_Carrot()
         {
-            db = FirebaseFirestore.DefaultInstance;
 
+            this.db = FirebaseFirestore.DefaultInstance;
 #if UNITY_EDITOR
-            db.Settings.Host = this.localhost;
-            db.Settings.PersistenceEnabled = false;
-            db.Settings.SslEnabled = false;
+            if (db.Settings.Host != this.localhost)
+            {
+                db.Settings.Host = this.localhost;
+                db.Settings.PersistenceEnabled = false;
+                db.Settings.SslEnabled = false;
+            }
 #endif
             this.list_log = new List<string>();
 
