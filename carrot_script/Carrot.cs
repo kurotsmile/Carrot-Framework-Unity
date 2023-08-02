@@ -748,32 +748,8 @@ namespace Carrot
 
             if (this.setting_login == Setting_Option.Show)
             {
-                Carrot_Box_Item item_setting_login = box_setting.create_item("setting_login");
-                if (this.user.get_id_user_login() == "")
-                {
-                    item_setting_login.set_title(PlayerPrefs.GetString("login", "Login"));
-                    item_setting_login.set_tip(PlayerPrefs.GetString("login_tip", "Sign in to your carrot account to manage data, and use many other services"));
-                    item_setting_login.set_lang_data("login", "login_tip");
-
-                    Carrot_Box_Btn_Item item_btn_regiter= item_setting_login.create_item();
-                    item_btn_regiter.set_icon(this.user.icon_user_register);
-                    item_btn_regiter.set_color(this.color_highlight);
-                    item_btn_regiter.set_act(this.user.show_user_register);
-
-                    Carrot_Box_Btn_Item item_btn_password = item_setting_login.create_item();
-                    item_btn_password.set_icon(this.user.icon_user_change_password);
-                    item_btn_password.set_color(this.color_highlight);
-                    item_btn_password.set_act(this.user.show_window_lost_password);
-                }
-                else
-                {
-                    item_setting_login.set_title(PlayerPrefs.GetString("acc_info", "Account Information"));
-                    item_setting_login.set_tip(PlayerPrefs.GetString("acc_edit_tip", "Click this button to update account information"));
-                    item_setting_login.set_lang_data("acc_info", "acc_edit_tip");
-                }
-
-                item_setting_login.set_act(() => this.user.show_login(this.reload_setting));
-                this.user.load_avatar_user_login(item_setting_login.img_icon);
+                this.user.user_login_item_setting = box_setting.create_item("setting_login");
+                this.user.check_and_show_item_login_setting();
             }
 
             if (this.setting_rank == Setting_Option.Show)
@@ -926,8 +902,9 @@ namespace Carrot
             return box_setting;
         }
 
-        private void reload_setting()
+        public void reload_setting()
         {
+            if (this.user.get_cur_window_user_login() != null) this.user.get_cur_window_user_login().close();
             if (this.box_setting != null) this.box_setting.close();
             if (this.box_setting.get_act_before_closing()!=null)
             {

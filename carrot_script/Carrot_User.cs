@@ -106,6 +106,9 @@ namespace Carrot
         private string s_data_json_user_boy_avatar_offline;
         private string s_data_json_user_girl_avatar_offline;
 
+        private Carrot_Window_User_Login cur_window_user_login = null;
+        public Carrot_Box_Item user_login_item_setting = null;
+
         public void load(Carrot carrot)
         {
             this.carrot = carrot;
@@ -254,17 +257,24 @@ namespace Carrot
         private void act_logout()
         {
             this.delete_data_user_login();
+            this.check_and_show_item_login_setting();
             if (this.box_list != null) this.box_list.close();
         }
 
         private void show_window_login(UnityAction act_login_success)
         {
             GameObject window_login = this.carrot.create_window(this.window_login_prefab);
-            window_login.GetComponent<Carrot_Window_User_Login>().load(this.carrot);
-            window_login.GetComponent<Carrot_Window_User_Login>().act_after_login_success = act_login_success;
+            this.cur_window_user_login = window_login.GetComponent<Carrot_Window_User_Login>();
+            this.cur_window_user_login.load(this.carrot);
+            this.cur_window_user_login.act_after_login_success = act_login_success;
             window_login.GetComponent<Carrot_lang_show>().load_lang_emp(this.carrot.lang.get_sp_lang_cur());
-            window_login.GetComponent<Carrot_Window_User_Login>().check_mode_login();
-            if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(window_login.GetComponent<Carrot_UI>().get_list_btn());
+            this.cur_window_user_login.check_mode_login();
+            if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.cur_window_user_login.UI.get_list_btn());
+        }
+
+        public Carrot_Window_User_Login get_cur_window_user_login()
+        {
+            return this.cur_window_user_login;
         }
 
         public void show_window_lost_password()
@@ -404,6 +414,38 @@ namespace Carrot
         {
             this.s_id_user_login = "";
             this.edit_or_add_by_data(null);
+        }
+
+        public void check_and_show_item_login_setting()
+        {
+            if (this.user_login_item_setting != null)
+            {
+                if (this.get_id_user_login() == "")
+                {
+                    this.user_login_item_setting.set_title(PlayerPrefs.GetString("login", "Login"));
+                    this.user_login_item_setting.set_tip(PlayerPrefs.GetString("login_tip", "Sign in to your carrot account to manage data, and use many other services"));
+                    this.user_login_item_setting.set_lang_data("login", "login_tip");
+
+                    Carrot_Box_Btn_Item item_btn_regiter = this.user_login_item_setting.create_item();
+                    item_btn_regiter.set_icon(this.icon_user_register);
+                    item_btn_regiter.set_color(this.carrot.color_highlight);
+                    item_btn_regiter.set_act(this.show_user_register);
+
+                    Carrot_Box_Btn_Item item_btn_password = this.user_login_item_setting.create_item();
+                    item_btn_password.set_icon(this.icon_user_change_password);
+                    item_btn_password.set_color(this.carrot.color_highlight);
+                    item_btn_password.set_act(this.show_window_lost_password);
+                }
+                else
+                {
+                    this.user_login_item_setting.set_title(PlayerPrefs.GetString("acc_info", "Account Information"));
+                    this.user_login_item_setting.set_tip(PlayerPrefs.GetString("acc_edit_tip", "Click this button to update account information"));
+                    this.user_login_item_setting.set_lang_data("acc_info", "acc_edit_tip");
+                }
+
+                this.user_login_item_setting.set_act(() => this.show_login(this.carrot.reload_setting));
+                this.load_avatar_user_login(this.user_login_item_setting.img_icon);
+            }
         }
 
         private void edit_or_add_by_data(IDictionary data)
