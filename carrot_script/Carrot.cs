@@ -731,6 +731,7 @@ namespace Carrot
                 this.box_setting.set_icon(this.sp_icon_dev);
 
             box_setting.name = "Box Setting";
+            box_setting.set_title(PlayerPrefs.GetString("setting", "Setting"));
             Button btn_icon_setting=this.box_setting.img_icon.gameObject.AddComponent<Button>();
             btn_icon_setting.onClick.AddListener(() => this.act_check_change_model_app());
 
