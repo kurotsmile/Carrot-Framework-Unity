@@ -75,7 +75,6 @@ namespace Carrot
         public Sprite icon_user_logout;
         public Sprite icon_user_done;
         public Sprite icon_user_change_password;
-        public Sprite icon_user_forgot_password;
 
         [Header("Infor user")]
         public Color32 color_edit;
@@ -280,7 +279,7 @@ namespace Carrot
         public void show_window_lost_password()
         {
             this.box_list = this.carrot.Create_Box();
-            this.box_list.set_icon(this.icon_user_forgot_password);
+            this.box_list.set_icon(this.icon_user_change_password);
             this.box_list.set_title(PlayerPrefs.GetString("forgot_password", "Forgot password"));
 
             Carrot_Box_Item item_tip=this.box_list.create_item("item_username");

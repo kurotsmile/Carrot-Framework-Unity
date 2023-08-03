@@ -311,6 +311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localhost: localhost:8082
+  mainhost: https://carrotstore.web.app
   model_app: 1
   os_app: 0
   store_public: 0
@@ -320,8 +321,6 @@ MonoBehaviour:
   type_ads: 0
   type_control: 0
   collection_document_lang: 
-  path_php_file_action: app_mobile/carrot_framework/app.php
-  link_share_app: https://carrotstore.com
   WindowUWP_ProductId: 
   Carrotstore_AppId: 
   color_highlight:
@@ -525,7 +524,7 @@ MonoBehaviour:
   icon_user_logout: {fileID: 21300000, guid: 3c3af017ee959024885b09d5cc86689f, type: 3}
   icon_user_done: {fileID: 21300000, guid: fd01247be9ba67b49bdb2720deefe5bc, type: 3}
   icon_user_change_password: {fileID: 21300000, guid: 26ca8fd801b015c4ab5591268c1981d8, type: 3}
-  icon_user_forgot_password: {fileID: 21300000, guid: 541224acb1b163f4f91185f4cfda195e, type: 3}
+  icon_user_forgot_password: {fileID: 21300000, guid: 26ca8fd801b015c4ab5591268c1981d8, type: 3}
   color_edit:
     serializedVersion: 2
     rgba: 4291552511
@@ -535,6 +534,7 @@ MonoBehaviour:
   color_change_password:
     serializedVersion: 2
     rgba: 4294960580
+  user_login_item_setting: {fileID: 0}
 --- !u!114 &1244711569507986795
 MonoBehaviour:
   m_ObjectHideFlags: 0
