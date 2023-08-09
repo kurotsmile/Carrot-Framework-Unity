@@ -144,7 +144,7 @@ namespace Carrot
             show_info_user_by_data(data_user);
         }
 
-        public void show_info_user_by_data(IDictionary data_user)
+        public Carrot_Box show_info_user_by_data(IDictionary data_user)
         {
             if (this.box_list != null) this.box_list.close();
             this.box_list = this.carrot.Create_Box();
@@ -248,6 +248,8 @@ namespace Carrot
                 btn_canel.set_act_click(() => this.act_close_box());
             }
             this.box_list.update_gamepad_cosonle_control();
+
+            return this.box_list;
         }
 
         private void act_show_edit_user(IDictionary data_user)
@@ -701,21 +703,32 @@ namespace Carrot
 
         public void show_user_by_id(string s_id_user, string s_lang_user)
         {
+            this.carrot.play_sound_click();
+            this.carrot.show_loading();
             DocumentReference UserRef = this.carrot.db.Collection("user-"+s_lang_user).Document(s_id_user);
             UserRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
             {
                 var snapshot = task.Result;
-                if (snapshot.Exists)
+                if (task.IsCompleted)
                 {
-                    IDictionary data_user = snapshot.ToDictionary();
-                    data_user["id"] = snapshot.Id;
-                    this.show_info_user_by_data(data_user);
+                    this.carrot.hide_loading();
+                    if (snapshot.Exists)
+                    {
+                        IDictionary data_user = snapshot.ToDictionary();
+                        data_user["id"] = snapshot.Id;
+                        this.show_info_user_by_data(data_user);
+                    }
+                    else
+                    {
+                        this.carrot.show_msg(PlayerPrefs.GetString("acc_info", "Account Information"), "Account not found", Msg_Icon.Alert);
+                    }
                 }
-                else
+
+                if (task.IsFaulted)
                 {
-                    this.carrot.show_msg(PlayerPrefs.GetString("acc_info", "Account Information"), "Account not found", Msg_Icon.Alert);
+                    this.carrot.hide_loading();
+                    this.carrot.show_msg(PlayerPrefs.GetString("acc_info", "Account Information"), "The operation failed, please try again next time!", Msg_Icon.Error);
                 }
-                
             });
         }
 
