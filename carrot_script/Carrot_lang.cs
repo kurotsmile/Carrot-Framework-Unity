@@ -195,13 +195,25 @@ namespace Carrot
                 DocumentReference langRef = this.carrot.db.Collection(this.carrot.collection_document_lang).Document(s_key);
                 langRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
                 {
+                    DocumentSnapshot collectionSnapshot = task.Result;
                     if (task.IsCompleted)
                     {
-                        DocumentSnapshot collectionSnapshot = task.Result;
-                        IDictionary lang_data_customer = collectionSnapshot.ToDictionary();
-                        foreach (var key in lang_data_customer.Keys) PlayerPrefs.SetString(key.ToString(), lang_data_customer[key.ToString()].ToString());
+                        if (collectionSnapshot.Exists)
+                        {
+                            IDictionary lang_data_customer = collectionSnapshot.ToDictionary();
+                            foreach (var key in lang_data_customer.Keys) PlayerPrefs.SetString(key.ToString(), lang_data_customer[key.ToString()].ToString());
+                            this.change_lang(s_key);
+                            this.data_lang_offline["lang_data_customer_" + s_key] = Json.Serialize(lang_data_customer);
+                        }
+                        else
+                        {
+                            this.change_lang(s_key);
+                        }
+                    }
+
+                    if (task.IsFaulted)
+                    {
                         this.change_lang(s_key);
-                        this.data_lang_offline["lang_data_customer_" + s_key] = Json.Serialize(lang_data_customer);
                     }
                 });
             }
@@ -215,8 +227,10 @@ namespace Carrot
 
             if (this.carrot.collection_document_lang != "")
             {
-                IDictionary lang_data_customer=(IDictionary)Json.Deserialize(this.data_lang_offline["lang_data_customer_"+s_key].ToString());
-                foreach (var key in lang_data_customer.Keys) PlayerPrefs.SetString(key.ToString(), lang_data_customer[key.ToString()].ToString());
+                if(this.data_lang_offline["lang_data_customer_" + s_key] != null) { 
+                    IDictionary lang_data_customer=(IDictionary)Json.Deserialize(this.data_lang_offline["lang_data_customer_"+s_key].ToString());
+                    foreach (var key in lang_data_customer.Keys) PlayerPrefs.SetString(key.ToString(), lang_data_customer[key.ToString()].ToString());
+                }
                 this.change_lang(s_key);
             }
         }

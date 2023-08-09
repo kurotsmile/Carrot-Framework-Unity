@@ -61,7 +61,7 @@ namespace Carrot
 
         public GameObject window_login_prefab;
 
-        public UnityAction<IDictionary> act_after_show_view_by_id;
+        private UnityAction<IDictionary> act_after_show_view_by_id = null;
         public UnityAction<string> event_customer_user_field;
 
         public string[] list_id_field_advanced;
@@ -248,7 +248,11 @@ namespace Carrot
                 btn_canel.set_act_click(() => this.act_close_box());
             }
             this.box_list.update_gamepad_cosonle_control();
-            if (this.act_after_show_view_by_id != null) this.act_after_show_view_by_id(data_user);
+            if (this.act_after_show_view_by_id != null)
+            {
+                this.carrot.show_msg("sdsd");
+                this.act_after_show_view_by_id.Invoke(data_user);
+            }
             return this.box_list;
         }
 
