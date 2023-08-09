@@ -61,7 +61,7 @@ namespace Carrot
 
         public GameObject window_login_prefab;
 
-        public UnityAction<string> act_after_show_view_by_id;
+        public UnityAction<IDictionary> act_after_show_view_by_id;
         public UnityAction<string> event_customer_user_field;
 
         public string[] list_id_field_advanced;
@@ -248,7 +248,7 @@ namespace Carrot
                 btn_canel.set_act_click(() => this.act_close_box());
             }
             this.box_list.update_gamepad_cosonle_control();
-
+            if (this.act_after_show_view_by_id != null) this.act_after_show_view_by_id(data_user);
             return this.box_list;
         }
 
@@ -732,7 +732,7 @@ namespace Carrot
             });
         }
 
-        public void show_user_by_id(string s_id_user, string s_lang_user, UnityAction<string> act_after)
+        public void show_user_by_id(string s_id_user, string s_lang_user, UnityAction<IDictionary> act_after)
         {
             this.act_after_show_view_by_id = act_after;
             this.show_user_by_id(s_id_user, s_lang_user);
