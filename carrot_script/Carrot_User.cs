@@ -250,8 +250,8 @@ namespace Carrot
             this.box_list.update_gamepad_cosonle_control();
             if (this.act_after_show_view_by_id != null)
             {
-                this.carrot.show_msg("sdsd");
                 this.act_after_show_view_by_id.Invoke(data_user);
+                this.act_after_show_view_by_id = null;
             }
             return this.box_list;
         }
