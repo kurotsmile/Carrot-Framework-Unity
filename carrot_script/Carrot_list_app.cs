@@ -123,6 +123,8 @@ namespace Carrot
                         {
                             IDictionary app_data = document.ToDictionary();
                             app_data["id"] = document.Id;
+                            if(app_data["rates"] != null) app_data.Remove("rates");
+                            if(app_data["rank"] != null) app_data.Remove("rank");
                             add_item_to_list_box(app_data);
                             list_app.Add(app_data);
                         };
