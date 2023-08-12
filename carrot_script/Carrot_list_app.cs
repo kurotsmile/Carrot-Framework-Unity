@@ -315,6 +315,8 @@ namespace Carrot
                     {
                         IDictionary app_data = document.ToDictionary();
                         app_data["id"] = document.Id;
+                        if (app_data["rates"] != null) app_data.Remove("rates");
+                        if (app_data["rank"] != null) app_data.Remove("rank");
                         list_app.Add(app_data);
                         if (count_app_exit < 10) add_item_app_exit(app_data);
                         count_app_exit++;
