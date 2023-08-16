@@ -28,6 +28,7 @@ namespace Carrot
             obj_btn_ext.transform.SetParent(this.area_list_app);
             obj_btn_ext.transform.localScale = new Vector3(1f, 1f, 1f);
             obj_btn_ext.transform.localPosition = Vector3.zero;
+            obj_btn_ext.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
             return obj_btn_ext.GetComponent<Carrot_Button_Item>();
         }
     }
