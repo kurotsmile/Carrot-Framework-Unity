@@ -614,6 +614,10 @@ namespace Carrot
                                 top_player.set_act_click(()=>this.carrot.user.show_user_by_id(user_id, user_lang));
                             }
                         }
+                        else
+                        {
+                            this.carrot.show_msg("Player rankings", "There are no ranks in the list");
+                        }
                     }
                     else
                     {
