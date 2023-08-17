@@ -472,18 +472,18 @@ MonoBehaviour:
   icon_top_player: {fileID: 21300000, guid: 2e78053b6ff70004d8ac3db19e5b85c4, type: 3}
   item_top_player_prefab: {fileID: 9017743497284892556, guid: 28f16e3fd80edf542a874c4de0865342, type: 3}
   icon_rank_player:
-  - {fileID: 191776466, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
-  - {fileID: 1824322730, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
-  - {fileID: -387310037, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
-  - {fileID: 819588914, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
-  - {fileID: 24563803, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
-  - {fileID: 1498617873, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
-  - {fileID: 1380233350, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
-  - {fileID: 1690791974, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
-  - {fileID: -951256485, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
-  - {fileID: 424866336, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
-  - {fileID: 1630661498, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
-  - {fileID: -1166193441, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 1742048843, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 1136403910, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: -760152115, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 1041476653, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: -1116225252, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: -1852294947, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: -2053819842, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 992102477, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: -1521975939, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 1115052144, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: 1611117314, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
+  - {fileID: -696598731, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
 --- !u!114 &1438298178766269817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,7 +524,6 @@ MonoBehaviour:
   icon_user_logout: {fileID: 21300000, guid: 3c3af017ee959024885b09d5cc86689f, type: 3}
   icon_user_done: {fileID: 21300000, guid: fd01247be9ba67b49bdb2720deefe5bc, type: 3}
   icon_user_change_password: {fileID: 21300000, guid: 26ca8fd801b015c4ab5591268c1981d8, type: 3}
-  icon_user_forgot_password: {fileID: 21300000, guid: 26ca8fd801b015c4ab5591268c1981d8, type: 3}
   color_edit:
     serializedVersion: 2
     rgba: 4291552511

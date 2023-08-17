@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -134,7 +134,259 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: carrot_game_rank_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 237.33334
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9837f60d18e331749a06c6bf2a2af773
+      internalID: 1742048843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: carrot_game_rank_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 237.33334
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 375427f533ca5f140a22c1c82e61a6f9
+      internalID: 1136403910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: carrot_game_rank_2
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 237.33334
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d3c4e71271a4f24bade9f79b53c647b
+      internalID: -760152115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: carrot_game_rank_3
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 237.33334
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec64639630cb8084b83a6ac3f9c8c913
+      internalID: 1041476653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: carrot_game_rank_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 119.333336
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6e2c4112b4e731459b31dee1d55e108
+      internalID: -1116225252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: carrot_game_rank_5
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 119.333336
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd16d5c7bd8e7594abe07320d933d17f
+      internalID: -1852294947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: carrot_game_rank_6
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 119.333336
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af162cf541d37ae45b5115de1a4f06b4
+      internalID: -2053819842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: carrot_game_rank_7
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 119.333336
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61f9f7757f6d6a04da813e8a5d00d690
+      internalID: 992102477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: carrot_game_rank_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1.3333359
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ef36638661165147ad0a79a573342b7
+      internalID: -1521975939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: carrot_game_rank_9
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 1.3333359
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 035d3a83585a3274e9cc751a35de341f
+      internalID: 1115052144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: carrot_game_rank_10
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 1.3333359
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e072dbc68abe454aad3054c6318c62c
+      internalID: 1611117314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: carrot_game_rank_11
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 1.3333359
+        width: 112.5
+        height: 118.666664
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c84b231acfd2664e8dc2e593fcc9a39
+      internalID: -696598731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -145,7 +397,19 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      carrot_game_rank_0: 1742048843
+      carrot_game_rank_1: 1136403910
+      carrot_game_rank_10: 1611117314
+      carrot_game_rank_11: -696598731
+      carrot_game_rank_2: -760152115
+      carrot_game_rank_3: 1041476653
+      carrot_game_rank_4: -1116225252
+      carrot_game_rank_5: -1852294947
+      carrot_game_rank_6: -2053819842
+      carrot_game_rank_7: 992102477
+      carrot_game_rank_8: -1521975939
+      carrot_game_rank_9: 1115052144
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
