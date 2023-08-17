@@ -14,8 +14,6 @@ namespace Carrot
         public Sprite sp_lang_default_en;
         private Carrot carrot;
         private string s_lang_key;
-        public string[] key;
-        public Text[] emp_val;
 
         private UnityAction<string> act_after_selecting_lang;
         private Carrot_Box box_lang;
@@ -161,7 +159,6 @@ namespace Carrot
 
         public void load_lang_emp()
         {
-            for (int i = 0; i < emp_val.Length; i++) if (PlayerPrefs.GetString(this.key[i], "") != "") this.emp_val[i].text = PlayerPrefs.GetString(this.key[i]);
             if (this.carrot.emp_show_lang != null)
             {
                 for (int i = 0; i < this.carrot.emp_show_lang.key.Length; i++)

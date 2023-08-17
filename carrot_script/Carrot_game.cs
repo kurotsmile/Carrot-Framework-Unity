@@ -61,6 +61,7 @@ namespace Carrot
         public GameObject item_top_player_prefab;
         public Sprite[] icon_rank_player;
         private string s_data_offline_rank_player;
+        private int index_edit_rank = -1;
 
         public void load_carrot_game()
         {
@@ -601,7 +602,11 @@ namespace Carrot
                                 {
                                     top_player.img_rank.gameObject.SetActive(false);
                                 }
-                                if (id_user_cur == top_player.user_id) top_player.GetComponent<Image>().color = this.carrot.get_color_highlight_blur(100);
+                                if (id_user_cur == top_player.user_id)
+                                {
+                                    this.index_edit_rank = i;
+                                    top_player.GetComponent<Image>().color = this.carrot.get_color_highlight_blur(100);
+                                }
                                 Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_" + top_player.user_id);
                                 if (sp_avatar != null)
                                 {
@@ -690,7 +695,8 @@ namespace Carrot
 
         public void update_scores_player(int scores,int type=0)
         {
-            if (this.carrot.user.get_id_user_login() == "") return;
+            string user_id_login = this.carrot.user.get_id_user_login();
+            if (user_id_login=="") return;
             CollectionReference RateDbRef = this.carrot.db.Collection("app");
             DocumentReference RankRef = RateDbRef.Document(this.carrot.Carrotstore_AppId);
             RankRef.GetSnapshotAsync().ContinueWithOnMainThread((task) => {
@@ -707,14 +713,34 @@ namespace Carrot
                     rank_item.type = type.ToString();
                     rank_item.scores = scores.ToString();
                     rank_item.date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ");
-                    Carrot_Rate_user_data user_login = new Carrot_Rate_user_data();
+                    Carrot_Rate_user_data user_login = new Carrot_Rate_user_data(); 
                     user_login.name = this.carrot.user.get_data_user_login("name");
                     user_login.id = this.carrot.user.get_id_user_login();
                     user_login.lang = this.carrot.user.get_lang_user_login();
                     user_login.avatar = this.carrot.user.get_data_user_login("avatar");
                     rank_item.user = user_login;
 
-                    rank.Add(rank_item);
+                    this.index_edit_rank = -1;
+                    if (rank.Count > 0)
+                    {
+                        for(int i = 0; i < rank.Count; i++)
+                        {
+                            IDictionary data_rank = (IDictionary) rank[i];
+                            if (data_rank["user"] != null)
+                            {
+                                IDictionary user_rank = (IDictionary)data_rank["user"];
+                                if(user_rank["id"].ToString()== user_id_login)
+                                {
+                                    this.index_edit_rank = i;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (this.index_edit_rank == -1)
+                        rank.Add(rank_item);
+                    else
+                        rank[this.index_edit_rank] = rank_item;
                     Dictionary<string, object> UpdateData = new Dictionary<string, object> { { "rank", rank } };
                     RankRef.UpdateAsync(UpdateData);
                 }
