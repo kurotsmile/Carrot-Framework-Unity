@@ -3,7 +3,7 @@ using Firebase.Firestore;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 namespace Carrot
 {
     public enum carrot_app_type { all, app, game }
@@ -65,13 +65,9 @@ namespace Carrot
                 if (this.carrot.s_data_json_carrotapp_app_temp == "")
                 {
                     if (this.carrot.is_online())
-                    {
                         this.load_list_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "app"));
-                    }
                     else
-                    {
-                        load_list_by_s_data(this.s_data_carrotapp_app);
-                    }    
+                        load_list_by_s_data(this.s_data_carrotapp_app);   
                 } 
                 else
                     load_list_by_s_data(this.carrot.s_data_json_carrotapp_app_temp);
@@ -275,15 +271,27 @@ namespace Carrot
             if (this.type == carrot_app_type.all)
             {
                 if (this.carrot.s_data_json_carrotapp_all_temp == "")
-                    this.act_load_app_where_exit_by_query(this.carrot.db.Collection("app").Limit(20));
+                {
+                    Query AppQuery = this.carrot.db.Collection("app");
+                    AppQuery = AppQuery.WhereEqualTo("status", "publish");
+                    AppQuery.Limit(20);
+                    this.act_load_app_where_exit_by_query(AppQuery);
+                }
                 else
+                {
                     this.act_load_app_where_exit_by_s_data(this.carrot.s_data_json_carrotapp_all_temp);
+                }
             }
 
             if (this.type == carrot_app_type.app)
             {
                 if (this.carrot.s_data_json_carrotapp_app_temp == "")
-                    this.act_load_app_where_exit_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "app").Limit(20));
+                {
+                    Query AppQuery = this.carrot.db.Collection("app");
+                    AppQuery = AppQuery.WhereEqualTo("status", "publish");
+                    AppQuery.Limit(20);
+                    this.act_load_app_where_exit_by_query(AppQuery);
+                }
                 else
                     this.act_load_app_where_exit_by_s_data(this.carrot.s_data_json_carrotapp_app_temp);
             }
@@ -291,7 +299,12 @@ namespace Carrot
             if (this.type == carrot_app_type.game)
             {
                 if (this.carrot.s_data_json_carrotapp_game_temp == "")
-                    this.act_load_app_where_exit_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "game").Limit(20));
+                {
+                    Query AppQuery = this.carrot.db.Collection("app");
+                    AppQuery = AppQuery.WhereEqualTo("status", "publish");
+                    AppQuery.Limit(20);
+                    this.act_load_app_where_exit_by_query(AppQuery);
+                }
                 else
                     this.act_load_app_where_exit_by_s_data(this.carrot.s_data_json_carrotapp_game_temp);
             }
