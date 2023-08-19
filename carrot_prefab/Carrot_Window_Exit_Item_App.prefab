@@ -110,7 +110,7 @@ RectTransform:
   m_Children:
   - {fileID: 3119793821622475370}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -199,9 +199,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Carrot_item_app, Assembly-CSharp
-        m_MethodName: click
+      - m_Target: {fileID: 2818650677905024516}
+        m_TargetAssemblyTypeName: Carrot.Carrot_Button_Item, Assembly-CSharp
+        m_MethodName: on_click
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
