@@ -48,6 +48,7 @@ namespace Carrot
 
         public void show_list_lang()
         {
+            this.carrot.show_loading();
             this.carrot.play_sound_click();
             this.act_after_selecting_lang = null;
 
@@ -67,6 +68,7 @@ namespace Carrot
                 {
                     if (langQuerySnapshot.Count > 0)
                     {
+                        this.carrot.hide_loading();
                         this.box_lang = this.carrot.Create_Box(PlayerPrefs.GetString("sel_lang_app", "Choose your language and country"), this.icon);
                         List<IDictionary> list_lang = new List<IDictionary>();
                         foreach (DocumentSnapshot documentSnapshot in langQuerySnapshot.Documents)
@@ -84,11 +86,17 @@ namespace Carrot
                         if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.box_lang.UI.get_list_btn());
                     }
                 }
+
+                if (task.IsFaulted)
+                {
+                    if (this.carrot.s_data_json_list_lang_temp !="") this.load_data_list_lang_by_s_data(this.carrot.s_data_json_list_lang_temp);
+                }
             });
         }
 
         private void load_data_list_lang_by_s_data(string s_data)
         {
+            this.carrot.hide_loading();
             this.carrot.log("load_data_list_lang_by_s_data");
             this.box_lang = this.carrot.Create_Box(PlayerPrefs.GetString("sel_lang_app", "Choose your language and country"), this.icon);
             IList list_lang = (IList) Json.Deserialize(s_data);
