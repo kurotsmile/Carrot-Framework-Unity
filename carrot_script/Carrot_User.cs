@@ -101,26 +101,18 @@ namespace Carrot
         private Carrot_Box_Btn_Item btn_model_advanced;
 
         user_carrot_address user_address;
-        private string s_data_json_user_all_avatar_offline;
-        private string s_data_json_user_boy_avatar_offline;
-        private string s_data_json_user_girl_avatar_offline;
+        private string s_data_json_avatar_offline;
 
         private Carrot_Window_User_Login cur_window_user_login = null;
         public Carrot_Box_Item user_login_item_setting = null;
+        private bool is_data_cache_avatar_ready = false;
 
         public void load(Carrot carrot)
         {
             this.carrot = carrot;
-            this.s_data_json_user_all_avatar_offline = PlayerPrefs.GetString("s_data_json_user_all_avatar_offline");
-            this.s_data_json_user_boy_avatar_offline= PlayerPrefs.GetString("s_data_json_user_boy_avatar_offline");
-            this.s_data_json_user_girl_avatar_offline= PlayerPrefs.GetString("s_data_json_user_girl_avatar_offline");
+            this.s_data_json_avatar_offline = PlayerPrefs.GetString("s_data_json_avatar_offline","");
 
-            if (this.carrot.is_offline())
-            {
-                this.carrot.s_data_json_user_girl_avatar = this.s_data_json_user_girl_avatar_offline;
-                this.carrot.s_data_json_user_boy_avatar = this.s_data_json_user_boy_avatar_offline;
-                this.carrot.s_data_json_user_all_avatar = this.s_data_json_user_all_avatar_offline;
-            }
+            if (this.carrot.is_offline()) this.is_data_cache_avatar_ready = true;
 
             this.s_data_user_login = PlayerPrefs.GetString("data_user_login");
             this.s_id_user_login = PlayerPrefs.GetString("id_user_login");
@@ -798,136 +790,92 @@ namespace Carrot
         {
             if (this.box_list_avatar != null) this.box_list_avatar.close();
 
-            if (this.type_list_avatar == Type_List_Avatar.all)
+            if (this.is_data_cache_avatar_ready)
             {
-                if(this.carrot.s_data_json_user_all_avatar=="")
-                    this.act_get_list_avatar_by_query(this.carrot.db.Collection("user-avatar"));
+                if (this.s_data_json_avatar_offline == "")
+                {
+                    this.act_get_list_avatar_from_sever();
+                }
                 else
-                    this.act_get_list_avatar_by_s_data(this.carrot.s_data_json_user_all_avatar);
+                {
+                    IList list_avatr = (IList)Json.Deserialize(this.s_data_json_avatar_offline);
+                    this.load_list_avatar(list_avatr);
+                }
+            }
+            else
+            {
+                this.act_get_list_avatar_from_sever();
             }
 
-            if (this.type_list_avatar == Type_List_Avatar.boy)
-            {
-                if (this.carrot.s_data_json_user_boy_avatar == "")
-                    this.act_get_list_avatar_by_query(this.carrot.db.Collection("user-avatar").WhereEqualTo("type", "boy"));
-                else
-                    this.act_get_list_avatar_by_s_data(this.carrot.s_data_json_user_boy_avatar);
-            }
-
-            if (this.type_list_avatar == Type_List_Avatar.girl)
-            {
-                if (this.carrot.s_data_json_user_girl_avatar == "")
-                    this.act_get_list_avatar_by_query(this.carrot.db.Collection("user-avatar").WhereEqualTo("type", "girl"));
-                else
-                    this.act_get_list_avatar_by_s_data(this.carrot.s_data_json_user_girl_avatar);
-            }
         }
 
-        private void act_get_list_avatar_by_query(Query AvatarQuery)
+        private void act_get_list_avatar_from_sever()
         {
+            this.carrot.show_loading();
+            Query AvatarQuery=this.carrot.db.Collection("user-avatar");
             this.carrot.log("act_get_list_avatar_by_query (" + this.type_list_avatar + ")");
             AvatarQuery.GetSnapshotAsync().ContinueWithOnMainThread(task => {
-                QuerySnapshot AvatarQuerySnapshot = task.Result;
+                QuerySnapshot AvatarQuerySnapshot = task.Result; 
 
                 if (task.IsFaulted)
                 {
-                    if (this.type_list_avatar ==Type_List_Avatar.all) this.act_get_list_avatar_by_s_data(this.s_data_json_user_all_avatar_offline);
-                    if (this.type_list_avatar ==Type_List_Avatar.boy) this.act_get_list_avatar_by_s_data(this.s_data_json_user_boy_avatar_offline);
-                    if (this.type_list_avatar ==Type_List_Avatar.girl) this.act_get_list_avatar_by_s_data(this.s_data_json_user_girl_avatar_offline);
+                    if (this.box_list_avatar != null) this.box_list_avatar.close();
                 }
 
                 if (task.IsCompleted)
                 {
                     if (AvatarQuerySnapshot.Count > 0)
                     {
-                        this.create_head_list_avatar();
-                        List<IDictionary> list_avatar = new List<IDictionary>();
+                        IList list_avatar = (IList) Json.Deserialize("[]");
                         foreach (DocumentSnapshot documentSnapshot in AvatarQuerySnapshot.Documents)
                         {
                             IDictionary avatar_data = documentSnapshot.ToDictionary();
                             avatar_data["id"] = documentSnapshot.Id;
-                            this.add_item_avatar_to_list_box(avatar_data);
                             list_avatar.Add(avatar_data);
                         };
 
-                        if (this.type_list_avatar == Type_List_Avatar.all)
-                        {
-                            this.s_data_json_user_all_avatar_offline = Json.Serialize(list_avatar);
-                            this.carrot.s_data_json_user_all_avatar = this.s_data_json_user_all_avatar_offline;
-                            PlayerPrefs.SetString("s_data_json_user_all_avatar_offline", this.s_data_json_user_all_avatar_offline);
-                        }
-
-                        if (this.type_list_avatar == Type_List_Avatar.boy)
-                        {
-                            this.s_data_json_user_boy_avatar_offline = Json.Serialize(list_avatar);
-                            this.carrot.s_data_json_user_boy_avatar = this.s_data_json_user_boy_avatar_offline;
-                            PlayerPrefs.SetString("s_data_json_user_boy_avatar_offline", this.s_data_json_user_boy_avatar_offline);
-                        }
-
-                        if (this.type_list_avatar == Type_List_Avatar.girl)
-                        {
-                            this.s_data_json_user_girl_avatar_offline = Json.Serialize(list_avatar);
-                            this.carrot.s_data_json_user_girl_avatar = this.s_data_json_user_boy_avatar_offline;
-                            PlayerPrefs.SetString("s_data_json_user_girl_avatar_offline", this.s_data_json_user_girl_avatar_offline);
-                        }
+                        this.s_data_json_avatar_offline = Json.Serialize(list_avatar);
+                        PlayerPrefs.SetString("s_data_json_avatar_offline", this.s_data_json_avatar_offline);
+                        this.is_data_cache_avatar_ready = true;
+                        this.load_list_avatar(list_avatar);
                     }
                 }
             });
         }
 
-        private void act_get_list_avatar_by_s_data(string s_data)
+        private void load_list_avatar(IList list_avatar)
         {
-            this.carrot.log("act_get_list_avatar_by_s_data (" + this.type_list_avatar + ")");
-            if (s_data == "") return;
-            this.create_head_list_avatar();
-            IList list_avatar = (IList)Json.Deserialize(s_data);
-            for(int i = 0; i < list_avatar.Count; i++)
-            {
-                IDictionary avatar_data =(IDictionary)list_avatar[i];
-                this.add_item_avatar_to_list_box(avatar_data);
-                list_avatar.Add(avatar_data);
-            }
-
-            if (this.type_list_avatar == Type_List_Avatar.all)
-            {
-                this.s_data_json_user_all_avatar_offline = Json.Serialize(list_avatar);
-                this.carrot.s_data_json_user_all_avatar = this.s_data_json_user_all_avatar_offline;
-                PlayerPrefs.SetString("s_data_json_user_all_avatar_offline", this.s_data_json_user_all_avatar_offline);
-            }
-
-            if (this.type_list_avatar == Type_List_Avatar.boy)
-            {
-                this.s_data_json_user_boy_avatar_offline = Json.Serialize(list_avatar);
-                this.carrot.s_data_json_user_boy_avatar = this.s_data_json_user_boy_avatar_offline;
-                PlayerPrefs.SetString("s_data_json_user_boy_avatar_offline", this.s_data_json_user_boy_avatar_offline);
-            }
-
-            if (this.type_list_avatar == Type_List_Avatar.girl)
-            {
-                this.s_data_json_user_girl_avatar_offline = Json.Serialize(list_avatar);
-                this.carrot.s_data_json_user_girl_avatar = this.s_data_json_user_boy_avatar_offline;
-                PlayerPrefs.SetString("s_data_json_user_girl_avatar_offline", this.s_data_json_user_girl_avatar_offline);
-            }
-        }
-
-        private void create_head_list_avatar()
-        {
+            if (this.box_list_avatar != null) this.box_list_avatar.close();
+            this.carrot.hide_loading();
             this.box_list_avatar = this.carrot.Create_Box("list_avatar");
             box_list_avatar.set_title(PlayerPrefs.GetString("user_avatar", "List Avatar"));
             box_list_avatar.set_icon(this.carrot.icon_carrot_avatar);
             box_list_avatar.set_type(Carrot_Box_Type.Grid_Box);
 
             Carrot_Box_Btn_Item btn_all = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_all_category);
-            btn_all.set_act(() => act_set_type_show_list_avatar(Type_List_Avatar.all));
+            btn_all.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.all));
             if (type_list_avatar == Type_List_Avatar.all) btn_all.set_icon_color(this.carrot.color_highlight);
 
             Carrot_Box_Btn_Item btn_boy = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_sex_boy);
-            btn_boy.set_act(() => act_set_type_show_list_avatar(Type_List_Avatar.boy));
+            btn_boy.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.boy));
             if (type_list_avatar == Type_List_Avatar.boy) btn_boy.set_icon_color(this.carrot.color_highlight);
 
             Carrot_Box_Btn_Item btn_girl = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_sex_girl);
-            btn_girl.set_act(() => act_set_type_show_list_avatar(Type_List_Avatar.girl));
+            btn_girl.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.girl));
             if (type_list_avatar == Type_List_Avatar.girl) btn_girl.set_icon_color(this.carrot.color_highlight);
+
+            for (int i = 0; i < list_avatar.Count; i++)
+            {
+                IDictionary avatar_data = (IDictionary)list_avatar[i];
+                if (this.type_list_avatar == Type_List_Avatar.all)
+                {
+                    this.add_item_avatar_to_list_box(avatar_data);
+                }  
+                else
+                {
+                    if(this.type_list_avatar.ToString().ToLower()==avatar_data["type"].ToString()) this.add_item_avatar_to_list_box(avatar_data);
+                }
+            }
         }
 
         private void add_item_avatar_to_list_box(IDictionary avatar_data)

@@ -179,9 +179,6 @@ namespace Carrot
         public string s_data_json_carrotapp_all_temp;
         public string s_data_json_carrotapp_app_temp;
         public string s_data_json_carrotapp_game_temp;
-        public string s_data_json_user_all_avatar; 
-        public string s_data_json_user_boy_avatar;
-        public string s_data_json_user_girl_avatar;
         public string s_data_json_list_lang_temp;
 
         private bool is_ready = false;
