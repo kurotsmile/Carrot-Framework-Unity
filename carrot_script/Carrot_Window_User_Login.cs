@@ -51,6 +51,7 @@ namespace Carrot
 
         public void btn_user_login()
         {
+            this.carrot.show_loading();
             Query UserQuery = this.carrot.db.Collection("user-" + this.carrot.lang.get_key_lang());
             UserQuery=UserQuery.WhereEqualTo("password", inp_login_password.text);
             if(this.is_model_login_email)
@@ -61,11 +62,13 @@ namespace Carrot
                 QuerySnapshot AllUserQuerySnapshot = task.Result;
                 if (task.IsFaulted)
                 {
-                    this.carrot.show_msg(PlayerPrefs.GetString("login", "Login"), PlayerPrefs.GetString("login_fail", "Login failed, please try again!"));
+                   this.carrot.hide_loading();
+                   this.carrot.show_msg(PlayerPrefs.GetString("login", "Login"), PlayerPrefs.GetString("login_fail", "Login failed, please try again!"));
                 }
 
                 if (task.IsCompleted)
                 {
+                   this.carrot.hide_loading();
                     if (AllUserQuerySnapshot.Count > 0)
                     {
                        if (this.is_model_login_email)

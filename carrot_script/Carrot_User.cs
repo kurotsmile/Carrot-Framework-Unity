@@ -156,7 +156,17 @@ namespace Carrot
             Carrot_Box_Item info_name = this.box_list.create_item("info_name");
             info_name.set_icon(this.icon_user_name);
             info_name.set_title(PlayerPrefs.GetString("user_name","Full name"));
-            info_name.set_tip(data_user["name"].ToString());
+            if (data_user["name"] != null)
+            {
+                info_name.set_tip(data_user["name"].ToString());
+            }
+            else
+            {
+                if (this.box_list != null) this.box_list.close();
+                this.act_logout();
+                return null;
+            }
+                
 
             if (data_user["email"] != null)
             {
