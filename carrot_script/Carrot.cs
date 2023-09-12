@@ -11,7 +11,7 @@ namespace Carrot
 {
     public enum ModelApp { Publish, Develope }
     public enum OS {Android,Window,Ios,Web};
-    public enum Store { Google_Play, Samsung_Galaxy_Store, Microsoft_Store, Amazon_app_store, Carrot_store};
+    public enum Store { Google_Play, Samsung_Galaxy_Store, Microsoft_Store, Amazon_app_store, Carrot_store, Huawei_store };
     public enum TypeApp { App,Game}
     public enum TypeRate {Market_Android,Ms_Windows_Store,Amazon_app_store,Link_Share_CarrotApp}
     public enum TypeAds {Admob_Ads,Carrot_Ads}
