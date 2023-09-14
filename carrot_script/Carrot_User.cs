@@ -142,15 +142,18 @@ namespace Carrot
             this.box_list.set_title(PlayerPrefs.GetString("acc_info", "Account Information"));
             this.box_list.set_icon(this.icon_user_info);
 
-            if (data_user["avatar"].ToString() != "")
+            if (data_user["avatar"] != null)
             {
-                Carrot_Box_Item info_avatar = this.box_list.create_item("info_avatar");
-                info_avatar.set_icon(this.carrot.icon_carrot_avatar);
-                info_avatar.set_title(PlayerPrefs.GetString("user_avatar", "Avatar"));
-                info_avatar.set_tip(data_user["avatar"].ToString());
-                Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_"+data_user["id"]);
-                if (sp_avatar != null) info_avatar.set_icon_white(sp_avatar);
-                else this.carrot.get_img_and_save_playerPrefs(data_user["avatar"].ToString(), info_avatar.img_icon, "avatar_user_"+data_user["id"]);
+                if (data_user["avatar"].ToString() != "")
+                {
+                    Carrot_Box_Item info_avatar = this.box_list.create_item("info_avatar");
+                    info_avatar.set_icon(this.carrot.icon_carrot_avatar);
+                    info_avatar.set_title(PlayerPrefs.GetString("user_avatar", "Avatar"));
+                    info_avatar.set_tip(data_user["avatar"].ToString());
+                    Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_" + data_user["id"]);
+                    if (sp_avatar != null) info_avatar.set_icon_white(sp_avatar);
+                    else this.carrot.get_img_and_save_playerPrefs(data_user["avatar"].ToString(), info_avatar.img_icon, "avatar_user_" + data_user["id"]);
+                }
             }
 
             Carrot_Box_Item info_name = this.box_list.create_item("info_name");
@@ -203,7 +206,7 @@ namespace Carrot
 
             if (data_user["address"] != null)
             {
-                IDictionary us_address = (IDictionary)data_user["address"];
+                IDictionary us_address = (IDictionary)Json.Deserialize(data_user["address"].ToString());
                 if (us_address["name"].ToString() != "")
                 {
                     Carrot_Box_Item info_address = this.box_list.create_item("info_address");
@@ -213,41 +216,47 @@ namespace Carrot
                 }
             }
 
-            Carrot_Box_Item info_status = this.box_list.create_item("info_status");
-            info_status.set_icon(this.icon_user_status);
-            info_status.set_title("Information status");
-            if(data_user["status_share"].ToString()=="0")
-                info_status.set_tip(PlayerPrefs.GetString("user_info_status_yes", "Share information"));
-            else
-                info_status.set_tip(PlayerPrefs.GetString("user_info_status_no", "Do not share information"));
-
-            
-            if (this.s_id_user_login == data_user["user_id"].ToString())
+            if (data_user["status_share"] != null)
             {
-                Carrot_Box_Btn_Panel panel_btn = this.box_list.create_panel_btn();
-
-                Carrot_Button_Item btn_edit = panel_btn.create_btn("btn_edit");
-                btn_edit.set_icon(this.carrot.icon_carrot_done);
-                btn_edit.set_label(PlayerPrefs.GetString("edit", "Edit"));
-                btn_edit.set_label_color(Color.white);
-                btn_edit.set_bk_color(this.carrot.color_highlight);
-                btn_edit.set_act_click(()=>act_show_edit_user(data_user));
-
-                Carrot_Button_Item btn_logout = panel_btn.create_btn("btn_logout");
-                btn_logout.set_icon(this.icon_user_logout);
-                btn_logout.set_label(PlayerPrefs.GetString("logout", "Log out"));
-                btn_logout.set_label_color(Color.white);
-                btn_logout.set_bk_color(this.carrot.color_highlight);
-                btn_logout.set_act_click(()=>this.act_logout());
-
-
-                Carrot_Button_Item btn_canel = panel_btn.create_btn("btn_cancel");
-                btn_canel.set_icon(this.carrot.icon_carrot_cancel);
-                btn_canel.set_label(PlayerPrefs.GetString("cancel", "Cancel"));
-                btn_canel.set_label_color(Color.white);
-                btn_canel.set_bk_color(this.carrot.color_highlight);
-                btn_canel.set_act_click(() => this.act_close_box());
+                Carrot_Box_Item info_status = this.box_list.create_item("info_status");
+                info_status.set_icon(this.icon_user_status);
+                info_status.set_title("Information status");
+                if (data_user["status_share"].ToString() == "0")
+                    info_status.set_tip(PlayerPrefs.GetString("user_info_status_yes", "Share information"));
+                else
+                    info_status.set_tip(PlayerPrefs.GetString("user_info_status_no", "Do not share information"));
             }
+
+            if (data_user["user_id"] != null)
+            {
+                if (this.s_id_user_login == data_user["user_id"].ToString())
+                {
+                    Carrot_Box_Btn_Panel panel_btn = this.box_list.create_panel_btn();
+
+                    Carrot_Button_Item btn_edit = panel_btn.create_btn("btn_edit");
+                    btn_edit.set_icon(this.carrot.icon_carrot_done);
+                    btn_edit.set_label(PlayerPrefs.GetString("edit", "Edit"));
+                    btn_edit.set_label_color(Color.white);
+                    btn_edit.set_bk_color(this.carrot.color_highlight);
+                    btn_edit.set_act_click(() => act_show_edit_user(data_user));
+
+                    Carrot_Button_Item btn_logout = panel_btn.create_btn("btn_logout");
+                    btn_logout.set_icon(this.icon_user_logout);
+                    btn_logout.set_label(PlayerPrefs.GetString("logout", "Log out"));
+                    btn_logout.set_label_color(Color.white);
+                    btn_logout.set_bk_color(this.carrot.color_highlight);
+                    btn_logout.set_act_click(() => this.act_logout());
+
+
+                    Carrot_Button_Item btn_canel = panel_btn.create_btn("btn_cancel");
+                    btn_canel.set_icon(this.carrot.icon_carrot_cancel);
+                    btn_canel.set_label(PlayerPrefs.GetString("cancel", "Cancel"));
+                    btn_canel.set_label_color(Color.white);
+                    btn_canel.set_bk_color(this.carrot.color_highlight);
+                    btn_canel.set_act_click(() => this.act_close_box());
+                }
+            }
+
             this.box_list.update_gamepad_cosonle_control();
             if (this.act_after_show_view_by_id != null)
             {
