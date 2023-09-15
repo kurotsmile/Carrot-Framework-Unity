@@ -206,13 +206,16 @@ namespace Carrot
 
             if (data_user["address"] != null)
             {
-                IDictionary us_address = (IDictionary)Json.Deserialize(data_user["address"].ToString());
-                if (us_address["name"].ToString() != "")
+                IDictionary us_address = (IDictionary)data_user["address"];
+                if (us_address["name"] != null)
                 {
-                    Carrot_Box_Item info_address = this.box_list.create_item("info_address");
-                    info_address.set_icon(this.carrot.icon_carrot_address);
-                    info_address.set_title(PlayerPrefs.GetString("user_address", "Your address"));
-                    info_address.set_tip(us_address["name"].ToString());
+                    if (us_address["name"].ToString() != "")
+                    {
+                        Carrot_Box_Item info_address = this.box_list.create_item("info_address");
+                        info_address.set_icon(this.carrot.icon_carrot_address);
+                        info_address.set_title(PlayerPrefs.GetString("user_address", "Your address"));
+                        info_address.set_tip(us_address["name"].ToString());
+                    }
                 }
             }
 
