@@ -646,6 +646,11 @@ namespace Carrot
             return this.is_online_internet;
         }
 
+        public void set_status_online(bool is_online)
+        {
+            this.is_online_internet = is_online;
+        }
+
         public void check_connect_internet()
         {
             bool status_internet_offline = is_offline();

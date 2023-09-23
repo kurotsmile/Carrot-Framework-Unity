@@ -48,7 +48,19 @@ namespace Carrot
                 this.set_model_by_status_internet(false);
             }
         }
+
+        [ContextMenu("Active OffLine")]
+        public void offline()
+        {
+            this.set_model_by_status_internet(true);
+            this.carrot.set_status_online(true);
+        }
+
+        [ContextMenu("Active OnLine")]
+        public void online()
+        {
+            this.set_model_by_status_internet(false);
+            this.carrot.set_status_online(false);
+        }
     }
-
-
 }
