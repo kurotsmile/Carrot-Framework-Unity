@@ -53,14 +53,14 @@ namespace Carrot
         public void offline()
         {
             this.set_model_by_status_internet(true);
-            this.carrot.set_status_online(true);
+            this.carrot.set_status_online(false);
         }
 
         [ContextMenu("Active OnLine")]
         public void online()
         {
             this.set_model_by_status_internet(false);
-            this.carrot.set_status_online(false);
+            this.carrot.set_status_online(true);
         }
     }
 }
