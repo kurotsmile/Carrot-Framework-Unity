@@ -122,12 +122,14 @@ namespace Carrot
                 this.inp_login_username.text = PlayerPrefs.GetString("login_username_mail");
                 this.img_icon_mode_login.sprite = this.carrot.icon_carrot_mail;
                 this.login_username_title.text = PlayerPrefs.GetString("user_email", "Email");
+                this.inp_login_username.contentType = InputField.ContentType.EmailAddress;
             }
             else
             {
                 this.inp_login_username.text = PlayerPrefs.GetString("login_username_phone");
                 this.img_icon_mode_login.sprite = this.carrot.icon_carrot_phone;
                 this.login_username_title.text = PlayerPrefs.GetString("user_phone", "Phone");
+                this.inp_login_username.contentType = InputField.ContentType.IntegerNumber;
             }
                 
         }
