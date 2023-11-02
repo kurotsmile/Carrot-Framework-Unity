@@ -30,6 +30,7 @@ namespace Carrot
         [Header("Theme Event")]
         public GameObject obj_hat_noel;
         public GameObject obj_hat_halloween;
+        public GameObject obj_hat_new_year;
         public Image img_scroll_handl;
 
         [Header("Button Header")]
@@ -41,8 +42,10 @@ namespace Carrot
             this.carrot = carrot;
             this.obj_hat_halloween.SetActive(false);
             this.obj_hat_noel.SetActive(false);
+            this.obj_hat_new_year.SetActive(false);
 
             int month_cur = DateTime.Now.Month;
+            if (month_cur == 1) this.obj_hat_new_year.SetActive(true);
             if (month_cur == 10) this.obj_hat_halloween.SetActive(true);
             if (month_cur == 11|| month_cur == 12) this.obj_hat_noel.SetActive(true);
             this.check_type_box();
