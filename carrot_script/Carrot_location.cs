@@ -56,8 +56,6 @@ namespace Carrot
                 if (box_loading != null) this.box_loading.close();
                 if (act_done != null) act_done(Input.location.lastData);
             }
-
-            //Input.location.Stop();
         }
 
         public void show_map_locations()
@@ -68,13 +66,7 @@ namespace Carrot
         public string get_address()
         {
             string s_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+this.lonA+","+this.latA+ "&key="+this.key_api;
-            //act_get_location_address
             return s_url;
-        }
-
-        private void act_get_location_address(string s_data)
-        {
-            this.GetComponent<Carrot>().show_msg(s_data);
         }
     }
 }
