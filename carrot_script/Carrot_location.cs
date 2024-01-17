@@ -9,11 +9,13 @@ namespace Carrot
     {
         public string key_api;
         public float latA, lonA;
+        private int count_check = 0;
 
         private Carrot_Window_Loading box_loading;
 
         public void get_location(UnityAction<LocationInfo> act_done, UnityAction<string> act_fail=null)
         {
+            this.count_check++;
             if (box_loading != null) this.box_loading.close();
             this.box_loading = this.GetComponent<Carrot>().show_loading(get_location_data(act_done, act_fail));
         }
@@ -23,7 +25,15 @@ namespace Carrot
             if (!Input.location.isEnabledByUser)
             {
                 Permission.RequestUserPermission(Permission.FineLocation);
-                this.GetComponent<Carrot>().delay_function(5f, ()=>this.get_location(act_done, act_fail));
+                if (this.count_check < 2)
+                {
+                    this.GetComponent<Carrot>().delay_function(5f, () => this.get_location(act_done, act_fail));
+                }
+                else
+                {
+                    this.StopAllCoroutines();
+                    this.GetComponent<Carrot>().stop_all_act();
+                }
                 yield break;
             }
 
