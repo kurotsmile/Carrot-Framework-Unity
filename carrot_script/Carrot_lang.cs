@@ -20,6 +20,8 @@ namespace Carrot
         private IDictionary data_lang_offline;
         public string s_data_json_list_lang_offline;
 
+        private Transform tr_item_lang_systemLanguage = null;
+
         public void load(Carrot carrot)
         {
             this.carrot = carrot;
@@ -79,6 +81,7 @@ namespace Carrot
                             list_lang.Add(lang);
                         };
 
+                        if(this.tr_item_lang_systemLanguage!=null) this.tr_item_lang_systemLanguage.SetSiblingIndex(0);
                         this.s_data_json_list_lang_offline = Json.Serialize(list_lang);
                         this.carrot.s_data_json_list_lang_temp = this.s_data_json_list_lang_offline;
                         PlayerPrefs.SetString("s_data_json_list_lang_offline", this.s_data_json_list_lang_offline);
@@ -106,6 +109,7 @@ namespace Carrot
                 this.add_item_to_list_box(lang);
             };
 
+            if (this.tr_item_lang_systemLanguage != null) this.tr_item_lang_systemLanguage.SetSiblingIndex(0);
             if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.box_lang.UI.get_list_btn());
         }
 
@@ -141,6 +145,7 @@ namespace Carrot
                 btn_sugger_lang.set_icon(this.carrot.icon_carrot_location);
                 btn_sugger_lang.set_color(this.carrot.color_highlight);
                 Destroy(btn_sugger_lang.GetComponent<Button>());
+                this.tr_item_lang_systemLanguage = item_lang.transform;
             }
 
             if (this.data_lang_offline!= null)
