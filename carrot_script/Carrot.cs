@@ -185,7 +185,6 @@ namespace Carrot
 
         public void Load_Carrot()
         {
-
             this.db = FirebaseFirestore.DefaultInstance;
 #if UNITY_EDITOR
             if (db.Settings.Host != this.localhost)
