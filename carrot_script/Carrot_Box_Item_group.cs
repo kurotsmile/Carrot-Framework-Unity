@@ -16,6 +16,7 @@ namespace Carrot
 
         private bool is_collect_true = true;
         private List<Carrot_Box_Item> list_box_item;
+        private int index;
 
         public void on_load()
         {

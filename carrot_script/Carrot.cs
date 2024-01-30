@@ -878,7 +878,7 @@ namespace Carrot
             item_setting_other_app.set_lang_data("list_app_carrot", "exit_app_other");
             item_setting_other_app.set_act(this.show_list_carrot_app);
 
-            Carrot_Box_Item item_setting_restore = box_setting.create_item();
+            Carrot_Box_Item item_setting_restore = box_setting.create_item("in_app_restore");
             item_setting_restore.set_icon(this.sp_icon_restore);
             item_setting_restore.set_title(PlayerPrefs.GetString("in_app_restore", "Restore purchased items"));
             item_setting_restore.set_tip(PlayerPrefs.GetString("in_app_restore_tip", "Restore purchased services and functions"));

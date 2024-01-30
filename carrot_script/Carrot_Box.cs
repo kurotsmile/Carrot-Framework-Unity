@@ -38,6 +38,7 @@ namespace Carrot
         public Transform area_btn_header;
         public GameObject box_btn_item_prefab;
 
+
         public void load(Carrot carrot)
         {
             this.carrot = carrot;
