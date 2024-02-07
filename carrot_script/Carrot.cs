@@ -10,17 +10,17 @@ using UnityEngine.UI;
 namespace Carrot
 {
     public enum ModelApp { Publish, Develope }
-    public enum OS {Android,Window,Ios,Web};
+    public enum OS { Android, Window, Ios, Web };
     public enum Store { Google_Play, Samsung_Galaxy_Store, Microsoft_Store, Amazon_app_store, Carrot_store, Huawei_store };
-    public enum TypeApp { App,Game}
-    public enum TypeRate {Market_Android,Ms_Windows_Store,Amazon_app_store,Link_Share_CarrotApp}
-    public enum TypeAds {Admob_Ads,Carrot_Ads}
-    public enum TypeControl {None, GamePad,D_pad}
-    public enum Setting_Option { Show,Hide }
+    public enum TypeApp { App, Game }
+    public enum TypeRate { Market_Android, Ms_Windows_Store, Amazon_app_store, Link_Share_CarrotApp }
+    public enum TypeAds { Admob_Ads, Carrot_Ads }
+    public enum TypeControl { None, GamePad, D_pad }
+    public enum Setting_Option { Show, Hide }
 
     public enum PayApp { UnitySDKPay, CarrotPay }
 
-    public class On_event_change: UnityEvent{};
+    public class On_event_change : UnityEvent { };
     public class Carrot : MonoBehaviour
     {
         [Header("Config App")]
@@ -41,7 +41,7 @@ namespace Carrot
         public string Carrotstore_AppId;
         public Color32 color_highlight;
         public bool check_lost_internet;
-        public bool auto_open_rate_store=true;
+        public bool auto_open_rate_store = true;
 
         private bool is_next_check_exit = true;
         private bool is_sound = true;
@@ -53,7 +53,7 @@ namespace Carrot
         private Carrot_Window_Msg msg_delete_all_data;
         private Carrot_Window_Loading loading;
         private List<string> list_log;
-        private int count_change_model_app=0;
+        private int count_change_model_app = 0;
 
         [Header("Login Obj")]
         public Image img_btn_login;
@@ -66,7 +66,7 @@ namespace Carrot
         public int index_inapp_remove_ads = -1;
         [Tooltip("Change the value to enable the background music buying function")]
         public int index_inapp_buy_bk_music = -1;
-        public Setting_Option setting_lang=Setting_Option.Hide;
+        public Setting_Option setting_lang = Setting_Option.Hide;
         public Setting_Option setting_login = Setting_Option.Hide;
         public Setting_Option setting_rank = Setting_Option.Hide;
         public Setting_Option setting_vibrate = Setting_Option.Hide;
@@ -145,7 +145,7 @@ namespace Carrot
 
         [Header("Lost Internet")]
         public Carrot_lost_internet carrot_lost_internet;
-        private bool is_online_internet=true;
+        private bool is_online_internet = true;
         public Sprite icon_lost_internet;
 
         [Header("Setting Carrot")]
@@ -216,7 +216,7 @@ namespace Carrot
 
             if (this.type_app == TypeApp.Game) this.ads.onRewardedSuccess += this.GetComponent<Carrot_game>().onRewardedSuccess;
             this.ads.onRewardedSuccess += this.theme.onRewardedSuccess;
-            
+
             this.carrot_list_app = new Carrot_list_app(this);
             this.list_Window = new List<GameObject>();
 
@@ -263,7 +263,7 @@ namespace Carrot
 
                     if (this.list_Window[index_box_check].name == "window_ads") return;
 
-                    if (this.list_Window[index_box_check].name== "window_exit")
+                    if (this.list_Window[index_box_check].name == "window_exit")
                     {
                         this.app_exit();
                         return;
@@ -294,12 +294,12 @@ namespace Carrot
         public void show_share()
         {
             this.play_sound_click();
-            GameObject window_share=this.create_window(this.window_share_prefab);
+            GameObject window_share = this.create_window(this.window_share_prefab);
             window_share.GetComponent<Carrot_Window_Share>().load(this);
-            window_share.GetComponent<Carrot_Window_Share>().inp_link_share.text =this.mainhost+"?p=app&id="+this.Carrotstore_AppId;
+            window_share.GetComponent<Carrot_Window_Share>().inp_link_share.text = this.mainhost + "?p=app&id=" + this.Carrotstore_AppId;
         }
 
-        public void show_share(string link_customer,string s_share_tip)
+        public void show_share(string link_customer, string s_share_tip)
         {
             GameObject window_share = this.create_window(this.window_share_prefab);
             window_share.GetComponent<Carrot_Window_Share>().load(this);
@@ -311,12 +311,12 @@ namespace Carrot
         public void close()
         {
             this.close_all_window();
-            if(this.act_after_close_all_box!=null) this.act_after_close_all_box();
+            if (this.act_after_close_all_box != null) this.act_after_close_all_box();
         }
 
         private Carrot_Window_Msg create_msg()
         {
-            GameObject window_msg= this.create_window(this.window_msg_prefab);
+            GameObject window_msg = this.create_window(this.window_msg_prefab);
             window_msg.name = "Window Msg";
             window_msg.GetComponent<Carrot_Window_Msg>().load(this);
             return window_msg.GetComponent<Carrot_Window_Msg>();
@@ -344,11 +344,11 @@ namespace Carrot
             return msg;
         }
 
-        public Carrot_Window_Msg show_msg(string s_title, string s_msg,UnityAction act_msg_yes, UnityAction act_msg_no)
+        public Carrot_Window_Msg show_msg(string s_title, string s_msg, UnityAction act_msg_yes, UnityAction act_msg_no)
         {
             Carrot_Window_Msg msg = show_msg(s_title, s_msg);
             msg.set_icon(Msg_Icon.Question);
-            msg.add_btn_msg(PlayerPrefs.GetString("msg_yes","Yes"), act_msg_yes);
+            msg.add_btn_msg(PlayerPrefs.GetString("msg_yes", "Yes"), act_msg_yes);
             msg.add_btn_msg(PlayerPrefs.GetString("cancel", "No"), act_msg_no);
             msg.update_btns_gamepad_console();
             return msg;
@@ -392,7 +392,7 @@ namespace Carrot
 
         public Carrot_Box show_grid()
         {
-            GameObject box_grid=this.create_window(this.window_box_prefab);
+            GameObject box_grid = this.create_window(this.window_box_prefab);
             Carrot_Box grid = box_grid.GetComponent<Carrot_Box>();
             grid.load(this);
             grid.set_type(Carrot_Box_Type.Grid_Box);
@@ -412,21 +412,21 @@ namespace Carrot
             Application.Quit();
         }
 
-        public void get_img(string url,Image img)
+        public void get_img(string url, Image img)
         {
             if (url == "") return;
-            StartCoroutine(this.tool.get_img_form_url(url,img));
+            StartCoroutine(this.tool.get_img_form_url(url, img));
         }
 
-        public void get_img(string url, UnityAction<Texture2D> act_done,UnityAction<string> act_fail=null)
+        public void get_img(string url, UnityAction<Texture2D> act_done, UnityAction<string> act_fail = null)
         {
             if (url == "") return;
-            StartCoroutine(this.tool.get_img_form_url(url,null, act_done, act_fail));
+            StartCoroutine(this.tool.get_img_form_url(url, null, act_done, act_fail));
         }
 
-        public void get_img_and_save_file(string url, Image img,string path_save){StartCoroutine(this.tool.get_img_form_url_and_save_file(url, img, path_save));}
+        public void get_img_and_save_file(string url, Image img, string path_save) { StartCoroutine(this.tool.get_img_form_url_and_save_file(url, img, path_save)); }
 
-        public void get_img_and_save_playerPrefs(string url, Image img, string s_key,UnityAction<Texture2D> act_done=null, UnityAction<string> act_fail = null)
+        public void get_img_and_save_playerPrefs(string url, Image img, string s_key, UnityAction<Texture2D> act_done = null, UnityAction<string> act_fail = null)
         {
             if (url == "") return;
             StartCoroutine(this.tool.get_img_form_url_and_save_playerPrefs(url, img, s_key, act_done, act_fail));
@@ -451,21 +451,21 @@ namespace Carrot
             return frm;
         }
 
-        public Carrot_Window_Input show_search(UnityAction<string> act_done_search, string s_search_tip= "Enter what you want to search for")
+        public Carrot_Window_Input show_search(UnityAction<string> act_done_search, string s_search_tip = "Enter what you want to search for")
         {
-            GameObject obj_search=this.create_window(this.window_input_prefab);
-            Carrot_Window_Input box_search=obj_search.GetComponent<Carrot_Window_Input>();
+            GameObject obj_search = this.create_window(this.window_input_prefab);
+            Carrot_Window_Input box_search = obj_search.GetComponent<Carrot_Window_Input>();
             box_search.load(this);
             box_search.set_icon(this.icon_carrot_search);
-            box_search.set_title(PlayerPrefs.GetString("search","Search"));
+            box_search.set_title(PlayerPrefs.GetString("search", "Search"));
             box_search.set_tip(s_search_tip);
             box_search.set_act_done(act_done_search);
             return box_search;
         }
 
-        public Carrot_Window_Input show_input(string s_title, string s_tip="",string s_txt="",Window_Input_value_Type type_val=Window_Input_value_Type.input_field)
+        public Carrot_Window_Input show_input(string s_title, string s_tip = "", string s_txt = "", Window_Input_value_Type type_val = Window_Input_value_Type.input_field)
         {
-            GameObject obj_box_inp= this.create_window(this.window_input_prefab);
+            GameObject obj_box_inp = this.create_window(this.window_input_prefab);
             Carrot_Window_Input box_inp = obj_box_inp.GetComponent<Carrot_Window_Input>();
             box_inp.load(this);
             box_inp.set_icon(this.icon_carrot_write);
@@ -480,7 +480,7 @@ namespace Carrot
         public void delete_all_data()
         {
             this.play_sound_click();
-           this.msg_delete_all_data=this.show_msg(PlayerPrefs.GetString("delete_all_data", "Clear all application data"), PlayerPrefs.GetString("question_delete_all_data", "Confirm erase all data and set up?"),this.act_delete_all_data_yes,this.act_delete_all_data_no);
+            this.msg_delete_all_data = this.show_msg(PlayerPrefs.GetString("delete_all_data", "Clear all application data"), PlayerPrefs.GetString("question_delete_all_data", "Confirm erase all data and set up?"), this.act_delete_all_data_yes, this.act_delete_all_data_no);
         }
 
         private void act_delete_all_data_yes()
@@ -509,13 +509,13 @@ namespace Carrot
             if (model_app == ModelApp.Develope) this.log("Cancel Delete All Data!");
         }
 
-        public Carrot_Window_Loading send(string url,WWWForm frm, UnityAction<string> done_func=null, UnityAction<string> fail_func=null)
+        public Carrot_Window_Loading send(string url, WWWForm frm, UnityAction<string> done_func = null, UnityAction<string> fail_func = null)
         {
-            if (model_app == ModelApp.Develope) this.log("Send Request.."+frm.ToString()+" url:"+url);
-            return this.show_loading(act_send(url,frm, done_func, fail_func));
+            if (model_app == ModelApp.Develope) this.log("Send Request.." + frm.ToString() + " url:" + url);
+            return this.show_loading(act_send(url, frm, done_func, fail_func));
         }
 
-        IEnumerator act_send(string url,WWWForm frm_send, UnityAction<string> done_func, UnityAction<string> fail_func)
+        IEnumerator act_send(string url, WWWForm frm_send, UnityAction<string> done_func, UnityAction<string> fail_func)
         {
             using (UnityWebRequest www = UnityWebRequest.Post(url, frm_send))
             {
@@ -524,23 +524,23 @@ namespace Carrot
                 {
                     this.hide_loading();
                     if (model_app == ModelApp.Develope) this.show_msg("Error", www.error, Msg_Icon.Error);
-                    if(fail_func!=null) fail_func(www.error);
+                    if (fail_func != null) fail_func(www.error);
                 }
                 else
                 {
                     this.hide_loading();
                     if (model_app == ModelApp.Develope) Debug.Log("Server response:" + www.downloadHandler.text);
-                    if(done_func!=null) done_func(www.downloadHandler.text);
+                    if (done_func != null) done_func(www.downloadHandler.text);
                 }
             }
         }
 
-        public void send_hide(string url,WWWForm frm, UnityAction<string> done_func=null, UnityAction<string> error_func = null)
+        public void send_hide(string url, WWWForm frm, UnityAction<string> done_func = null, UnityAction<string> error_func = null)
         {
-            StartCoroutine(act_send_hide(url,frm, done_func, error_func));
+            StartCoroutine(act_send_hide(url, frm, done_func, error_func));
         }
 
-        IEnumerator act_send_hide(string url,WWWForm frm_send,UnityAction<string> done_func=null, UnityAction<string> error_func=null)
+        IEnumerator act_send_hide(string url, WWWForm frm_send, UnityAction<string> done_func = null, UnityAction<string> error_func = null)
         {
             using (UnityWebRequest www = UnityWebRequest.Post(url, frm_send))
             {
@@ -548,11 +548,11 @@ namespace Carrot
                 if (www.result == UnityWebRequest.Result.Success)
                 {
                     if (model_app == ModelApp.Develope) Debug.Log("Send hide server response:" + www.downloadHandler.text);
-                    if(done_func!=null) done_func(www.downloadHandler.text);
+                    if (done_func != null) done_func(www.downloadHandler.text);
                 }
                 else
                 {
-                    if(error_func!=null) error_func(www.error);
+                    if (error_func != null) error_func(www.error);
                 }
             }
         }
@@ -587,9 +587,9 @@ namespace Carrot
             this.is_next_check_exit = false;
         }
 
-        public Carrot_Window_Loading get_mp3(string url,UnityAction<UnityWebRequest> act_success, UnityAction act_fail=null)
+        public Carrot_Window_Loading get_mp3(string url, UnityAction<UnityWebRequest> act_success, UnityAction act_fail = null)
         {
-            this.loading=this.show_loading_with_process_bar(get_mp3_form_url(url, act_success, act_fail));
+            this.loading = this.show_loading_with_process_bar(get_mp3_form_url(url, act_success, act_fail));
             return this.loading;
         }
 
@@ -600,7 +600,7 @@ namespace Carrot
                 www.SendWebRequest();
                 while (!www.isDone)
                 {
-                    if(this.loading!=null) this.loading.slider_loading.value = www.downloadProgress;
+                    if (this.loading != null) this.loading.slider_loading.value = www.downloadProgress;
                     yield return null;
                 }
 
@@ -630,11 +630,13 @@ namespace Carrot
 
         public bool is_offline()
         {
-            if (Application.internetReachability == NetworkReachability.NotReachable) {
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
                 this.is_online_internet = false;
                 return true;
             }
-            else {
+            else
+            {
                 this.is_online_internet = true;
                 return false;
             }
@@ -656,14 +658,14 @@ namespace Carrot
             if (status_internet_offline)
             {
                 if (this.carrot_lost_internet != null) this.carrot_lost_internet.carrot = this;
-                this.msg_lost_interne=this.create_msg();
+                this.msg_lost_interne = this.create_msg();
                 msg_lost_interne.set_title(PlayerPrefs.GetString("lost_connect", "Lost Internet connection"));
                 msg_lost_interne.set_title(PlayerPrefs.GetString("lost_connect_msg", "Please check your network connection, currently the app cannot access the Internet"));
                 msg_lost_interne.set_icon_customer(this.icon_lost_internet);
                 msg_lost_interne.add_btn_msg(PlayerPrefs.GetString("lost_connect_try", "Try checking again!"), act_try_connect_internet);
                 this.carrot_lost_internet.try_connect();
             }
-            if(this.carrot_lost_internet!=null) this.carrot_lost_internet.set_model_by_status_internet(status_internet_offline);
+            if (this.carrot_lost_internet != null) this.carrot_lost_internet.set_model_by_status_internet(status_internet_offline);
         }
 
         private void act_try_connect_internet()
@@ -671,13 +673,13 @@ namespace Carrot
             this.msg_lost_interne.close();
         }
 
-        public void delay_function(float timer,UnityAction act_func)
+        public void delay_function(float timer, UnityAction act_func)
         {
-            if(this.is_ready) if (this.model_app == ModelApp.Develope) this.log("Delay function " + timer + "s");
+            if (this.is_ready) if (this.model_app == ModelApp.Develope) this.log("Delay function " + timer + "s");
             StartCoroutine(act_try_connect(timer, act_func));
         }
 
-        private IEnumerator act_try_connect(float timer,UnityAction act_func)
+        private IEnumerator act_try_connect(float timer, UnityAction act_func)
         {
             yield return new WaitForSeconds(timer);
             act_func();
@@ -688,7 +690,7 @@ namespace Carrot
             GameObject obj_window = Instantiate(obj_prefab);
             obj_window.name = "Carrot Window";
             obj_window.transform.SetParent(GameObject.Find("Canvas").transform);
-            obj_window.transform.localPosition = new Vector3(obj_window.transform.localPosition.x, obj_window.transform.localPosition.y,0f);
+            obj_window.transform.localPosition = new Vector3(obj_window.transform.localPosition.x, obj_window.transform.localPosition.y, 0f);
             obj_window.transform.localScale = new Vector3(1f, 1f, 1f);
             obj_window.transform.localRotation = Quaternion.identity;
             RectTransform rectTransform = obj_window.GetComponent<RectTransform>();
@@ -703,7 +705,7 @@ namespace Carrot
         public Carrot_Box Create_Box()
         {
             GameObject box_window = this.create_window(this.window_box_prefab);
-            Carrot_Box box= box_window.GetComponent<Carrot_Box>();
+            Carrot_Box box = box_window.GetComponent<Carrot_Box>();
             box.load(this);
             return box.GetComponent<Carrot_Box>();
         }
@@ -715,14 +717,14 @@ namespace Carrot
             return box;
         }
 
-        public Carrot_Box Create_Box(string s_title,Sprite icon)
+        public Carrot_Box Create_Box(string s_title, Sprite icon)
         {
             Carrot_Box box = this.Create_Box(s_title);
             box.set_icon(icon);
             return box;
         }
 
-        public Carrot_Box Create_Setting(GameObject[] array_item_customer=null)
+        public Carrot_Box Create_Setting(GameObject[] array_item_customer = null)
         {
             this.play_sound_click();
             this.box_setting = this.Create_Box(PlayerPrefs.GetString("setting", "Setting"));
@@ -733,10 +735,10 @@ namespace Carrot
 
             box_setting.name = "Box Setting";
             box_setting.set_title(PlayerPrefs.GetString("setting", "Setting"));
-            Button btn_icon_setting=this.box_setting.img_icon.gameObject.AddComponent<Button>();
+            Button btn_icon_setting = this.box_setting.img_icon.gameObject.AddComponent<Button>();
             btn_icon_setting.onClick.AddListener(() => this.act_check_change_model_app());
 
-            if (array_item_customer != null) for(int i=0;i<array_item_customer.Length;i++) box_setting.add_item(array_item_customer[i]);
+            if (array_item_customer != null) for (int i = 0; i < array_item_customer.Length; i++) box_setting.add_item(array_item_customer[i]);
 
             if (this.setting_lang == Setting_Option.Show)
             {
@@ -765,14 +767,14 @@ namespace Carrot
             }
 
             Carrot_Box_Item item_setting_sound = box_setting.create_item("sound");
-            if(this.is_sound)
+            if (this.is_sound)
                 item_setting_sound.set_icon(this.sp_icon_sound_on);
             else
                 item_setting_sound.set_icon(this.sp_icon_sound_off);
             item_setting_sound.set_title(PlayerPrefs.GetString("sound_app", "Sound"));
             item_setting_sound.set_tip(PlayerPrefs.GetString("sound_app_tip", "On or Off Sound click"));
             item_setting_sound.set_lang_data("sound_app", "sound_app_tip");
-            item_setting_sound.set_act(()=>this.change_status_sound(item_setting_sound));
+            item_setting_sound.set_act(() => this.change_status_sound(item_setting_sound));
 
             if (this.index_inapp_remove_ads != -1)
             {
@@ -859,14 +861,14 @@ namespace Carrot
 
             Carrot_Box_Item item_setting_rate = box_setting.create_item("rate");
             item_setting_rate.set_icon(this.sp_icon_rate);
-            item_setting_rate.set_title(PlayerPrefs.GetString("rate","Evaluate"));
-            item_setting_rate.set_tip(PlayerPrefs.GetString("rate_tip","Please take a moment of your time to rate this app."));
+            item_setting_rate.set_title(PlayerPrefs.GetString("rate", "Evaluate"));
+            item_setting_rate.set_tip(PlayerPrefs.GetString("rate_tip", "Please take a moment of your time to rate this app."));
             item_setting_rate.set_lang_data("rate", "rate_tip");
             item_setting_rate.set_act(this.show_rate);
 
             Carrot_Box_Item item_setting_share = box_setting.create_item("share");
             item_setting_share.set_icon(this.sp_icon_share);
-            item_setting_share.set_title(PlayerPrefs.GetString("share","Share"));
+            item_setting_share.set_title(PlayerPrefs.GetString("share", "Share"));
             item_setting_share.set_tip(PlayerPrefs.GetString("share_tip", "Choose the platform below to share this great app with your friends or others"));
             item_setting_share.set_lang_data("share", "share_tip");
             item_setting_share.set_act(this.show_share);
@@ -908,12 +910,13 @@ namespace Carrot
         {
             if (this.user.get_cur_window_user_login() != null) this.user.get_cur_window_user_login().close();
             if (this.box_setting != null) this.box_setting.close();
-            if (this.box_setting.get_act_before_closing()!=null)
+            if (this.box_setting.get_act_before_closing() != null)
             {
                 UnityAction act_close_setting = this.box_setting.get_act_before_closing();
-                this.box_setting=this.Create_Setting();
+                this.box_setting = this.Create_Setting();
                 this.box_setting.set_act_before_closing(act_close_setting);
-            }else if(this.box_setting.get_act_before_closing_change() != null)
+            }
+            else if (this.box_setting.get_act_before_closing_change() != null)
             {
                 UnityAction<List<string>> act_close_setting = this.box_setting.get_act_before_closing_change();
                 this.box_setting = this.Create_Setting();
@@ -1005,7 +1008,7 @@ namespace Carrot
             byte c_r = (byte)c_r_i; ;
             byte c_g = (byte)c_g_i;
 
-            return new Color32(c_r, c_g, c_b,(byte) 255);
+            return new Color32(c_r, c_g, c_b, (byte)255);
         }
 
         public bool close_window(int index_close)
@@ -1028,7 +1031,7 @@ namespace Carrot
                 is_close_success = true;
                 Destroy(this.list_Window[index_close].gameObject);
             }
-                
+
 
             this.list_Window.RemoveAt(index_close);
 
@@ -1070,8 +1073,8 @@ namespace Carrot
 
         private void carrot_by_success(string s_id_product)
         {
-            if(this.index_inapp_remove_ads!=-1) if (s_id_product == this.shop.get_id_by_index(this.index_inapp_remove_ads)) this.in_app_remove_ads();
-            if(this.index_inapp_buy_bk_music != -1) this.game.check_buy_music_item_bk(s_id_product);
+            if (this.index_inapp_remove_ads != -1) if (s_id_product == this.shop.get_id_by_index(this.index_inapp_remove_ads)) this.in_app_remove_ads();
+            if (this.index_inapp_buy_bk_music != -1) this.game.check_buy_music_item_bk(s_id_product);
         }
 
         private void carrot_restore_success(string[] arr_id)
@@ -1115,7 +1118,7 @@ namespace Carrot
 
         public void show_log()
         {
-            Carrot_Box box_log=this.Create_Box("Log");
+            Carrot_Box box_log = this.Create_Box("Log");
             box_log.set_icon(this.icon_carrot_bug);
             box_log.set_title("Review the application activity log");
 
@@ -1131,14 +1134,15 @@ namespace Carrot
         [ContextMenu("CaptureScreenshot")]
         public void CaptureScreenshot()
         {
-            ScreenCapture.CaptureScreenshot("screenshot"+ UnityEngine.Random.Range(0,100)+".png");
+            ScreenCapture.CaptureScreenshot("screenshot" + UnityEngine.Random.Range(0, 100) + ".png");
         }
 
         private void act_check_change_model_app()
         {
             this.play_sound_click();
             this.count_change_model_app++;
-            if (this.count_change_model_app >= 3) {
+            if (this.count_change_model_app >= 3)
+            {
                 this.act_change_model_app();
                 this.count_change_model_app = 0;
             }
@@ -1156,18 +1160,18 @@ namespace Carrot
                 this.box_setting.set_icon(this.sp_icon_setting);
                 this.model_app = ModelApp.Publish;
             }
-            this.show_msg("Change Model App Success!!!",this.model_app.ToString(),Msg_Icon.Success);
+            this.show_msg("Change Model App Success!!!", this.model_app.ToString(), Msg_Icon.Success);
         }
 
         public Carrot_Button_Item create_button(string s_text)
         {
             GameObject obj_btn = Instantiate(this.carrot_btn_prefab);
-            Carrot_Button_Item item_btn= obj_btn.GetComponent<Carrot_Button_Item>();
+            Carrot_Button_Item item_btn = obj_btn.GetComponent<Carrot_Button_Item>();
             item_btn.txt_val.text = s_text;
             return item_btn;
         }
 
-        public Carrot_Button_Item create_button(string s_text,Transform tr_father)
+        public Carrot_Button_Item create_button(string s_text, Transform tr_father)
         {
             Carrot_Button_Item item_btn = this.create_button(s_text);
             item_btn.transform.SetParent(tr_father);

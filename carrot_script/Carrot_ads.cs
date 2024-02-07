@@ -59,11 +59,11 @@ namespace Carrot
         [ContextMenu("Show Carrot Ads")]
         public void show_carrot_ads()
         {
-            if (this.carrot.s_data_json_carrotapp_all_temp!="")
+            if (this.carrot.s_data_json_carrotapp_all_temp != "")
             {
-                IList list_app = (IList) Json.Deserialize(this.carrot.s_data_json_carrotapp_all_temp);
+                IList list_app = (IList)Json.Deserialize(this.carrot.s_data_json_carrotapp_all_temp);
                 int index_rand = UnityEngine.Random.Range(0, list_app.Count);
-                IDictionary data_ads = (IDictionary) list_app[index_rand];
+                IDictionary data_ads = (IDictionary)list_app[index_rand];
                 this.act_show_ads(data_ads);
             }
             else
@@ -94,7 +94,7 @@ namespace Carrot
                     }
                 });
             }
-        } 
+        }
 
         private void act_show_ads(IDictionary data_ads)
         {
@@ -201,9 +201,9 @@ namespace Carrot
         {
             this.is_ads_admob = true;
             this.carrot.log("HandleInitCompleteAction admob !");
-            if(this.id_ads_Interstitial_admob!="") this.Admob_LoadInterstitialAd();
-            if(this.id_ads_Rewarded_admob!="") this.Admob_LoadRewardedAd();
-            if(this.carrot.show_banner_ads_start)this.create_banner_ads();
+            if (this.id_ads_Interstitial_admob != "") this.Admob_LoadInterstitialAd();
+            if (this.id_ads_Rewarded_admob != "") this.Admob_LoadRewardedAd();
+            if (this.carrot.show_banner_ads_start) this.create_banner_ads();
         }
 
         private AdRequest get_AdRequest_Admob()
@@ -226,14 +226,14 @@ namespace Carrot
                 interstitialAd = null;
             }
 
-           this.carrot.log("Loading the interstitial ad. ("+this.id_ads_Interstitial_admob+")");
+            this.carrot.log("Loading the interstitial ad. (" + this.id_ads_Interstitial_admob + ")");
 
             // send the request to load the ad.
             InterstitialAd.Load(this.id_ads_Interstitial_admob, this.get_AdRequest_Admob(),
                 (InterstitialAd ad, LoadAdError error) =>
                 {
-                // if error is not null, the load request failed.
-                if (error != null || ad == null)
+                    // if error is not null, the load request failed.
+                    if (error != null || ad == null)
                     {
                         this.carrot.log("interstitial ad failed to load an ad with error : " + error);
                         return;
@@ -251,7 +251,7 @@ namespace Carrot
             // Raised when the ad is estimated to have earned money.
             ad.OnAdPaid += (AdValue adValue) =>
             {
-                this.carrot.log(String.Format("Interstitial ad paid {0} {1}.",adValue.Value,adValue.CurrencyCode));
+                this.carrot.log(String.Format("Interstitial ad paid {0} {1}.", adValue.Value, adValue.CurrencyCode));
             };
             // Raised when an impression is recorded for an ad.
             ad.OnAdImpressionRecorded += () =>
@@ -277,17 +277,17 @@ namespace Carrot
             // Raised when the ad failed to open full screen content.
             ad.OnAdFullScreenContentFailed += (AdError error) =>
             {
-                this.carrot.log("Interstitial ad failed to open full screen content " +"with error : " + error);
+                this.carrot.log("Interstitial ad failed to open full screen content " + "with error : " + error);
                 this.Admob_LoadInterstitialAd();
             };
         }
 
         private void Admob_Show_InterstitialAd()
         {
-            if (interstitialAd != null&& interstitialAd.CanShowAd())
+            if (interstitialAd != null && interstitialAd.CanShowAd())
             {
                 interstitialAd.Show();
-                this.carrot.log("Showing interstitial Admob Ad! (id:"+this.id_ads_Interstitial_admob+")");
+                this.carrot.log("Showing interstitial Admob Ad! (id:" + this.id_ads_Interstitial_admob + ")");
             }
             else
             {
@@ -299,7 +299,7 @@ namespace Carrot
 
         public void Destroy_Interstitial_Ad()
         {
-            if (interstitialAd!= null)
+            if (interstitialAd != null)
             {
                 this.carrot.log("Destroying interstitialAd Admob ad.");
                 interstitialAd.Destroy();
@@ -309,7 +309,7 @@ namespace Carrot
 
         private void Admob_CreateBannerView()
         {
-            this.carrot.log("Creating banner view ("+this.id_ads_Banner_admob+")");
+            this.carrot.log("Creating banner view (" + this.id_ads_Banner_admob + ")");
             if (_bannerView != null)
             {
                 Destroy_Banner_Ad();
@@ -380,7 +380,7 @@ namespace Carrot
                 rewardedAd = null;
             }
 
-            this.carrot.log("Loading the rewarded ad. ("+this.id_ads_Rewarded_admob+")");
+            this.carrot.log("Loading the rewarded ad. (" + this.id_ads_Rewarded_admob + ")");
 
             // create our request used to load the ad.
             var adRequest = new AdRequest.Builder().Build();
@@ -419,7 +419,7 @@ namespace Carrot
         {
             if (this.is_ads && this.is_ads_admob)
             {
-                if (this.id_ads_Banner_admob !="") this.Admob_CreateBannerView();
+                if (this.id_ads_Banner_admob != "") this.Admob_CreateBannerView();
             }
         }
 
@@ -439,7 +439,7 @@ namespace Carrot
                     else
                     {
                         this.show_carrot_ads();
-                    } 
+                    }
                 }
             }
 
@@ -452,7 +452,7 @@ namespace Carrot
 
         public void show_ads_Rewarded()
         {
-            if(this.is_ads_admob) this.Admob_ShowRewardedAd();
+            if (this.is_ads_admob) this.Admob_ShowRewardedAd();
         }
 
         public void remove_ads()
@@ -474,4 +474,3 @@ namespace Carrot
         }
     }
 }
-

@@ -49,7 +49,7 @@ namespace Carrot
             {
                 if (this.carrot.s_data_json_carrotapp_all_temp == "")
                 {
-                    if(this.carrot.is_online())
+                    if (this.carrot.is_online())
                         this.load_list_by_query(this.carrot.db.Collection("app"));
                     else
                         load_list_by_s_data(this.s_data_carrotapp_all);
@@ -67,8 +67,8 @@ namespace Carrot
                     if (this.carrot.is_online())
                         this.load_list_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "app"));
                     else
-                        load_list_by_s_data(this.s_data_carrotapp_app);   
-                } 
+                        load_list_by_s_data(this.s_data_carrotapp_app);
+                }
                 else
                     load_list_by_s_data(this.carrot.s_data_json_carrotapp_app_temp);
             }
@@ -84,13 +84,13 @@ namespace Carrot
                     else
                     {
                         load_list_by_s_data(this.s_data_carrotapp_game);
-                    }  
+                    }
                 }
                 else
                 {
                     load_list_by_s_data(this.carrot.s_data_json_carrotapp_game_temp);
                 }
-                    
+
             }
         }
 
@@ -119,8 +119,8 @@ namespace Carrot
                         {
                             IDictionary app_data = document.ToDictionary();
                             app_data["id"] = document.Id;
-                            if(app_data["rates"] != null) app_data.Remove("rates");
-                            if(app_data["rank"] != null) app_data.Remove("rank");
+                            if (app_data["rates"] != null) app_data.Remove("rates");
+                            if (app_data["rank"] != null) app_data.Remove("rank");
                             add_item_to_list_box(app_data);
                             list_app.Add(app_data);
                         };
@@ -146,7 +146,7 @@ namespace Carrot
                             PlayerPrefs.SetString("s_data_carrotapp_game", this.s_data_carrotapp_game);
                         }
 
-                        if (this.carrot.type_control != TypeControl.None) 
+                        if (this.carrot.type_control != TypeControl.None)
                         {
                             this.carrot.game.set_list_button_gamepad_console(this.list_btn_gamepad);
                             this.box_list_app.update_gamepad_cosonle_control();
@@ -190,15 +190,15 @@ namespace Carrot
             box_list_app.set_title(PlayerPrefs.GetString("list_app_carrot", "Applications from the developer"));
 
             this.btn_header_all = box_list_app.create_btn_menu_header(this.carrot.icon_carrot_all_category);
-            this.btn_header_all.set_act(()=>this.act_btn_header_box(carrot_app_type.all));
+            this.btn_header_all.set_act(() => this.act_btn_header_box(carrot_app_type.all));
             if (this.type == carrot_app_type.all) this.btn_header_all.set_icon_color(this.carrot.color_highlight);
 
             this.btn_header_app = box_list_app.create_btn_menu_header(this.carrot.icon_carrot_app);
-            this.btn_header_app.set_act(()=>this.act_btn_header_box(carrot_app_type.app));
+            this.btn_header_app.set_act(() => this.act_btn_header_box(carrot_app_type.app));
             if (this.type == carrot_app_type.app) this.btn_header_app.set_icon_color(this.carrot.color_highlight);
 
             this.btn_header_game = box_list_app.create_btn_menu_header(this.carrot.icon_carrot_game);
-            this.btn_header_game.set_act(()=>this.act_btn_header_box(carrot_app_type.game));
+            this.btn_header_game.set_act(() => this.act_btn_header_box(carrot_app_type.game));
             if (this.type == carrot_app_type.game) this.btn_header_game.set_icon_color(this.carrot.color_highlight);
 
             if (this.carrot.model_app == ModelApp.Develope)
@@ -314,7 +314,7 @@ namespace Carrot
 
         private void act_load_app_where_exit_by_query(Query AppQueryS)
         {
-            this.carrot.log("act_load_app_where_exit_by_query ("+this.type+")");
+            this.carrot.log("act_load_app_where_exit_by_query (" + this.type + ")");
             AppQueryS.GetSnapshotAsync().ContinueWithOnMainThread(task =>
             {
                 QuerySnapshot AppQuerySnapshotExit = task.Result;
@@ -423,7 +423,7 @@ namespace Carrot
 
         public void show_add_app()
         {
-            Carrot_Box box_add_app=this.carrot.Create_Box();
+            Carrot_Box box_add_app = this.carrot.Create_Box();
             box_add_app.set_icon(this.carrot.icon_carrot_add);
         }
     }

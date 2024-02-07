@@ -27,11 +27,11 @@ namespace Carrot
             if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.UI.get_list_btn());
             if (this.carrot.is_online())
             {
-                if(this.carrot.s_data_json_share_temp=="")
+                if (this.carrot.s_data_json_share_temp == "")
                     this.load_list_share();
                 else
                     this.load_list_share_by_data(this.carrot.s_data_json_share_temp);
-            } 
+            }
             else
                 this.load_list_share_by_data(this.s_data_json_share);
         }
@@ -89,7 +89,7 @@ namespace Carrot
                             else
                                 this.carrot.get_img_and_save_playerPrefs(data_share["icon"].ToString(), btn_share_item.img_icon, s_id_share);
 
-                            if(s_link_share!="") btn_share_item.set_act_click(() => act_click_btn_share(s_link_share));
+                            if (s_link_share != "") btn_share_item.set_act_click(() => act_click_btn_share(s_link_share));
                             list_share.Add(data_share);
                         };
 
@@ -109,7 +109,7 @@ namespace Carrot
             string s_os_app = this.carrot.os_app.ToString().ToLower();
             for (int i = 0; i < list_share.Count; i++)
             {
-                IDictionary data_share = (IDictionary) list_share[i];
+                IDictionary data_share = (IDictionary)list_share[i];
                 string s_id_share = data_share["id"].ToString();
                 GameObject item_share = UnityEngine.GameObject.Instantiate(this.item_share_prefab);
                 item_share.transform.SetParent(this.area_all_item_share);
