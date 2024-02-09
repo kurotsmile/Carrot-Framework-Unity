@@ -660,7 +660,7 @@ namespace Carrot
                 if (this.carrot_lost_internet != null) this.carrot_lost_internet.carrot = this;
                 this.msg_lost_interne = this.create_msg();
                 msg_lost_interne.set_title(PlayerPrefs.GetString("lost_connect", "Lost Internet connection"));
-                msg_lost_interne.set_title(PlayerPrefs.GetString("lost_connect_msg", "Please check your network connection, currently the app cannot access the Internet"));
+                msg_lost_interne.set_msg(PlayerPrefs.GetString("lost_connect_msg", "Please check your network connection, currently the app cannot access the Internet"));
                 msg_lost_interne.set_icon_customer(this.icon_lost_internet);
                 msg_lost_interne.add_btn_msg(PlayerPrefs.GetString("lost_connect_try", "Try checking again!"), act_try_connect_internet);
                 this.carrot_lost_internet.try_connect();
