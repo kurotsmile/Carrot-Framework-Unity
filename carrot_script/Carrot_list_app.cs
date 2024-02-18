@@ -1,12 +1,10 @@
-using Firebase.Extensions;
-using Firebase.Firestore;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Carrot
 {
-    public enum carrot_app_type { all, app, game }
+    public enum Carrot_app_type { all, app, game }
     public class Carrot_list_app
     {
         private Carrot carrot;
@@ -19,24 +17,21 @@ namespace Carrot
         private Carrot_Window_Exit window_exit;
 
         private List<GameObject> list_btn_gamepad;
-        private carrot_app_type type = carrot_app_type.all;
+        private Carrot_app_type type = Carrot_app_type.all;
 
-        private string s_data_carrotapp_all;
-        private string s_data_carrotapp_app;
-        private string s_data_carrotapp_game;
+        private string s_data_carrotapp_all = "";
+        private string s_data_carrotapp_app = "";
+        private string s_data_carrotapp_game = "";
 
         public Carrot_list_app(Carrot carrot)
         {
             this.carrot = carrot;
-            this.s_data_carrotapp_all = PlayerPrefs.GetString("s_data_carrotapp_all");
-            this.s_data_carrotapp_app = PlayerPrefs.GetString("s_data_carrotapp_app");
-            this.s_data_carrotapp_game = PlayerPrefs.GetString("s_data_carrotapp_game");
 
             if (this.carrot.is_offline())
             {
-                this.carrot.s_data_json_carrotapp_all_temp = this.s_data_carrotapp_all;
-                this.carrot.s_data_json_carrotapp_app_temp = this.s_data_carrotapp_app;
-                this.carrot.s_data_json_carrotapp_game_temp = this.s_data_carrotapp_game;
+                this.s_data_carrotapp_all = PlayerPrefs.GetString("s_data_carrotapp_all");
+                this.s_data_carrotapp_app = PlayerPrefs.GetString("s_data_carrotapp_app");
+                this.s_data_carrotapp_game = PlayerPrefs.GetString("s_data_carrotapp_game");
             }
         }
 
@@ -45,139 +40,115 @@ namespace Carrot
         {
             this.carrot.play_sound_click();
             this.carrot.show_loading();
-            if (this.type == carrot_app_type.all)
+            if (this.type == Carrot_app_type.all)
             {
-                if (this.carrot.s_data_json_carrotapp_all_temp == "")
+                if (this.s_data_carrotapp_all == "")
                 {
-                    if (this.carrot.is_online())
-                        this.load_list_by_query(this.carrot.db.Collection("app"));
-                    else
-                        load_list_by_s_data(this.s_data_carrotapp_all);
+                    StructuredQuery q = new("app");
+                    q.Set_limit(20);
+                    q.Add_where("status", Query_OP.EQUAL, "publish");
+                    this.carrot.server.Get_doc(q.ToJson(), get_data_app_done, get_data_app_fail);
                 }
                 else
                 {
-                    load_list_by_s_data(this.carrot.s_data_json_carrotapp_all_temp);
+                    this.load_list_by_data(this.s_data_carrotapp_all);
                 }
             }
 
-            if (this.type == carrot_app_type.app)
+            if (this.type == Carrot_app_type.app)
             {
-                if (this.carrot.s_data_json_carrotapp_app_temp == "")
+                if (this.s_data_carrotapp_app == "")
                 {
-                    if (this.carrot.is_online())
-                        this.load_list_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "app"));
-                    else
-                        load_list_by_s_data(this.s_data_carrotapp_app);
+                    StructuredQuery q = new("app");
+                    q.Set_limit(20);
+                    q.Add_where("status", Query_OP.EQUAL, "publish");
+                    q.Add_where("type", Query_OP.EQUAL, "app");
+                    this.carrot.server.Get_doc(q.ToJson(), get_data_app_done, get_data_app_fail);
                 }
                 else
-                    load_list_by_s_data(this.carrot.s_data_json_carrotapp_app_temp);
+                    this.load_list_by_data(this.s_data_carrotapp_app);
             }
 
-            if (this.type == carrot_app_type.game)
+            if (this.type == Carrot_app_type.game)
             {
-                if (this.carrot.s_data_json_carrotapp_game_temp == "")
+                if (this.s_data_carrotapp_game == "")
                 {
-                    if (this.carrot.is_online())
-                    {
-                        this.load_list_by_query(this.carrot.db.Collection("app").WhereEqualTo("type", "game"));
-                    }
-                    else
-                    {
-                        load_list_by_s_data(this.s_data_carrotapp_game);
-                    }
+                    StructuredQuery q = new("app");
+                    q.Set_limit(20);
+                    q.Add_where("status", Query_OP.EQUAL, "publish");
+                    q.Add_where("type", Query_OP.EQUAL, "game");
+                    this.carrot.server.Get_doc(q.ToJson(), get_data_app_done, get_data_app_fail);
                 }
                 else
                 {
-                    load_list_by_s_data(this.carrot.s_data_json_carrotapp_game_temp);
+                    this.load_list_by_data(this.s_data_carrotapp_game);
                 }
 
             }
         }
 
-        private void load_list_by_query(Query AppQuery)
+        private void get_data_app_done(string s_data)
         {
-            this.carrot.log("load_list_by_query (" + this.type + ")");
-            AppQuery = AppQuery.WhereEqualTo("status", "publish");
-            AppQuery.Limit(20);
-            AppQuery.GetSnapshotAsync().ContinueWithOnMainThread(task => {
-                QuerySnapshot AppQuerySnapshot = task.Result;
+            if (this.type == Carrot_app_type.all)
+            {
+                this.s_data_carrotapp_all = s_data;
+                PlayerPrefs.SetString("s_data_carrotapp_all", this.s_data_carrotapp_all);
+            }
 
-                if (task.IsFaulted)
-                {
-                    if (this.type == carrot_app_type.all) this.load_list_by_s_data(this.s_data_carrotapp_all);
-                    if (this.type == carrot_app_type.app) this.load_list_by_s_data(this.s_data_carrotapp_app);
-                    if (this.type == carrot_app_type.game) this.load_list_by_s_data(this.s_data_carrotapp_game);
-                }
+            if (this.type == Carrot_app_type.app)
+            {
+                this.s_data_carrotapp_app = s_data;
+                PlayerPrefs.SetString("s_data_carrotapp_app", this.s_data_carrotapp_app);
+            }
 
-                if (task.IsCompleted)
-                {
-                    if (AppQuerySnapshot.Count > 0)
-                    {
-                        create_list_box_app();
-                        List<IDictionary> list_app = new List<IDictionary>();
-                        foreach (DocumentSnapshot document in AppQuerySnapshot.Documents)
-                        {
-                            IDictionary app_data = document.ToDictionary();
-                            app_data["id"] = document.Id;
-                            if (app_data["rates"] != null) app_data.Remove("rates");
-                            if (app_data["rank"] != null) app_data.Remove("rank");
-                            add_item_to_list_box(app_data);
-                            list_app.Add(app_data);
-                        };
+            if (this.type == Carrot_app_type.game)
+            {
+                this.s_data_carrotapp_game = s_data;
+                PlayerPrefs.SetString("s_data_carrotapp_game", this.s_data_carrotapp_game);
+            }
 
-                        if (this.type == carrot_app_type.all)
-                        {
-                            this.s_data_carrotapp_all = Json.Serialize(list_app);
-                            this.carrot.s_data_json_carrotapp_all_temp = this.s_data_carrotapp_all;
-                            PlayerPrefs.SetString("s_data_carrotapp_all", this.s_data_carrotapp_all);
-                        }
-
-                        if (this.type == carrot_app_type.app)
-                        {
-                            this.s_data_carrotapp_app = Json.Serialize(list_app);
-                            this.carrot.s_data_json_carrotapp_app_temp = this.s_data_carrotapp_app;
-                            PlayerPrefs.SetString("s_data_carrotapp_app", this.s_data_carrotapp_app);
-                        }
-
-                        if (this.type == carrot_app_type.game)
-                        {
-                            this.s_data_carrotapp_game = Json.Serialize(list_app);
-                            this.carrot.s_data_json_carrotapp_game_temp = this.s_data_carrotapp_game;
-                            PlayerPrefs.SetString("s_data_carrotapp_game", this.s_data_carrotapp_game);
-                        }
-
-                        if (this.carrot.type_control != TypeControl.None)
-                        {
-                            this.carrot.game.set_list_button_gamepad_console(this.list_btn_gamepad);
-                            this.box_list_app.update_gamepad_cosonle_control();
-                            this.box_list_app.update_color_table_row();
-                            this.carrot.game.set_index_button_gamepad_console(3);
-                            this.carrot.game.set_scrollRect_gamepad_consoles(this.box_list_app.UI.scrollRect);
-                        }
-                    }
-                }
-            });
+            this.load_list_by_data(s_data);
         }
 
-        private void load_list_by_s_data(string s_data)
+        private void get_data_app_fail(string s_error)
         {
-            this.carrot.log("load_list_by_s_data (" + this.type + ")");
-            if (s_data == "") return;
-            create_list_box_app();
-            IList list_app = (IList)Json.Deserialize(s_data);
-            for (int i = 0; i < list_app.Count; i++)
+            if (this.type == Carrot_app_type.all)
             {
-                IDictionary app_data = (IDictionary)list_app[i];
-                add_item_to_list_box(app_data);
-            };
+                if (this.s_data_carrotapp_all != "") this.load_list_by_data(this.s_data_carrotapp_all);
+            }
+            if (this.type == Carrot_app_type.app)
+            {
+                if (this.s_data_carrotapp_app != "") this.load_list_by_data(this.s_data_carrotapp_app);
+            }
+            if (this.type == Carrot_app_type.game)
+            {
+                if (this.s_data_carrotapp_game != "") this.load_list_by_data(this.s_data_carrotapp_game);
+            }
+        }
 
-            if (this.carrot.type_control != TypeControl.None)
+        private void load_list_by_data(string s_data)
+        {
+            Fire_Collection fc = new(s_data);
+            if (!fc.is_null)
             {
-                this.carrot.game.set_list_button_gamepad_console(this.list_btn_gamepad);
-                this.box_list_app.update_gamepad_cosonle_control();
-                this.box_list_app.update_color_table_row();
-                this.carrot.game.set_index_button_gamepad_console(3);
-                this.carrot.game.set_scrollRect_gamepad_consoles(this.box_list_app.UI.scrollRect);
+                create_list_box_app();
+                for (int i = 0; i < fc.fire_document.Length; i++)
+                {
+                    IDictionary app_data = fc.fire_document[i].Get_IDictionary();
+                    if (app_data["rates"] != null) app_data.Remove("rates");
+                    if (app_data["rank"] != null) app_data.Remove("rank");
+                    add_item_to_list_box(app_data);
+
+                };
+
+                if (this.carrot.type_control != TypeControl.None)
+                {
+                    this.carrot.game.set_list_button_gamepad_console(this.list_btn_gamepad);
+                    this.box_list_app.update_gamepad_cosonle_control();
+                    this.box_list_app.update_color_table_row();
+                    this.carrot.game.set_index_button_gamepad_console(3);
+                    this.carrot.game.set_scrollRect_gamepad_consoles(this.box_list_app.UI.scrollRect);
+                }
             }
         }
 
@@ -190,22 +161,16 @@ namespace Carrot
             box_list_app.set_title(PlayerPrefs.GetString("list_app_carrot", "Applications from the developer"));
 
             this.btn_header_all = box_list_app.create_btn_menu_header(this.carrot.icon_carrot_all_category);
-            this.btn_header_all.set_act(() => this.act_btn_header_box(carrot_app_type.all));
-            if (this.type == carrot_app_type.all) this.btn_header_all.set_icon_color(this.carrot.color_highlight);
+            this.btn_header_all.set_act(() => this.act_btn_header_box(Carrot_app_type.all));
+            if (this.type == Carrot_app_type.all) this.btn_header_all.set_icon_color(this.carrot.color_highlight);
 
             this.btn_header_app = box_list_app.create_btn_menu_header(this.carrot.icon_carrot_app);
-            this.btn_header_app.set_act(() => this.act_btn_header_box(carrot_app_type.app));
-            if (this.type == carrot_app_type.app) this.btn_header_app.set_icon_color(this.carrot.color_highlight);
+            this.btn_header_app.set_act(() => this.act_btn_header_box(Carrot_app_type.app));
+            if (this.type == Carrot_app_type.app) this.btn_header_app.set_icon_color(this.carrot.color_highlight);
 
             this.btn_header_game = box_list_app.create_btn_menu_header(this.carrot.icon_carrot_game);
-            this.btn_header_game.set_act(() => this.act_btn_header_box(carrot_app_type.game));
-            if (this.type == carrot_app_type.game) this.btn_header_game.set_icon_color(this.carrot.color_highlight);
-
-            if (this.carrot.model_app == ModelApp.Develope)
-            {
-                Carrot_Box_Btn_Item btn_add_app = this.box_list_app.create_btn_menu_header(this.carrot.icon_carrot_add);
-                btn_add_app.set_act(show_add_app);
-            }
+            this.btn_header_game.set_act(() => this.act_btn_header_box(Carrot_app_type.game));
+            if (this.type == Carrot_app_type.game) this.btn_header_game.set_icon_color(this.carrot.color_highlight);
         }
 
         private void add_item_to_list_box(IDictionary data_item)
@@ -268,117 +233,113 @@ namespace Carrot
             this.window_exit.txt_title_app_other.text = PlayerPrefs.GetString("exit_app_other", "Perhaps you will enjoy our other applications");
             this.window_exit.panel_list_app_other.SetActive(false);
 
-            if (this.type == carrot_app_type.all)
+            if (this.type == Carrot_app_type.all)
             {
-                if (this.carrot.s_data_json_carrotapp_all_temp == "")
+                if (this.s_data_carrotapp_all == "")
                 {
-                    Query AppQuery = this.carrot.db.Collection("app");
-                    AppQuery = AppQuery.WhereEqualTo("status", "publish");
-                    AppQuery.Limit(20);
-                    this.act_load_app_where_exit_by_query(AppQuery);
+                    StructuredQuery q = new("app");
+                    q.Set_limit(20);
+                    q.Add_where("status", Query_OP.EQUAL, "publish");
+                    this.carrot.server.Get_doc(q.ToJson(), get_data_app_exit_done, get_data_app_exit_fail);
                 }
                 else
                 {
-                    this.act_load_app_where_exit_by_s_data(this.carrot.s_data_json_carrotapp_all_temp);
+                    this.Act_load_app_where_exit_by_data(this.s_data_carrotapp_all);
                 }
             }
 
-            if (this.type == carrot_app_type.app)
+            if (this.type == Carrot_app_type.app)
             {
-                if (this.carrot.s_data_json_carrotapp_app_temp == "")
+                if (this.s_data_carrotapp_app == "")
                 {
-                    Query AppQuery = this.carrot.db.Collection("app");
-                    AppQuery = AppQuery.WhereEqualTo("status", "publish");
-                    AppQuery.Limit(20);
-                    this.act_load_app_where_exit_by_query(AppQuery);
+                    StructuredQuery q = new("app");
+                    q.Set_limit(20);
+                    q.Add_where("status", Query_OP.EQUAL, "publish");
+                    q.Add_where("type", Query_OP.EQUAL, "app");
+                    this.carrot.server.Get_doc(q.ToJson(), get_data_app_exit_done, get_data_app_exit_fail);
                 }
                 else
-                    this.act_load_app_where_exit_by_s_data(this.carrot.s_data_json_carrotapp_app_temp);
+                    this.Act_load_app_where_exit_by_data(this.s_data_carrotapp_app);
             }
 
-            if (this.type == carrot_app_type.game)
+            if (this.type == Carrot_app_type.game)
             {
-                if (this.carrot.s_data_json_carrotapp_game_temp == "")
+                if (this.s_data_carrotapp_game == "")
                 {
-                    Query AppQuery = this.carrot.db.Collection("app");
-                    AppQuery = AppQuery.WhereEqualTo("status", "publish");
-                    AppQuery.Limit(20);
-                    this.act_load_app_where_exit_by_query(AppQuery);
+                    StructuredQuery q = new("app");
+                    q.Set_limit(20);
+                    q.Add_where("status", Query_OP.EQUAL, "publish");
+                    q.Add_where("type", Query_OP.EQUAL, "game");
+                    this.carrot.server.Get_doc(q.ToJson(), get_data_app_exit_done, get_data_app_exit_fail);
                 }
                 else
-                    this.act_load_app_where_exit_by_s_data(this.carrot.s_data_json_carrotapp_game_temp);
+                    this.Act_load_app_where_exit_by_data(this.s_data_carrotapp_game);
             }
 
             this.window_exit.UI.set_theme(this.carrot.color_highlight);
         }
 
-        private void act_load_app_where_exit_by_query(Query AppQueryS)
+        private void get_data_app_exit_done(string s_data)
         {
-            this.carrot.log("act_load_app_where_exit_by_query (" + this.type + ")");
-            AppQueryS.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+            if (this.type == Carrot_app_type.all)
             {
-                QuerySnapshot AppQuerySnapshotExit = task.Result;
-                if (AppQuerySnapshotExit.Count > 0)
-                {
-                    int count_app_exit = 0;
-                    this.window_exit.panel_list_app_other.SetActive(true);
+                this.s_data_carrotapp_all = s_data;
+                PlayerPrefs.SetString("s_data_carrotapp_all", this.s_data_carrotapp_all);
+            }
 
-                    List<IDictionary> list_app = new List<IDictionary>();
-                    foreach (DocumentSnapshot document in AppQuerySnapshotExit.Documents)
-                    {
-                        IDictionary app_data = document.ToDictionary();
-                        app_data["id"] = document.Id;
-                        if (app_data["rates"] != null) app_data.Remove("rates");
-                        if (app_data["rank"] != null) app_data.Remove("rank");
-                        list_app.Add(app_data);
-                        if (count_app_exit < 10) add_item_app_exit(app_data);
-                        count_app_exit++;
-                    };
+            if (this.type == Carrot_app_type.app)
+            {
+                this.s_data_carrotapp_app = s_data;
+                PlayerPrefs.SetString("s_data_carrotapp_app", this.s_data_carrotapp_app);
+            }
 
-                    if (this.type == carrot_app_type.all)
-                    {
-                        this.s_data_carrotapp_all = Json.Serialize(list_app);
-                        this.carrot.s_data_json_carrotapp_all_temp = this.s_data_carrotapp_all;
-                        PlayerPrefs.SetString("s_data_carrotapp_all", this.s_data_carrotapp_all);
-                    }
+            if (this.type == Carrot_app_type.game)
+            {
+                this.s_data_carrotapp_game = s_data;
+                PlayerPrefs.SetString("s_data_carrotapp_game", this.s_data_carrotapp_game);
+            }
 
-                    if (this.type == carrot_app_type.app)
-                    {
-                        this.s_data_carrotapp_app = Json.Serialize(list_app);
-                        this.carrot.s_data_json_carrotapp_app_temp = this.s_data_carrotapp_app;
-                        PlayerPrefs.SetString("s_data_carrotapp_app", this.s_data_carrotapp_app);
-                    }
-
-                    if (this.type == carrot_app_type.game)
-                    {
-                        this.s_data_carrotapp_game = Json.Serialize(list_app);
-                        this.carrot.s_data_json_carrotapp_game_temp = this.s_data_carrotapp_game;
-                        PlayerPrefs.SetString("s_data_carrotapp_game", this.s_data_carrotapp_game);
-                    }
-
-                    this.list_btn_gamepad.Add(this.window_exit.UI.obj_gamepad[0]);
-                    this.list_btn_gamepad.Add(this.window_exit.UI.obj_gamepad[1]);
-                }
-            });
+            this.Act_load_app_where_exit_by_data(s_data);
         }
 
-        private void act_load_app_where_exit_by_s_data(string s_data)
+        private void get_data_app_exit_fail(string s_error)
         {
-            this.carrot.log("act_load_app_where_exit_by_s_data (" + this.type + ")");
-            IList list_app_exit = (IList)Json.Deserialize(s_data);
-
-            int count_app_exit = 0;
-            this.window_exit.panel_list_app_other.SetActive(true);
-
-            for (int i = 0; i < list_app_exit.Count; i++)
+            if (this.type == Carrot_app_type.all)
             {
-                IDictionary app_data = (IDictionary)list_app_exit[i];
-                add_item_app_exit(app_data);
-                count_app_exit++;
-                if (count_app_exit >= 10) break;
-            };
-            this.list_btn_gamepad.Add(this.window_exit.UI.obj_gamepad[0]);
-            this.list_btn_gamepad.Add(this.window_exit.UI.obj_gamepad[1]);
+                if (this.s_data_carrotapp_all != "") this.Act_load_app_where_exit_by_data(this.s_data_carrotapp_all);
+            }
+            if (this.type == Carrot_app_type.app)
+            {
+                if (this.s_data_carrotapp_app != "") this.Act_load_app_where_exit_by_data(this.s_data_carrotapp_app);
+            }
+            if (this.type == Carrot_app_type.game)
+            {
+                if (this.s_data_carrotapp_game != "") this.Act_load_app_where_exit_by_data(this.s_data_carrotapp_game);
+            }
+        }
+
+        private void Act_load_app_where_exit_by_data(string s_data)
+        {
+            Fire_Collection fc = new(s_data);
+            this.carrot.log("act_load_app_where_exit_by_query (" + this.type + ")");
+
+            if (!fc.is_null)
+            {
+                int count_app_exit = 0;
+                this.window_exit.panel_list_app_other.SetActive(true);
+
+                for (int i = 0; i < fc.fire_document.Length; i++)
+                {
+                    IDictionary app_data = fc.fire_document[i].Get_IDictionary();
+                    if (app_data["rates"] != null) app_data.Remove("rates");
+                    if (app_data["rank"] != null) app_data.Remove("rank");
+                    if (count_app_exit < 10) add_item_app_exit(app_data);
+                    count_app_exit++;
+                };
+
+                this.list_btn_gamepad.Add(this.window_exit.UI.obj_gamepad[0]);
+                this.list_btn_gamepad.Add(this.window_exit.UI.obj_gamepad[1]);
+            }
         }
 
         private void add_item_app_exit(IDictionary data_app_exit)
@@ -415,16 +376,10 @@ namespace Carrot
             this.carrot.show_share(s_link, PlayerPrefs.GetString("share_tip", "Choose the platform below to share this great app with your friends or others"));
         }
 
-        private void act_btn_header_box(carrot_app_type type_show)
+        private void act_btn_header_box(Carrot_app_type type_show)
         {
             this.type = type_show;
             show_list_carrot_app();
-        }
-
-        public void show_add_app()
-        {
-            Carrot_Box box_add_app = this.carrot.Create_Box();
-            box_add_app.set_icon(this.carrot.icon_carrot_add);
         }
     }
 }

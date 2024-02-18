@@ -97,6 +97,7 @@ namespace Carrot
         public Carrot_camera camera_pro;
         public Carrot_location location;
         public Carrot_Theme theme;
+        public Carrot_Server server;
 
         [Header("Panel Obj")]
         public GameObject window_msg_prefab;
@@ -175,11 +176,6 @@ namespace Carrot
 
         [Header("Database String Temp")]
         public FirebaseFirestore db;
-        public string s_data_json_share_temp;
-        public string s_data_json_carrotapp_all_temp;
-        public string s_data_json_carrotapp_app_temp;
-        public string s_data_json_carrotapp_game_temp;
-        public string s_data_json_list_lang_temp;
 
         private bool is_ready = false;
 
@@ -205,7 +201,7 @@ namespace Carrot
                 this.GetComponent<Carrot_game>().load_carrot_game();
 
             this.tool = new Carrot_tool();
-            this.lang.load(this);
+            this.lang.On_load(this);
             this.user.load(this);
             this.camera_pro.load(this);
             this.shop.load(this);

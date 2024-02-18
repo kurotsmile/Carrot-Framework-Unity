@@ -15,25 +15,23 @@ namespace Carrot
 
         public IEnumerator get_img_form_url_and_save_playerPrefs(string s_url_img, Image img, string s_key,UnityAction<Texture2D> act_done=null, UnityAction<string> act_fail = null)
         {
-            using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(s_url_img))
+            using UnityWebRequest www = UnityWebRequestTexture.GetTexture(s_url_img);
+            yield return www.SendWebRequest();
+            if (www.result != UnityWebRequest.Result.Success)
             {
-                yield return www.SendWebRequest();
-                if (www.result != UnityWebRequest.Result.Success)
+                Debug.Log(www.error);
+                if (act_fail != null) act_fail(www.error);
+            }
+            else
+            {
+                Texture2D tex = ((DownloadHandlerTexture)www.downloadHandler).texture;
+                if (img != null)
                 {
-                    Debug.Log(www.error);
-                    if (act_fail != null) act_fail(www.error);
+                    img.sprite = this.Texture2DtoSprite(tex);
+                    img.color = Color.white;
                 }
-                else
-                {
-                    Texture2D tex = ((DownloadHandlerTexture)www.downloadHandler).texture;
-                    if (img != null)
-                    {
-                        img.sprite = this.Texture2DtoSprite(tex);
-                        img.color = Color.white;
-                    }
-                    this.PlayerPrefs_Save_texture2D(s_key, tex);
-                    if (act_done != null) act_done(tex);
-                }
+                this.PlayerPrefs_Save_texture2D(s_key, tex);
+                if (act_done != null) act_done(tex);
             }
         }
 

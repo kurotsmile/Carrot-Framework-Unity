@@ -274,6 +274,7 @@ GameObject:
   - component: {fileID: 1244711569507986795}
   - component: {fileID: 3353702974751351471}
   - component: {fileID: 6474188085226842489}
+  - component: {fileID: 3560113166446709643}
   m_Layer: 0
   m_Name: Carrot
   m_TagString: Untagged
@@ -310,8 +311,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99072c8f0c1c9014fa8cd890c4a3da76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ProjectId: carrotstore
-  ApiKey: 
   localhost: localhost:8082
   mainhost: https://carrotstore.web.app
   model_app: 1
@@ -357,6 +356,7 @@ MonoBehaviour:
   camera_pro: {fileID: 1244711569507986795}
   location: {fileID: 3353702974751351471}
   theme: {fileID: 6474188085226842489}
+  server: {fileID: 3560113166446709643}
   window_msg_prefab: {fileID: 1750426150788012, guid: 064e59bc4fa60ed48b452c77919d6473, type: 3}
   window_loading_prefab: {fileID: 2632683814581162851, guid: af7a7fddea11b0b4ca4aa617dd48a44e, type: 3}
   window_exit_prefab: {fileID: 2646574534074554939, guid: 93cb11e1d2cdb424f9711d3b049a4eb9, type: 3}
@@ -571,5 +571,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 687169fc80c58b645a5dacde47b4554f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3560113166446709643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170736565810424376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a85d4b03e2ea934b954f2a557f007a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

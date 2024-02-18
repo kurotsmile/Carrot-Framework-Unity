@@ -1,7 +1,4 @@
-using Firebase.Extensions;
-using Firebase.Firestore;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -14,6 +11,7 @@ namespace Carrot
         public Sprite sp_lang_default_en;
         private Carrot carrot;
         private string s_lang_key;
+        private string s_key_lang_temp = "";
 
         private UnityAction<string> act_after_selecting_lang;
         private Carrot_Box box_lang;
@@ -22,20 +20,19 @@ namespace Carrot
 
         private Transform tr_item_lang_systemLanguage = null;
 
-        public void load(Carrot carrot)
+        public void On_load(Carrot carrot)
         {
             this.carrot = carrot;
             this.data_lang_offline = (IDictionary)Json.Deserialize("{}");
-            this.s_data_json_list_lang_offline = PlayerPrefs.GetString("s_data_json_list_lang_offline");
+            if(this.carrot.is_offline()) this.s_data_json_list_lang_offline = PlayerPrefs.GetString("s_data_json_list_lang_offline");
             this.s_lang_key = PlayerPrefs.GetString("lang", "en");
-            this.load_icon_lang();
-            this.load_lang_emp();
+            this.Load_icon_lang();
+            this.Load_lang_emp();
         }
 
-        private void load_icon_lang()
+        private void Load_icon_lang()
         {
-            Sprite sp_lang_icon = this.carrot.get_tool().get_sprite_to_playerPrefs("icon_" + this.s_lang_key);
-            if (sp_lang_icon == null) sp_lang_icon = this.sp_lang_default_en;
+            Sprite sp_lang_icon = this.carrot.get_tool().get_sprite_to_playerPrefs("icon_" + this.s_lang_key) ?? this.sp_lang_default_en;
             if (this.carrot.emp_show_lang != null) for (int i = 0; i < this.carrot.emp_show_lang.List_img_change_icon_lang.Length; i++) this.carrot.emp_show_lang.List_img_change_icon_lang[i].sprite = sp_lang_icon;
         }
 
@@ -54,63 +51,47 @@ namespace Carrot
             this.carrot.play_sound_click();
             this.act_after_selecting_lang = null;
 
-            if (this.carrot.s_data_json_list_lang_temp == "")
-                load_data_list_lang_by_query(this.carrot.db.Collection("lang"));
+            if (this.s_data_json_list_lang_offline== "")
+            {
+                StructuredQuery q = new("lang");
+                this.carrot.server.Get_doc(q.ToJson(), Get_doc_done, Get_doc_fail);
+            }
             else
-                load_data_list_lang_by_s_data(this.carrot.s_data_json_list_lang_temp);
-        }
-
-        private void load_data_list_lang_by_query(Query query_lang)
-        {
-            this.carrot.log("load_data_list_lang_by_query");
-            query_lang.GetSnapshotAsync().ContinueWithOnMainThread(task =>
             {
-                QuerySnapshot langQuerySnapshot = task.Result;
-                if (task.IsCompleted)
-                {
-                    if (langQuerySnapshot.Count > 0)
-                    {
-                        this.carrot.hide_loading();
-                        this.box_lang = this.carrot.Create_Box(PlayerPrefs.GetString("sel_lang_app", "Choose your language and country"), this.icon);
-                        List<IDictionary> list_lang = new List<IDictionary>();
-                        foreach (DocumentSnapshot documentSnapshot in langQuerySnapshot.Documents)
-                        {
-                            IDictionary lang = documentSnapshot.ToDictionary();
-                            lang["id"] = documentSnapshot.Id;
-                            this.add_item_to_list_box(lang);
-                            list_lang.Add(lang);
-                        };
-
-                        if (this.tr_item_lang_systemLanguage != null) this.tr_item_lang_systemLanguage.SetSiblingIndex(0);
-                        this.s_data_json_list_lang_offline = Json.Serialize(list_lang);
-                        this.carrot.s_data_json_list_lang_temp = this.s_data_json_list_lang_offline;
-                        PlayerPrefs.SetString("s_data_json_list_lang_offline", this.s_data_json_list_lang_offline);
-
-                        if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.box_lang.UI.get_list_btn());
-                    }
-                }
-
-                if (task.IsFaulted)
-                {
-                    if (this.carrot.s_data_json_list_lang_temp != "") this.load_data_list_lang_by_s_data(this.carrot.s_data_json_list_lang_temp);
-                }
-            });
+                this.Load_list_lang_by_data(this.s_data_json_list_lang_offline);
+            }     
         }
 
-        private void load_data_list_lang_by_s_data(string s_data)
+        private void Get_doc_done(string s_data)
         {
+            this.s_data_json_list_lang_offline = s_data;
+            PlayerPrefs.SetString("s_data_json_list_lang_offline", s_data);
+            this.Load_list_lang_by_data(s_data);
+        }
+
+        private void Load_list_lang_by_data(string s_data)
+        {
+            Fire_Collection fc = new(s_data);
+
             this.carrot.hide_loading();
-            this.carrot.log("load_data_list_lang_by_s_data");
-            this.box_lang = this.carrot.Create_Box(PlayerPrefs.GetString("sel_lang_app", "Choose your language and country"), this.icon);
-            IList list_lang = (IList)Json.Deserialize(s_data);
-            for (int i = 0; i < list_lang.Count; i++)
-            {
-                IDictionary lang = (IDictionary)list_lang[i];
-                this.add_item_to_list_box(lang);
-            };
 
-            if (this.tr_item_lang_systemLanguage != null) this.tr_item_lang_systemLanguage.SetSiblingIndex(0);
-            if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.box_lang.UI.get_list_btn());
+            if (!fc.is_null)
+            {
+                this.box_lang = this.carrot.Create_Box(PlayerPrefs.GetString("sel_lang_app", "Choose your language and country"), this.icon);
+                foreach (var doc in fc.fire_document)
+                {
+                    IDictionary lang = doc.Get_IDictionary();
+                    this.Add_item_to_list_box(lang);
+                };
+
+                if (this.tr_item_lang_systemLanguage != null) this.tr_item_lang_systemLanguage.SetSiblingIndex(0);
+                if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.box_lang.UI.get_list_btn());
+            }
+        }
+
+        private void Get_doc_fail(string s_error)
+        {
+            this.carrot.show_msg(s_error);
         }
 
         public void show_list_lang(UnityAction<string> fnc_after_sel_lang)
@@ -119,7 +100,7 @@ namespace Carrot
             this.act_after_selecting_lang = fnc_after_sel_lang;
         }
 
-        private void add_item_to_list_box(IDictionary data_lang)
+        private void Add_item_to_list_box(IDictionary data_lang)
         {
             string s_id_lang = data_lang["id"].ToString();
             var s_key = data_lang["key"].ToString();
@@ -136,8 +117,6 @@ namespace Carrot
                 if (data_lang["icon"] != null) this.carrot.get_img_and_save_playerPrefs(data_lang["icon"].ToString(), item_lang.img_icon, s_id_icon_lang);
 
             if (s_key_lang == this.s_lang_key) item_lang.GetComponent<Image>().color = this.carrot.get_color_highlight_blur(50);
-
-
 
             if (Application.systemLanguage.ToString() == data_lang["name"].ToString())
             {
@@ -156,21 +135,21 @@ namespace Carrot
                     btn_datat_offline.set_icon(this.carrot.icon_carrot_database);
                     btn_datat_offline.set_color(this.carrot.color_highlight);
                     Destroy(btn_datat_offline.GetComponent<Button>());
-                    item_lang.set_act(() => this.select_lang_offline(s_key));
+                    item_lang.set_act(() => this.Select_lang_offline(s_key));
                 }
                 else
                 {
-                    item_lang.set_act(() => this.select_lang(s_key));
+                    item_lang.set_act(() => this.Select_lang(s_key));
                 }
             }
             else
             {
-                item_lang.set_act(() => this.select_lang(s_key));
+                item_lang.set_act(() => this.Select_lang(s_key));
             }
 
         }
 
-        public void load_lang_emp()
+        public void Load_lang_emp()
         {
             if (this.carrot.emp_show_lang != null)
             {
@@ -184,56 +163,42 @@ namespace Carrot
             return this.s_lang_key;
         }
 
-        public void select_lang(string s_key)
+        public void Select_lang(string s_key)
         {
-            DocumentReference langappRef = this.carrot.db.Collection("lang_app").Document(s_key);
-            langappRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
-            {
-                if (task.IsCompleted)
-                {
-                    DocumentSnapshot collectionSnapshot = task.Result;
-                    IDictionary lang_data = collectionSnapshot.ToDictionary();
-                    foreach (var key in lang_data.Keys) PlayerPrefs.SetString(key.ToString(), lang_data[key.ToString()].ToString());
-                    if (this.carrot.collection_document_lang == "") this.change_lang(s_key);
-                    this.data_lang_offline["lang_data_" + s_key] = Json.Serialize(lang_data);
-                }
-            });
-
-
-            if (this.carrot.collection_document_lang != "")
-            {
-                DocumentReference langRef = this.carrot.db.Collection(this.carrot.collection_document_lang).Document(s_key);
-                langRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
-                {
-                    DocumentSnapshot collectionSnapshot = task.Result;
-                    if (task.IsCompleted)
-                    {
-                        if (collectionSnapshot.Exists)
-                        {
-                            IDictionary lang_data_customer = collectionSnapshot.ToDictionary();
-                            foreach (var key in lang_data_customer.Keys) PlayerPrefs.SetString(key.ToString(), lang_data_customer[key.ToString()].ToString());
-                            this.change_lang(s_key);
-                            this.data_lang_offline["lang_data_customer_" + s_key] = Json.Serialize(lang_data_customer);
-                        }
-                        else
-                        {
-                            this.change_lang(s_key);
-                        }
-                    }
-
-                    if (task.IsFaulted)
-                    {
-                        this.change_lang(s_key);
-                    }
-                });
-            }
+            this.carrot.show_loading();
+            this.s_key_lang_temp = s_key;
+            this.carrot.server.Get_doc_by_path("lang_app",this.s_key_lang_temp, Act_sel_lang_done, Act_load_and_sel_fail);
         }
 
-        private void select_lang_offline(string s_key)
+        private void Act_sel_lang_done(string s_data)
+        {
+            Fire_Document data_lang = new(s_data);
+            IDictionary lang_data = data_lang.Get_IDictionary();
+            foreach (var key in lang_data.Keys) PlayerPrefs.SetString(key.ToString(), lang_data[key.ToString()].ToString());
+            if (this.carrot.collection_document_lang == "") this.Change_lang(this.s_key_lang_temp);
+            this.data_lang_offline["lang_data_" + this.s_key_lang_temp] = Json.Serialize(lang_data);
+            if (this.carrot.collection_document_lang != "") this.carrot.server.Get_doc_by_path(this.carrot.collection_document_lang, this.s_key_lang_temp, Act_sel_lang_customer_done);
+        }
+
+        private void Act_load_and_sel_fail(string s_error)
+        {
+            this.Change_lang(this.s_key_lang_temp);
+        }
+
+        private void Act_sel_lang_customer_done(string s_data)
+        {
+            Fire_Document data_lang = new(s_data);
+            IDictionary lang_data_customer = data_lang.Get_IDictionary();
+            foreach (var key in lang_data_customer.Keys) PlayerPrefs.SetString(key.ToString(), lang_data_customer[key.ToString()].ToString());
+            this.Change_lang(this.s_key_lang_temp);
+            this.data_lang_offline["lang_data_customer_" + this.s_key_lang_temp] = Json.Serialize(lang_data_customer);
+        }
+
+        private void Select_lang_offline(string s_key)
         {
             IDictionary lang_data = (IDictionary)Json.Deserialize(this.data_lang_offline["lang_data_" + s_key].ToString());
             foreach (var key in lang_data.Keys) PlayerPrefs.SetString(key.ToString(), lang_data[key.ToString()].ToString());
-            if (this.carrot.collection_document_lang == "") this.change_lang(s_key);
+            if (this.carrot.collection_document_lang == "") this.Change_lang(s_key);
 
             if (this.carrot.collection_document_lang != "")
             {
@@ -242,16 +207,17 @@ namespace Carrot
                     IDictionary lang_data_customer = (IDictionary)Json.Deserialize(this.data_lang_offline["lang_data_customer_" + s_key].ToString());
                     foreach (var key in lang_data_customer.Keys) PlayerPrefs.SetString(key.ToString(), lang_data_customer[key.ToString()].ToString());
                 }
-                this.change_lang(s_key);
+                this.Change_lang(s_key);
             }
         }
 
-        private void change_lang(string s_key_new)
+        private void Change_lang(string s_key_new)
         {
+            this.carrot.hide_loading();
             this.s_lang_key = s_key_new;
-            this.load_icon_lang();
-            this.load_lang_emp();
-            if (this.act_after_selecting_lang != null) this.act_after_selecting_lang(this.s_lang_key);
+            this.Load_icon_lang();
+            this.Load_lang_emp();
+            if (this.act_after_selecting_lang != null) act_after_selecting_lang(this.s_lang_key);
             if (this.box_lang != null) this.box_lang.close();
             PlayerPrefs.SetString("lang", this.s_lang_key);
         }

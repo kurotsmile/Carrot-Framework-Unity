@@ -15,7 +15,7 @@ namespace Carrot
         //Obj Carrot Ads
         public GameObject window_ads_prefab;
         private Carrot carrot;
-
+        private string s_data_carrotapp_all = "";
         //Config
         private int count_show_ads = 0;
         private bool is_ads = true;
@@ -45,7 +45,13 @@ namespace Carrot
                 this.is_ads = false;
 
             this.set_enable_all_emp_btn_removeads(this.is_ads);
-            if (this.carrot.type_ads == TypeAds.Admob_Ads) this.setup_ads_Admob();
+
+            if (this.carrot.type_ads == TypeAds.Admob_Ads)
+            {
+#if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
+                this.setup_ads_Admob();
+#endif
+            }
         }
 
         private void set_enable_all_emp_btn_removeads(bool is_show_ads)
@@ -59,9 +65,9 @@ namespace Carrot
         [ContextMenu("Show Carrot Ads")]
         public void show_carrot_ads()
         {
-            if (this.carrot.s_data_json_carrotapp_all_temp != "")
+            if (this.s_data_carrotapp_all != "")
             {
-                IList list_app = (IList)Json.Deserialize(this.carrot.s_data_json_carrotapp_all_temp);
+                IList list_app = (IList)Json.Deserialize(this.s_data_carrotapp_all);
                 int index_rand = UnityEngine.Random.Range(0, list_app.Count);
                 IDictionary data_ads = (IDictionary)list_app[index_rand];
                 this.act_show_ads(data_ads);
@@ -85,7 +91,7 @@ namespace Carrot
                             };
 
                             string s_data_carrotapp_all = Json.Serialize(list_app);
-                            this.carrot.s_data_json_carrotapp_all_temp = s_data_carrotapp_all;
+                            this.s_data_carrotapp_all = s_data_carrotapp_all;
                             PlayerPrefs.SetString("s_data_carrotapp_all", s_data_carrotapp_all);
 
                             int index_rand = UnityEngine.Random.Range(0, list_app.Count);
