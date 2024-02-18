@@ -1,4 +1,3 @@
-using Firebase.Firestore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,7 +23,6 @@ namespace Carrot
     public class Carrot : MonoBehaviour
     {
         [Header("Config App")]
-        public string localhost = "localhost:8082";
         public string mainhost = "https://carrotstore.web.app";
         public ModelApp model_app;
         public OS os_app;
@@ -173,23 +171,10 @@ namespace Carrot
         public UnityAction act_after_close_all_box;
         public UnityAction act_after_delete_all_data;
 
-
-        [Header("Database String Temp")]
-        public FirebaseFirestore db;
-
         private bool is_ready = false;
 
         public void Load_Carrot()
         {
-            this.db = FirebaseFirestore.DefaultInstance;
-#if UNITY_EDITOR
-            if (db.Settings.Host != this.localhost)
-            {
-                db.Settings.Host = this.localhost;
-                db.Settings.PersistenceEnabled = false;
-                db.Settings.SslEnabled = false;
-            }
-#endif
             this.list_log = new List<string>();
 
             this.s_store = this.store_public.ToString().ToLower();
@@ -198,11 +183,11 @@ namespace Carrot
             if (this.type_app == TypeApp.App)
                 Destroy(this.GetComponent<Carrot_game>());
             else
-                this.GetComponent<Carrot_game>().load_carrot_game();
+                this.GetComponent<Carrot_game>().Load_carrot_game();
 
             this.tool = new Carrot_tool();
             this.lang.On_load(this);
-            this.user.load(this);
+            this.user.On_load(this);
             this.camera_pro.load(this);
             this.shop.load(this);
             this.shop.onCarrotPaySuccess += this.carrot_by_success;
@@ -210,7 +195,7 @@ namespace Carrot
             this.ads.load(this);
             this.theme.on_load(this);
 
-            if (this.type_app == TypeApp.Game) this.ads.onRewardedSuccess += this.GetComponent<Carrot_game>().onRewardedSuccess;
+            if (this.type_app == TypeApp.Game) this.ads.onRewardedSuccess += this.GetComponent<Carrot_game>().OnRewardedSuccess;
             this.ads.onRewardedSuccess += this.theme.onRewardedSuccess;
 
             this.carrot_list_app = new Carrot_list_app(this);

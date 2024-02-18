@@ -1,10 +1,7 @@
-using Firebase.Extensions;
-using Firebase.Firestore;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Ump.Api;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -52,6 +49,11 @@ namespace Carrot
                 this.setup_ads_Admob();
 #endif
             }
+
+            if (this.carrot.is_offline()&& this.is_ads)
+            {
+                this.s_data_carrotapp_all = PlayerPrefs.GetString("s_data_carrotapp_all");
+            }
         }
 
         private void set_enable_all_emp_btn_removeads(bool is_show_ads)
@@ -67,48 +69,44 @@ namespace Carrot
         {
             if (this.s_data_carrotapp_all != "")
             {
-                IList list_app = (IList)Json.Deserialize(this.s_data_carrotapp_all);
-                int index_rand = UnityEngine.Random.Range(0, list_app.Count);
-                IDictionary data_ads = (IDictionary)list_app[index_rand];
-                this.act_show_ads(data_ads);
+                this.Act_load_ads_data(this.s_data_carrotapp_all);
             }
             else
             {
-                Query AppQuery = this.carrot.db.Collection("app").WhereEqualTo("status", "publish");
-                AppQuery.GetSnapshotAsync().ContinueWithOnMainThread(task =>
-                {
-                    QuerySnapshot AppQuerySnapshot = task.Result;
-                    if (task.IsCompleted)
-                    {
-                        if (AppQuerySnapshot.Count > 0)
-                        {
-                            List<IDictionary> list_app = new List<IDictionary>();
-                            foreach (DocumentSnapshot document in AppQuerySnapshot.Documents)
-                            {
-                                IDictionary app_data = document.ToDictionary();
-                                app_data["id"] = document.Id;
-                                list_app.Add(app_data);
-                            };
-
-                            string s_data_carrotapp_all = Json.Serialize(list_app);
-                            this.s_data_carrotapp_all = s_data_carrotapp_all;
-                            PlayerPrefs.SetString("s_data_carrotapp_all", s_data_carrotapp_all);
-
-                            int index_rand = UnityEngine.Random.Range(0, list_app.Count);
-                            this.act_show_ads(list_app[index_rand]);
-                        }
-                    }
-                });
+                this.carrot.show_loading();
+                StructuredQuery q = new("app");
+                q.Add_where("status", Query_OP.EQUAL, "publish");
+                this.carrot.server.Get_doc(q.ToJson(), Act_show_carrot_ads_done, Act_show_carrot_ads_fail);
             }
         }
 
-        private void act_show_ads(IDictionary data_ads)
+        private void Act_show_carrot_ads_done(string s_data)
+        {
+            this.carrot.hide_loading();
+            this.s_data_carrotapp_all = s_data;
+            PlayerPrefs.SetString("s_data_carrotapp_all", s_data);
+            this.Act_load_ads_data(s_data);
+        }
+
+        private void Act_show_carrot_ads_fail(string s_error)
+        {
+            this.carrot.hide_loading();
+            if (this.s_data_carrotapp_all != "") this.Act_load_ads_data(this.s_data_carrotapp_all);
+        }
+
+        private void Act_load_ads_data(string s_data)
+        {
+            Fire_Collection fc = new(s_data);
+            if (!fc.is_null) this.Act_show_ads(fc.Get_doc_random().Get_IDictionary());
+        }
+
+        private void Act_show_ads(IDictionary data_ads)
         {
             GameObject window_ads = this.carrot.create_window(this.window_ads_prefab);
             window_ads.name = "window_ads";
             window_ads.gameObject.SetActive(true);
             Carrot_Window_Ads ads = window_ads.GetComponent<Carrot_Window_Ads>();
-            ads.load(this.carrot);
+            ads.On_load(this.carrot);
             ads.load_data_ads(data_ads);
         }
 

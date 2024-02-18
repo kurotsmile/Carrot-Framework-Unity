@@ -32,7 +32,7 @@ namespace Carrot
     public class Carrot_Server : MonoBehaviour
     {
         private readonly string projectId = "carrotstore";
-        private readonly string key_api = "AIzaSyDzsx1KYLZL5COz1NaTD8cOz8GYalX2Dxc";
+        public string key_api = "";
 
         public void Get_doc(string query, UnityAction<string> act_done = null, UnityAction<string> act_fail = null)
         {
@@ -126,6 +126,12 @@ namespace Carrot
             this.Add_Document_To_Collection("app", "a", jsonPayload);
         }
 
+        [ContextMenu("Del test")]
+        public void delete_test()
+        {
+            this.Delete_Doc("app", "a");
+        }
+
         public string Convert_IDictionary_to_json(IDictionary obj_IDictionary)
         {
             string s_json = "{";
@@ -160,6 +166,32 @@ namespace Carrot
             }
             s_json = s_json[..^1];
             return s_json += "}}";
+        }
+
+        public void Delete_Doc(string id_Collection, string id_document, UnityAction<string> act_done = null, UnityAction<string> act_fail = null)
+        {
+            StartCoroutine(DeleteDoc(id_Collection, id_document, act_done, act_fail));
+        }
+
+        IEnumerator DeleteDoc(string id_Collection, string id_document, UnityAction<string> act_done = null, UnityAction<string> act_fail = null)
+        {
+            string url = "https://firestore.googleapis.com/v1/projects/" + projectId + "/databases/(default)/documents/" + id_Collection + "/" + id_document + "?key=" + this.key_api;
+
+            using (UnityWebRequest www = UnityWebRequest.Delete(url))
+            {
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.LogError("Error: " + www.error);
+                    act_fail?.Invoke(www.error);
+                }
+                else
+                {
+                    Debug.Log("Delete successful!");
+                    act_done?.Invoke(www.downloadHandler.text);
+                }
+            }
         }
     }
 

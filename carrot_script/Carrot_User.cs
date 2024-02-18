@@ -1,5 +1,3 @@
-using Firebase.Extensions;
-using Firebase.Firestore;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -11,39 +9,24 @@ namespace Carrot
 {
     public enum Type_List_Avatar {all,boy,girl}
 
-    [FirestoreData]
     public struct user_carrot_address
     {
-        [FirestoreProperty]
         public string lon { get; set; }
-        [FirestoreProperty]
         public string lat { get; set; }
-        [FirestoreProperty]
         public string name { get; set; }
     }
 
-    [FirestoreData]
     public struct user_carrot_data
     {
-        [FirestoreProperty]
         public string name { get; set; }
-        [FirestoreProperty]
         public string email { get; set; }
-        [FirestoreProperty]
         public string phone { get; set; }
-        [FirestoreProperty]
         public string sex { get; set; }
-        [FirestoreProperty]
         public string password { get; set; }
-        [FirestoreProperty]
         public string status_share { get; set; }
-        [FirestoreProperty]
         public user_carrot_address address { get; set; }
-        [FirestoreProperty]
         public string lang { get; set; }
-        [FirestoreProperty]
         public string avatar { get; set; }
-        [FirestoreProperty]
         public string date_create { get; set; }
     }
 
@@ -100,19 +83,17 @@ namespace Carrot
         private Carrot_Box_Btn_Item btn_model_advanced;
 
         user_carrot_address user_address;
-        private string s_data_json_avatar_offline;
+        private string s_data_json_avatar_offline = "";
 
         private Carrot_Window_User_Login cur_window_user_login = null;
         public Carrot_Box_Item user_login_item_setting = null;
-        private bool is_data_cache_avatar_ready = false;
 
-        public void load(Carrot carrot)
+        private IDictionary data_user_temp = null;
+
+        public void On_load(Carrot carrot)
         {
             this.carrot = carrot;
-            this.s_data_json_avatar_offline = PlayerPrefs.GetString("s_data_json_avatar_offline","");
-
-            if (this.carrot.is_offline()) this.is_data_cache_avatar_ready = true;
-
+            if (this.carrot.is_offline()) this.s_data_json_avatar_offline = PlayerPrefs.GetString("s_data_json_avatar_offline", "");
             this.s_data_user_login = PlayerPrefs.GetString("data_user_login");
             this.s_id_user_login = PlayerPrefs.GetString("id_user_login");
             this.s_password_user_login = PlayerPrefs.GetString("password_user_login");
@@ -169,7 +150,6 @@ namespace Carrot
                 this.act_logout();
                 return null;
             }
-                
 
             if (data_user["email"] != null)
             {
@@ -285,10 +265,10 @@ namespace Carrot
         {
             GameObject window_login = this.carrot.create_window(this.window_login_prefab);
             this.cur_window_user_login = window_login.GetComponent<Carrot_Window_User_Login>();
-            this.cur_window_user_login.load(this.carrot);
+            this.cur_window_user_login.On_load(this.carrot);
             this.cur_window_user_login.act_after_login_success = act_login_success;
             window_login.GetComponent<Carrot_lang_show>().load_lang_emp(this.carrot.lang.get_sp_lang_cur());
-            this.cur_window_user_login.check_mode_login();
+            this.cur_window_user_login.Check_mode_login();
             if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.cur_window_user_login.UI.get_list_btn());
         }
 
@@ -332,7 +312,7 @@ namespace Carrot
             btn_done.set_label_color(Color.white);
             btn_done.set_bk_color(this.carrot.color_highlight);
             btn_done.set_label(PlayerPrefs.GetString("done","Done"));
-            btn_done.set_act_click(act_done_lost_password);
+            btn_done.set_act_click(Act_done_lost_password);
 
             Carrot_Button_Item btn_cancel = panel_btn.create_btn("item_cancel");
             btn_cancel.set_icon(this.carrot.icon_carrot_done);
@@ -343,35 +323,38 @@ namespace Carrot
             this.box_list.update_gamepad_cosonle_control();
         }
 
-        private void act_done_lost_password()
+        private void Act_done_lost_password()
         {
-            Query UserQuery = this.carrot.db.Collection("user-" + this.carrot.lang.get_key_lang());
-            if(this.item_email.get_val()!="") UserQuery=UserQuery.WhereEqualTo("email", this.item_email.get_val());
-            if(this.item_phone.get_val()!="") UserQuery=UserQuery.WhereEqualTo("phone", this.item_phone.get_val());
-            UserQuery.Limit(1).GetSnapshotAsync().ContinueWithOnMainThread(task => {
-                QuerySnapshot AllUserQuerySnapshot = task.Result;
-                if (task.IsFaulted)
-                {
-                    this.carrot.show_msg(PlayerPrefs.GetString("forgot_password", "Forgot password"), PlayerPrefs.GetString("acc_no", "This account information is not in the system!"));
-                }
+            this.carrot.show_loading();
+            StructuredQuery q = new("user-" + this.carrot.lang.get_key_lang());
+            if(this.item_email.get_val()!="")q.Add_where("email",Query_OP.EQUAL,this.item_email.get_val());
+            if(this.item_phone.get_val()!="") q.Add_where("phone",Query_OP.EQUAL,this.item_phone.get_val());
+            this.carrot.server.Get_doc(q.ToJson(), Act_done_lost_password_done, Act_done_lost_password_fail);
+        }
 
-                if (task.IsCompleted)
+        private void Act_done_lost_password_done(string s_data)
+        {
+            this.carrot.hide_loading();
+            Fire_Collection fc = new Fire_Collection(s_data);
+            if (!fc.is_null)
+            {
+                for(int i=0;i<fc.fire_document.Length;i++)
                 {
-                    if (AllUserQuerySnapshot.Count > 0)
-                    {
-                        foreach (DocumentSnapshot documentSnapshot in AllUserQuerySnapshot.Documents)
-                        {
-                            IDictionary u = documentSnapshot.ToDictionary();
-                            if(u["password"] !=null) this.carrot.show_msg(PlayerPrefs.GetString("pass_acc_msg", "The password for the account is:"+ u["password"].ToString()));
-                            return;
-                        };
-                    }
-                    else
-                    {
-                        this.carrot.show_msg(PlayerPrefs.GetString("forgot_password", "Forgot password"), PlayerPrefs.GetString("acc_no", "This account information is not in the system!"));
-                    }
-                }
-            });
+                    IDictionary u = fc.fire_document[i].Get_IDictionary();
+                    if (u["password"] != null) this.carrot.show_msg(PlayerPrefs.GetString("pass_acc_msg", "The password for the account is:" + u["password"].ToString()));
+                    return;
+                };
+            }
+            else
+            {
+                this.carrot.show_msg(PlayerPrefs.GetString("forgot_password", "Forgot password"), PlayerPrefs.GetString("acc_no", "This account information is not in the system!"));
+            }
+        }
+
+        private void Act_done_lost_password_fail(string s_error)
+        {
+            this.carrot.hide_loading();
+            this.carrot.show_msg(PlayerPrefs.GetString("forgot_password", "Forgot password"), PlayerPrefs.GetString("acc_no", "This account information is not in the system!"));
         }
 
         public void set_data_user_login(IDictionary data_user)
@@ -494,7 +477,7 @@ namespace Carrot
             this.item_avatar.set_tip("Choose your profile picture");
             this.item_avatar.set_lang_data("user_avatar", "user_avatar_tip");
             this.item_avatar.load_lang_data();
-            this.item_avatar.set_act(()=>this.act_show_list_avatar());
+            this.item_avatar.set_act(()=>this.Act_show_list_avatar());
             if (data != null)
             {
                 if (data["avatar"] != null)
@@ -508,7 +491,7 @@ namespace Carrot
 
             Carrot_Box_Btn_Item btn_list_avatar=this.item_avatar.create_item();
             btn_list_avatar.set_icon(this.carrot.icon_carrot_all_category);
-            btn_list_avatar.set_act(()=>this.act_show_list_avatar());
+            btn_list_avatar.set_act(()=>this.Act_show_list_avatar());
             btn_list_avatar.set_color(this.carrot.color_highlight);
 
             this.item_name = this.box_list.create_item("item_name");
@@ -633,7 +616,7 @@ namespace Carrot
             btn_done.set_label(PlayerPrefs.GetString("done", "Done"));
             btn_done.set_label_color(Color.white);
             btn_done.set_bk_color(this.carrot.color_highlight);
-            btn_done.set_act_click(act_done_register);
+            btn_done.set_act_click(Act_done_register);
 
             Carrot_Button_Item btn_canel = panel_btn.create_btn("btn_cancel");
             btn_canel.set_icon(this.carrot.icon_carrot_cancel);
@@ -651,7 +634,7 @@ namespace Carrot
             this.user_address.lon = loc.longitude.ToString();
         }
 
-        private void act_done_register()
+        private void Act_done_register()
         {
             string s_title;
             if (this.s_id_user_login == "")
@@ -692,25 +675,33 @@ namespace Carrot
                 date_create = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ")
             };
 
-            CollectionReference userDbRef= this.carrot.db.Collection("user-" + this.carrot.lang.get_key_lang());
-            DocumentReference uRef;
-            if(this.s_id_user_login=="")
-                uRef=userDbRef.Document("user"+this.carrot.generateID());
-            else
-                uRef=userDbRef.Document(this.s_id_user_login);
-            uRef.SetAsync(u);
 
+            string user_id_new = "";
             if(this.s_id_user_login=="")
-                this.carrot.show_msg(s_title, PlayerPrefs.GetString("register_success", "Account registration is successful!"), Msg_Icon.Success);
+                user_id_new="user" +this.carrot.generateID();
+            else
+                user_id_new = this.s_id_user_login;
+
+            this.data_user_temp= (IDictionary)Json.Deserialize(JsonConvert.SerializeObject(u));
+            this.carrot.server.Add_Document_To_Collection("user-" + this.carrot.lang.get_key_lang(), user_id_new, this.carrot.server.Convert_IDictionary_to_json(this.data_user_temp), Act_done_register_done, Act_done_register_fail);
+        }
+
+        private void Act_done_register_done(string s_data)
+        {
+            if (this.s_id_user_login == "")
+                this.carrot.show_msg(PlayerPrefs.GetString("register", "Register Account"), PlayerPrefs.GetString("register_success", "Account registration is successful!"), Msg_Icon.Success);
             else
             {
-                this.carrot.show_msg(s_title, PlayerPrefs.GetString("acc_edit_success", "Successful account information update!"), Msg_Icon.Success);
-                string user_update = JsonConvert.SerializeObject(u);
-                IDictionary data_user = (IDictionary)Json.Deserialize(user_update);
-                data_user["user_id"] = this.s_id_user_login;
-                this.set_data_user_login(data_user);
+                this.carrot.show_msg(PlayerPrefs.GetString("register", "Register Account"), PlayerPrefs.GetString("acc_edit_success", "Successful account information update!"), Msg_Icon.Success);
+                this.data_user_temp["user_id"] = this.s_id_user_login;
+                this.set_data_user_login(this.data_user_temp);
             }
             if (this.box_list != null) this.box_list.close();
+        }
+
+        private void Act_done_register_fail(string s_error)
+        {
+            this.carrot.show_msg(s_error);
         }
 
         public string get_id_user_login()
@@ -722,31 +713,28 @@ namespace Carrot
         {
             this.carrot.play_sound_click();
             this.carrot.show_loading();
-            DocumentReference UserRef = this.carrot.db.Collection("user-"+s_lang_user).Document(s_id_user);
-            UserRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
-            {
-                var snapshot = task.Result;
-                if (task.IsCompleted)
-                {
-                    this.carrot.hide_loading();
-                    if (snapshot.Exists)
-                    {
-                        IDictionary data_user = snapshot.ToDictionary();
-                        data_user["id"] = snapshot.Id;
-                        this.show_info_user_by_data(data_user);
-                    }
-                    else
-                    {
-                        this.carrot.show_msg(PlayerPrefs.GetString("acc_info", "Account Information"), "Account not found", Msg_Icon.Alert);
-                    }
-                }
+            this.carrot.server.Get_doc_by_path("user-" + s_lang_user, s_id_user, Act_show_user_by_id_done, Act_show_user_by_id_fail);
+        }
 
-                if (task.IsFaulted)
-                {
-                    this.carrot.hide_loading();
-                    this.carrot.show_msg(PlayerPrefs.GetString("acc_info", "Account Information"), "The operation failed, please try again next time!", Msg_Icon.Error);
-                }
-            });
+        private void Act_show_user_by_id_done(string s_data)
+        {
+            this.carrot.hide_loading();
+            Fire_Collection fc = new Fire_Collection(s_data);
+            if (!fc.is_null)
+            {
+                IDictionary data_user = fc.fire_document[0].Get_IDictionary();
+                this.show_info_user_by_data(data_user);
+            }
+            else
+            {
+                this.carrot.show_msg(PlayerPrefs.GetString("acc_info", "Account Information"), "Account not found", Msg_Icon.Alert);
+            }
+        }
+
+        private void Act_show_user_by_id_fail(string s_error)
+        {
+            this.carrot.hide_loading();
+            this.carrot.show_msg(PlayerPrefs.GetString("acc_info", "Account Information"), "The operation failed, please try again next time!", Msg_Icon.Error);
         }
 
         public void show_user_by_id(string s_id_user, string s_lang_user, UnityAction<IDictionary> act_after)
@@ -807,99 +795,76 @@ namespace Carrot
         }
 
         #region List Avatar
-        private void act_show_list_avatar()
+        private void Act_show_list_avatar()
         {
             if (this.box_list_avatar != null) this.box_list_avatar.close();
 
-            if (this.is_data_cache_avatar_ready)
+            if (this.s_data_json_avatar_offline=="")
             {
-                if (this.s_data_json_avatar_offline == "")
-                {
-                    this.act_get_list_avatar_from_sever();
-                }
-                else
-                {
-                    IList list_avatr = (IList)Json.Deserialize(this.s_data_json_avatar_offline);
-                    this.load_list_avatar(list_avatr);
-                }
+                this.carrot.show_loading();
+                StructuredQuery q = new("user-avatar");
+                this.carrot.server.Get_doc(q.ToJson(), Act_show_list_avatar_done, Act_show_list_avatar_fail);
             }
             else
             {
-                this.act_get_list_avatar_from_sever();
+                this.Act_load_list_avatar(this.s_data_json_avatar_offline);
             }
-
         }
 
-        private void act_get_list_avatar_from_sever()
+        private void Act_show_list_avatar_done(string s_data)
         {
-            this.carrot.show_loading();
-            Query AvatarQuery=this.carrot.db.Collection("user-avatar");
-            this.carrot.log("act_get_list_avatar_by_query (" + this.type_list_avatar + ")");
-            AvatarQuery.GetSnapshotAsync().ContinueWithOnMainThread(task => {
-                QuerySnapshot AvatarQuerySnapshot = task.Result; 
-
-                if (task.IsFaulted)
-                {
-                    if (this.box_list_avatar != null) this.box_list_avatar.close();
-                }
-
-                if (task.IsCompleted)
-                {
-                    if (AvatarQuerySnapshot.Count > 0)
-                    {
-                        IList list_avatar = (IList) Json.Deserialize("[]");
-                        foreach (DocumentSnapshot documentSnapshot in AvatarQuerySnapshot.Documents)
-                        {
-                            IDictionary avatar_data = documentSnapshot.ToDictionary();
-                            avatar_data["id"] = documentSnapshot.Id;
-                            list_avatar.Add(avatar_data);
-                        };
-
-                        this.s_data_json_avatar_offline = Json.Serialize(list_avatar);
-                        PlayerPrefs.SetString("s_data_json_avatar_offline", this.s_data_json_avatar_offline);
-                        this.is_data_cache_avatar_ready = true;
-                        this.load_list_avatar(list_avatar);
-                    }
-                }
-            });
+            this.s_data_json_avatar_offline = s_data;
+            PlayerPrefs.SetString("s_data_json_avatar_offline", this.s_data_json_avatar_offline);
+            this.Act_load_list_avatar(s_data);
         }
 
-        private void load_list_avatar(IList list_avatar)
+        private void Act_show_list_avatar_fail(string s_error)
         {
-            if (this.box_list_avatar != null) this.box_list_avatar.close();
             this.carrot.hide_loading();
-            this.box_list_avatar = this.carrot.Create_Box("list_avatar");
-            box_list_avatar.set_title(PlayerPrefs.GetString("user_avatar", "List Avatar"));
-            box_list_avatar.set_icon(this.carrot.icon_carrot_avatar);
-            box_list_avatar.set_type(Carrot_Box_Type.Grid_Box);
+            if (this.box_list_avatar != null) this.box_list_avatar.close();
+        }
 
-            Carrot_Box_Btn_Item btn_all = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_all_category);
-            btn_all.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.all));
-            if (type_list_avatar == Type_List_Avatar.all) btn_all.set_icon_color(this.carrot.color_highlight);
+        private void Act_load_list_avatar(string s_data)
+        {
+            this.carrot.hide_loading();
+            Fire_Collection fc = new(s_data);
+            this.carrot.log("act_get_list_avatar_by_query (" + this.type_list_avatar + ")");
 
-            Carrot_Box_Btn_Item btn_boy = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_sex_boy);
-            btn_boy.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.boy));
-            if (type_list_avatar == Type_List_Avatar.boy) btn_boy.set_icon_color(this.carrot.color_highlight);
-
-            Carrot_Box_Btn_Item btn_girl = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_sex_girl);
-            btn_girl.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.girl));
-            if (type_list_avatar == Type_List_Avatar.girl) btn_girl.set_icon_color(this.carrot.color_highlight);
-
-            for (int i = 0; i < list_avatar.Count; i++)
+            if (!fc.is_null)
             {
-                IDictionary avatar_data = (IDictionary)list_avatar[i];
-                if (this.type_list_avatar == Type_List_Avatar.all)
+                if (this.box_list_avatar != null) this.box_list_avatar.close();
+                this.carrot.hide_loading();
+                this.box_list_avatar = this.carrot.Create_Box("list_avatar");
+                box_list_avatar.set_title(PlayerPrefs.GetString("user_avatar", "List Avatar"));
+                box_list_avatar.set_icon(this.carrot.icon_carrot_avatar);
+                box_list_avatar.set_type(Carrot_Box_Type.Grid_Box);
+
+                Carrot_Box_Btn_Item btn_all = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_all_category);
+                btn_all.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.all));
+                if (type_list_avatar == Type_List_Avatar.all) btn_all.set_icon_color(this.carrot.color_highlight);
+
+                Carrot_Box_Btn_Item btn_boy = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_sex_boy);
+                btn_boy.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.boy));
+                if (type_list_avatar == Type_List_Avatar.boy) btn_boy.set_icon_color(this.carrot.color_highlight);
+
+                Carrot_Box_Btn_Item btn_girl = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_sex_girl);
+                btn_girl.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.girl));
+                if (type_list_avatar == Type_List_Avatar.girl) btn_girl.set_icon_color(this.carrot.color_highlight);
+
+                for (int i = 0; i < fc.fire_document.Length; i++)
                 {
-                    this.add_item_avatar_to_list_box(avatar_data);
-                }  
-                else
-                {
-                    if(this.type_list_avatar.ToString().ToLower()==avatar_data["type"].ToString()) this.add_item_avatar_to_list_box(avatar_data);
+                    IDictionary avatar_data =fc.fire_document[i].Get_IDictionary();
+                    if (this.type_list_avatar == Type_List_Avatar.all)
+                        this.Add_item_avatar_to_list_box(avatar_data);
+
+                    else
+                        if (this.type_list_avatar.ToString().ToLower() == avatar_data["type"].ToString()) this.Add_item_avatar_to_list_box(avatar_data);
                 }
             }
         }
 
-        private void add_item_avatar_to_list_box(IDictionary avatar_data)
+
+        private void Add_item_avatar_to_list_box(IDictionary avatar_data)
         {
             string s_id_avatar = "avt_"+avatar_data["id"].ToString();
             string s_url_icon = avatar_data["icon"].ToString();
@@ -910,16 +875,16 @@ namespace Carrot
                 avatar_item.set_icon_white(sp);
             else
                 this.carrot.get_img_and_save_playerPrefs(s_url_icon, avatar_item.img_icon, s_id_avatar);
-            avatar_item.set_act(() => select_avatar(s_url_icon, avatar_item.img_icon.sprite));
+            avatar_item.set_act(() => Select_avatar(s_url_icon, avatar_item.img_icon.sprite));
         }
 
         private void act_set_type_show_list_avatar(Type_List_Avatar type_list)
         {
             this.type_list_avatar = type_list;
-            this.act_show_list_avatar();
+            this.Act_show_list_avatar();
         }
 
-        private void select_avatar(string url_icon, Sprite sp_icon)
+        private void Select_avatar(string url_icon, Sprite sp_icon)
         {
             this.item_avatar.img_icon.sprite = sp_icon;
             this.item_avatar.img_icon.color = Color.white;

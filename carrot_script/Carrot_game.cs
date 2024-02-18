@@ -1,5 +1,3 @@
-using Firebase.Extensions;
-using Firebase.Firestore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,16 +9,11 @@ using UnityEngine.UI;
 
 namespace Carrot
 {
-    [FirestoreData]
     public struct Carrot_rank_data
     {
-        [FirestoreProperty]
         public Carrot_Rate_user_data user { get; set; }
-        [FirestoreProperty]
         public string type { get; set; }
-        [FirestoreProperty]
         public string scores { get; set; }
-        [FirestoreProperty]
         public string date { get; set; }
     }
 
@@ -63,7 +56,7 @@ namespace Carrot
         private string s_data_offline_rank_player;
         private int index_edit_rank = -1;
 
-        public void load_carrot_game()
+        public void Load_carrot_game()
         {
             this.carrot = this.GetComponent<Carrot>();
             this.sound_bk_game = this.GetComponent<AudioSource>();
@@ -84,108 +77,106 @@ namespace Carrot
         {
             this.carrot.show_loading();
             this.box_setting_item_bkmusic = item_setting;
-            Query AudioQuery = this.carrot.db.Collection("audio");
-            AudioQuery.Limit(20);
-            AudioQuery.GetSnapshotAsync().ContinueWithOnMainThread(task => {
-                QuerySnapshot capitalQuerySnapshot = task.Result;
+            StructuredQuery q = new("audio");
+            q.Set_limit(20);
+            this.carrot.server.Get_doc(q.ToJson(), get_list_music_game_done, get_list_music_game_fail);
+        }
 
-                if (task.IsFaulted)
+        private void get_list_music_game_done(string s_data)
+        {
+            this.carrot.hide_loading();
+            Fire_Collection fc = new(s_data);
+            if (!fc.is_null)
+            {
+                List<IDictionary> list_music = new();
+                for(int i=0;i<fc.fire_document.Length;i++)
                 {
-                    this.carrot.hide_loading();
-                    this.carrot.log(task.Exception.Message);
-                }
+                    IDictionary audio = fc.fire_document[i].Get_IDictionary();
+                    list_music.Add(audio);
+                };
+                this.carrot.log("show_list_music_game from server..." + list_music.Count);
 
-                if (task.IsCompleted)
+                if (this.sound_bk_game != null) this.sound_bk_game.Stop();
+                if (this.box_list_music_game != null) this.box_list_music_game.close();
+                this.box_list_music_game = this.carrot.Create_Box("carrot_list_bk_music");
+                box_list_music_game.set_title("Background music games");
+                box_list_music_game.set_icon(this.icon_list_music_game);
+                box_list_music_game.set_act_before_closing(this.act_close_list_music);
+
+                this.list_link_music_bk = new List<string>();
+                this.item_bk_music_play = null;
+                this.id_select_play_bk_music = "";
+                this.id_buy_bk_music_temp = "";
+                this.index_buy_music_link_temp = -1;
+
+
+                for (int i = 0; i < list_music.Count; i++)
                 {
-                    this.carrot.hide_loading();
-                    if (capitalQuerySnapshot.Count > 0)
+                    IDictionary item_data_music = (IDictionary)list_music[i];
+
+                    Carrot_Box_Item item_music_bk = this.box_list_music_game.create_item("item_bk_music_" + i);
+                    item_music_bk.set_icon(this.icon_list_music_game);
+                    item_music_bk.set_title(item_data_music["name"].ToString());
+                    this.list_link_music_bk.Add(item_data_music["mp3"].ToString());
+
+                    var index_link = i;
+                    var id_bk_music = item_data_music["id"].ToString();
+                    Carrot_Box_Btn_Item btn_play = item_music_bk.create_item();
+                    btn_play.set_icon(this.icon_play_music_game);
+                    btn_play.set_color(this.carrot.color_highlight);
+                    btn_play.set_act(() => this.play_item_music_background_game(item_music_bk, index_link, id_bk_music));
+
+                    bool is_buy = false;
+
+                    if (item_data_music["buy"].ToString() == "0") is_buy = false;
+                    else is_buy = true;
+
+                    if (is_buy)
                     {
-                        
-                        List<IDictionary> list_music = new List<IDictionary>();
-                        foreach (DocumentSnapshot documentSnapshot in capitalQuerySnapshot.Documents)
+                        if (PlayerPrefs.GetInt("is_buy_bk_" + item_data_music["id"].ToString(), 0) == 1) is_buy = false;
+                    }
+
+                    if (is_buy)
+                    {
+                        Carrot_Box_Btn_Item btn_buy = item_music_bk.create_item();
+                        btn_buy.set_icon(this.icon_buy_music_game);
+                        btn_buy.set_color(this.carrot.color_highlight);
+                        btn_buy.set_act(() => this.act_buy_music_bk(id_bk_music, index_link));
+                        item_music_bk.set_tip("Please buy to use this track");
+                        item_music_bk.set_act(() => this.act_buy_music_bk(id_bk_music, index_link));
+
+                        if (this.carrot.id_ads_Rewarded_android != "" || this.carrot.id_ads_Rewarded_ios != "")
                         {
-                            IDictionary audio = documentSnapshot.ToDictionary();
-                            list_music.Add(audio);
-                        };
-                        this.carrot.log("show_list_music_game from server..." + list_music.Count);
-
-                        if(this.sound_bk_game!=null) this.sound_bk_game.Stop();
-                        if (this.box_list_music_game != null) this.box_list_music_game.close();
-                        this.box_list_music_game = this.carrot.Create_Box("carrot_list_bk_music");
-                        box_list_music_game.set_title("Background music games");
-                        box_list_music_game.set_icon(this.icon_list_music_game);
-                        box_list_music_game.set_act_before_closing(this.act_close_list_music);
-  
-                        this.list_link_music_bk = new List<string>();
-                        this.item_bk_music_play = null;
-                        this.id_select_play_bk_music = "";
-                        this.id_buy_bk_music_temp = "";
-                        this.index_buy_music_link_temp = -1;
-
-       
-                        for (int i = 0; i < list_music.Count; i++)
-                        {
-                            IDictionary item_data_music = (IDictionary)list_music[i];
-
-                            Carrot_Box_Item item_music_bk = this.box_list_music_game.create_item("item_bk_music_" + i);
-                            item_music_bk.set_icon(this.icon_list_music_game);
-                            item_music_bk.set_title(item_data_music["name"].ToString());
-                            this.list_link_music_bk.Add(item_data_music["mp3"].ToString());
-
-                            var index_link = i;
-                            var id_bk_music = item_data_music["id"].ToString();
-                            Carrot_Box_Btn_Item btn_play = item_music_bk.create_item();
-                            btn_play.set_icon(this.icon_play_music_game);
-                            btn_play.set_color(this.carrot.color_highlight);
-                            btn_play.set_act(() => this.play_item_music_background_game(item_music_bk, index_link, id_bk_music));
-
-                            bool is_buy = false;
-
-                            if (item_data_music["buy"].ToString() == "0") is_buy = false;
-                            else is_buy = true;
-
-                            if (is_buy)
-                            {
-                                if (PlayerPrefs.GetInt("is_buy_bk_" + item_data_music["id"].ToString(), 0) == 1) is_buy = false;
-                            }
-
-                            if (is_buy)
-                            {
-                                Carrot_Box_Btn_Item btn_buy = item_music_bk.create_item();
-                                btn_buy.set_icon(this.icon_buy_music_game);
-                                btn_buy.set_color(this.carrot.color_highlight);
-                                btn_buy.set_act(() => this.act_buy_music_bk(id_bk_music, index_link));
-                                item_music_bk.set_tip("Please buy to use this track");
-                                item_music_bk.set_act(() => this.act_buy_music_bk(id_bk_music, index_link));
-
-                                if (this.carrot.id_ads_Rewarded_android != "" || this.carrot.id_ads_Rewarded_ios != "")
-                                {
-                                    Carrot_Box_Btn_Item btn_ads = item_music_bk.create_item();
-                                    btn_ads.set_icon(this.carrot.icon_carrot_ads);
-                                    btn_ads.set_color(this.carrot.color_highlight);
-                                    btn_ads.set_act(() => this.act_watch_ads_to_music_bk(id_bk_music, index_link));
-                                }
-                            }
-                            else
-                            {
-                                item_music_bk.set_tip("Free");
-                                item_music_bk.set_act(() => this.act_change_bk_music_game(id_bk_music, index_link));
-                            }
-
-                            this.box_list_music_game.update_color_table_row();
-                        }
-                        if (this.carrot.type_control != TypeControl.None)
-                        {
-                            this.set_list_button_gamepad_console(box_list_music_game.UI.get_list_btn());
-                            this.set_scrollRect_gamepad_consoles(box_list_music_game.UI.scrollRect);
+                            Carrot_Box_Btn_Item btn_ads = item_music_bk.create_item();
+                            btn_ads.set_icon(this.carrot.icon_carrot_ads);
+                            btn_ads.set_color(this.carrot.color_highlight);
+                            btn_ads.set_act(() => this.act_watch_ads_to_music_bk(id_bk_music, index_link));
                         }
                     }
                     else
                     {
-                        this.carrot.show_msg("Background music games", "There are no songs in the list");
+                        item_music_bk.set_tip("Free");
+                        item_music_bk.set_act(() => this.act_change_bk_music_game(id_bk_music, index_link));
                     }
+
+                    this.box_list_music_game.update_color_table_row();
                 }
-            });
+                if (this.carrot.type_control != TypeControl.None)
+                {
+                    this.set_list_button_gamepad_console(box_list_music_game.UI.get_list_btn());
+                    this.set_scrollRect_gamepad_consoles(box_list_music_game.UI.scrollRect);
+                }
+            }
+            else
+            {
+                this.carrot.show_msg("Background music games", "There are no songs in the list");
+            }
+        }
+
+        private void get_list_music_game_fail(string s_error)
+        {
+            this.carrot.hide_loading();
+            this.carrot.log(s_error);
         }
 
         private void act_close_list_music()
@@ -336,7 +327,7 @@ namespace Carrot
             }
         }
 
-        public void onRewardedSuccess()
+        public void OnRewardedSuccess()
         {
             if (this.id_buy_bk_music_temp != "")
             {
@@ -548,153 +539,96 @@ namespace Carrot
         }
         #endregion
 
-        #region Top Player
-
+        #region Top_Player
         public void Show_List_Top_player()
         {
             this.carrot.show_loading();
-            DocumentReference AppRankRef = this.carrot.db.Collection("app").Document(this.carrot.Carrotstore_AppId);
-            AppRankRef.GetSnapshotAsync().ContinueWithOnMainThread(task => {
-                var snapshot = task.Result;
-                if (task.IsFaulted)
-                {
-                    this.carrot.hide_loading();
-                    this.carrot.log(task.Exception.Message);
-                }
+            this.carrot.server.Get_doc_by_path("app", this.carrot.Carrotstore_AppId, Act_get_List_Top_player_done, Act_get_List_Top_player_fail);
+        }
 
-                if (task.IsCompleted)
+        private void Act_get_List_Top_player_done(string s_data)
+        {
+            this.carrot.hide_loading();
+            Fire_Collection fc = new(s_data);
+            if (!fc.is_null)
+            {
+                IDictionary data_app = fc.fire_document[0].Get_IDictionary();
+                if (data_app["rank"] != null)
                 {
-                    this.carrot.hide_loading();
-                    if (snapshot.Exists)
+                    IList list_rank = (IList)data_app["rank"];
+
+                    Carrot_Box Box_top_palyer = this.carrot.Create_Box();
+                    Box_top_palyer.set_icon(this.icon_top_player);
+                    Box_top_palyer.set_title("Player rankings");
+
+                    string id_user_cur = this.carrot.user.get_id_user_login();
+                    for (int i = 0; i < list_rank.Count; i++)
                     {
-                        IDictionary data_app = snapshot.ToDictionary();
-                        if (data_app["rank"] != null)
+                        IDictionary data_rank = (IDictionary)list_rank[i];
+                        IDictionary data_user = (IDictionary)data_rank["user"];
+                        var user_id = data_user["id"].ToString();
+                        var user_lang = data_user["lang"].ToString();
+                        GameObject obj_item_player_top = Instantiate(this.item_top_player_prefab);
+                        obj_item_player_top.transform.SetParent(Box_top_palyer.area_all_item);
+                        obj_item_player_top.transform.localPosition = new Vector3(obj_item_player_top.transform.localPosition.x, obj_item_player_top.transform.localPosition.y, 0f);
+                        obj_item_player_top.transform.localScale = new Vector3(1f, 1f, 1f);
+                        obj_item_player_top.transform.localRotation = Quaternion.identity;
+                        Carrot_Item_top_player top_player = obj_item_player_top.GetComponent<Carrot_Item_top_player>();
+                        top_player.txt_user_name.text = data_user["name"].ToString();
+                        top_player.txt_user_scores.text = data_rank["scores"].ToString();
+                        top_player.user_id = data_user["id"].ToString();
+                        top_player.user_lang = data_user["lang"].ToString();
+                        if (i < this.icon_rank_player.Length)
                         {
-                            IList list_rank = (IList)data_app["rank"];
-
-                            Carrot_Box Box_top_palyer = this.carrot.Create_Box();
-                            Box_top_palyer.set_icon(this.icon_top_player);
-                            Box_top_palyer.set_title("Player rankings");
-
-                            string id_user_cur = this.carrot.user.get_id_user_login();
-                            for (int i = 0; i < list_rank.Count; i++)
-                            {
-                                IDictionary data_rank = (IDictionary)list_rank[i];
-                                IDictionary data_user = (IDictionary)data_rank["user"];
-                                var user_id= data_user["id"].ToString();
-                                var user_lang= data_user["lang"].ToString();
-                                GameObject obj_item_player_top = Instantiate(this.item_top_player_prefab);
-                                obj_item_player_top.transform.SetParent(Box_top_palyer.area_all_item);
-                                obj_item_player_top.transform.localPosition = new Vector3(obj_item_player_top.transform.localPosition.x, obj_item_player_top.transform.localPosition.y, 0f);
-                                obj_item_player_top.transform.localScale = new Vector3(1f, 1f, 1f);
-                                obj_item_player_top.transform.localRotation = Quaternion.identity;
-                                Carrot_Item_top_player top_player = obj_item_player_top.GetComponent<Carrot_Item_top_player>();
-                                top_player.txt_user_name.text = data_user["name"].ToString();
-                                top_player.txt_user_scores.text = data_rank["scores"].ToString();
-                                top_player.user_id = data_user["id"].ToString();
-                                top_player.user_lang = data_user["lang"].ToString();
-                                if (i < this.icon_rank_player.Length)
-                                {
-                                    top_player.img_rank.gameObject.SetActive(true);
-                                    top_player.img_rank.sprite = this.icon_rank_player[i];
-                                }
-                                else
-                                {
-                                    top_player.img_rank.gameObject.SetActive(false);
-                                }
-                                if (id_user_cur == top_player.user_id)
-                                {
-                                    this.index_edit_rank = i;
-                                    top_player.GetComponent<Image>().color = this.carrot.get_color_highlight_blur(100);
-                                }
-                                Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_" + top_player.user_id);
-                                if (sp_avatar != null)
-                                {
-                                    top_player.img_user.sprite = sp_avatar;
-                                    top_player.img_user.color = Color.white;
-                                }
-                                else
-                                    this.carrot.get_img_and_save_playerPrefs(data_user["avatar"].ToString(), top_player.img_user, "avatar_user_" + top_player.user_id);
-
-                                top_player.set_act_click(()=>this.carrot.user.show_user_by_id(user_id, user_lang));
-                            }
+                            top_player.img_rank.gameObject.SetActive(true);
+                            top_player.img_rank.sprite = this.icon_rank_player[i];
                         }
                         else
                         {
-                            this.carrot.show_msg("Player rankings", "There are no ranks in the list");
+                            top_player.img_rank.gameObject.SetActive(false);
                         }
+                        if (id_user_cur == top_player.user_id)
+                        {
+                            this.index_edit_rank = i;
+                            top_player.GetComponent<Image>().color = this.carrot.get_color_highlight_blur(100);
+                        }
+                        Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_" + top_player.user_id);
+                        if (sp_avatar != null)
+                        {
+                            top_player.img_user.sprite = sp_avatar;
+                            top_player.img_user.color = Color.white;
+                        }
+                        else
+                            this.carrot.get_img_and_save_playerPrefs(data_user["avatar"].ToString(), top_player.img_user, "avatar_user_" + top_player.user_id);
+
+                        top_player.set_act_click(() => this.carrot.user.show_user_by_id(user_id, user_lang));
                     }
-                    else
+
+                    if (this.carrot.type_app == TypeApp.Game)
                     {
-                        this.carrot.show_msg("Player rankings", "There are no ranks in the list");
+                        Box_top_palyer.update_gamepad_cosonle_control();
                     }
                 }
-            });
-        }
-
-        private void act_success_list_top_player(string s_data)
-        {
-            Carrot_Box Box_top_palyer = this.carrot.Create_Box();
-            Box_top_palyer.set_icon(this.icon_top_player);
-            Box_top_palyer.set_title("Player rankings");
-
-            string id_user_cur = this.carrot.user.get_id_user_login();
-            IList list_top_player = (IList)Json.Deserialize(s_data);
-            for(int i = 0; i < list_top_player.Count; i++)
-            {
-                IDictionary data_p = (IDictionary)list_top_player[i];
-                GameObject obj_item_player_top = Instantiate(this.item_top_player_prefab);
-                obj_item_player_top.transform.SetParent(Box_top_palyer.area_all_item);
-                obj_item_player_top.transform.localPosition = new Vector3(obj_item_player_top.transform.localPosition.x, obj_item_player_top.transform.localPosition.y, 0f);
-                obj_item_player_top.transform.localScale = new Vector3(1f, 1f, 1f);
-                obj_item_player_top.transform.localRotation = Quaternion.identity;
-                Carrot_Item_top_player top_player = obj_item_player_top.GetComponent<Carrot_Item_top_player>();
-                top_player.txt_user_name.text = data_p["name"].ToString();
-                top_player.txt_user_scores.text = data_p["scores"].ToString();
-                top_player.user_id= data_p["user_id"].ToString();
-                top_player.user_lang= data_p["lang"].ToString();
-                if (i < this.icon_rank_player.Length)
-                {
-                    top_player.img_rank.gameObject.SetActive(true);
-                    top_player.img_rank.sprite = this.icon_rank_player[i];
-                }
                 else
                 {
-                    top_player.img_rank.gameObject.SetActive(false);
+                    this.carrot.show_msg("Player rankings", "There are no ranks in the list");
                 }
-                if (id_user_cur == top_player.user_id) top_player.GetComponent<Image>().color = this.carrot.get_color_highlight_blur(100);
-                Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_" + top_player.user_id);
-                if (sp_avatar != null)
-                {
-                    top_player.img_user.sprite = sp_avatar;
-                    top_player.img_user.color = Color.white;
-                }
-                else
-                    this.carrot.get_img_and_save_playerPrefs(data_p["avatar"].ToString(), top_player.img_user,"avatar_user_"+ top_player.user_id);
             }
-
-            if (this.carrot.type_control != TypeControl.None)
+            else
             {
-                this.set_list_button_gamepad_console(Box_top_palyer.UI.get_list_btn());
-                this.set_scrollRect_gamepad_consoles(Box_top_palyer.UI.scrollRect);
+                this.carrot.show_msg("Player rankings", "There are no ranks in the list");
             }
-
-            this.update_scores_player_data_offline(s_data);
         }
 
-        private void act_fail_list_top_player(string s_error)
+        private void Act_get_List_Top_player_fail(string s_error)
         {
-            act_success_list_top_player(this.s_data_offline_rank_player);
-        }
-
-        private void update_scores_player_data_offline(string s_data)
-        {
-            this.s_data_offline_rank_player = s_data;
-            PlayerPrefs.SetString("s_data_offline_rank_player", this.s_data_offline_rank_player);
+            this.carrot.hide_loading();
+            this.carrot.log(s_error);
         }
 
         public void update_scores_player(int scores,int type=0)
         {
+            /**
             string user_id_login = this.carrot.user.get_id_user_login();
             if (user_id_login=="") return;
             CollectionReference RateDbRef = this.carrot.db.Collection("app");
@@ -749,6 +683,7 @@ namespace Carrot
                     this.carrot.log(String.Format("Document {0} does not exist!", snapshot.Id));
                 }
             });
+            */
         }
         #endregion
     }

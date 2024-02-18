@@ -1,6 +1,3 @@
-using Firebase.Extensions;
-using Firebase.Firestore;
-using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -22,11 +19,11 @@ namespace Carrot
 
         private bool is_model_login_email = true;
 
-        public void load(Carrot carrot)
+        public void On_load(Carrot carrot)
         {
             this.carrot = carrot;
             this.UI.set_theme(this.carrot.color_highlight);
-            this.check_mode_login();
+            this.Check_mode_login();
         }
 
         public void btn_show_list_lang()
@@ -52,47 +49,48 @@ namespace Carrot
         public void btn_user_login()
         {
             this.carrot.show_loading();
-            Query UserQuery = this.carrot.db.Collection("user-" + this.carrot.lang.get_key_lang());
-            UserQuery=UserQuery.WhereEqualTo("password", inp_login_password.text);
-            if(this.is_model_login_email)
-                UserQuery=UserQuery.WhereEqualTo("email", this.inp_login_username.text);
+            StructuredQuery q = new("user-" + this.carrot.lang.get_key_lang());
+            q.Add_where("password", Query_OP.EQUAL, inp_login_password.text);
+            q.Set_limit(1);
+            if (this.is_model_login_email)
+                q.Add_where("email", Query_OP.EQUAL, inp_login_username.text);
             else
-                UserQuery=UserQuery.WhereEqualTo("phone", this.inp_login_username.text);
-           UserQuery.Limit(1).GetSnapshotAsync().ContinueWithOnMainThread(task => {
-                QuerySnapshot AllUserQuerySnapshot = task.Result;
-                if (task.IsFaulted)
-                {
-                   this.carrot.hide_loading();
-                   this.carrot.show_msg(PlayerPrefs.GetString("login", "Login"), PlayerPrefs.GetString("login_fail", "Login failed, please try again!"));
-                }
+                q.Add_where("phone", Query_OP.EQUAL, inp_login_username.text);
+            this.carrot.server.Get_doc(q.ToJson(), Act_user_login_done, Act_user_login_fail);
+        }
 
-                if (task.IsCompleted)
-                {
-                   this.carrot.hide_loading();
-                    if (AllUserQuerySnapshot.Count > 0)
-                    {
-                       if (this.is_model_login_email)
-                           PlayerPrefs.SetString("login_username_mail", this.inp_login_username.text);
-                       else
-                           PlayerPrefs.SetString("login_username_phone", this.inp_login_username.text);
+        private void Act_user_login_done(string s_data)
+        {
+            this.carrot.hide_loading();
+            Fire_Collection fc = new(s_data);
+            if (!fc.is_null)
+            {
+                if (this.is_model_login_email)
+                    PlayerPrefs.SetString("login_username_mail", this.inp_login_username.text);
+                else
+                    PlayerPrefs.SetString("login_username_phone", this.inp_login_username.text);
 
-                       foreach (DocumentSnapshot documentSnapshot in AllUserQuerySnapshot.Documents)
-                        {
-                            IDictionary u = documentSnapshot.ToDictionary();
-                            u["user_id"] = documentSnapshot.Id;
-                            this.carrot.user.set_data_user_login(u);
-                            this.carrot.user.show_info_user_by_data(u);
-                            if (this.act_after_login_success != null) this.act_after_login_success();
-                            this.close();
-                            return; 
-                        };
-                    }
-                    else
-                    {
-                        this.carrot.show_msg(PlayerPrefs.GetString("login", "Login"), PlayerPrefs.GetString("acc_no", "This account information is not in the system!"));
-                    }
-                }
-            });
+                for(int i=0;i<fc.fire_document.Length;i++)
+                {
+                    IDictionary u = fc.fire_document[i].Get_IDictionary();
+                    u["user_id"] = u["id"].ToString();
+                    this.carrot.user.set_data_user_login(u);
+                    this.carrot.user.show_info_user_by_data(u);
+                    if (this.act_after_login_success != null) this.act_after_login_success();
+                    this.close();
+                    return;
+                };
+            }
+            else
+            {
+                this.carrot.show_msg(PlayerPrefs.GetString("login", "Login"), PlayerPrefs.GetString("acc_no", "This account information is not in the system!"));
+            }
+        }
+
+        private void Act_user_login_fail(string s_error)
+        {
+            this.carrot.hide_loading();
+            this.carrot.show_msg(PlayerPrefs.GetString("login", "Login"), PlayerPrefs.GetString("login_fail", "Login failed, please try again!"));
         }
 
         public void close()
@@ -112,10 +110,10 @@ namespace Carrot
                 this.is_model_login_email = false;
             else
                 this.is_model_login_email = true;
-            this.check_mode_login();
+            this.Check_mode_login();
         }
 
-        public void check_mode_login()
+        public void Check_mode_login()
         {
             if (this.is_model_login_email)
             {
