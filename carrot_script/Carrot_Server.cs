@@ -143,14 +143,21 @@ namespace Carrot
                     if (obj_IDictionary[key] != null)
                     {
                         IDictionary data_user = (IDictionary)obj_IDictionary[key];
-                        s_json += "\"user\":{\"mapValue\":\"" + this.Get_Mapvalue_json_user(data_user) + "\"},";
+                        s_json += "\"user\":{\"mapValue\":"+this.Get_Mapvalue_json_user(data_user)+"},";
+                    }
+                }
+                else if(key.ToString()== "address")
+                {
+                    if (obj_IDictionary[key] != null)
+                    {
+                        IDictionary data_user = (IDictionary)obj_IDictionary[key];
+                        s_json += "\"address\":{\"mapValue\":"+this.Get_Mapvalue_json_user(data_user)+ "},";
                     }
                 }
                 else
                 {
                     s_json += "\"" + key + "\":{\"stringValue\":\"" + obj_IDictionary[key] + "\"},";
                 }
-
             }
             s_json = s_json[..^1];
             return s_json += "}}";
@@ -240,8 +247,7 @@ namespace Carrot
                 IDictionary val = (IDictionary)fields[key];
                 if (val["stringValue"] != null)
                 {
-                    string s_val = val["stringValue"].ToString();
-                    obj_d[key] = s_val;
+                    obj_d[key] = val["stringValue"];
                 }
                 else
                 {

@@ -718,17 +718,14 @@ namespace Carrot
 
         private void Act_show_user_by_id_done(string s_data)
         {
+            Debug.Log("user:" + s_data);
             this.carrot.hide_loading();
-            Fire_Collection fc = new Fire_Collection(s_data);
-            if (!fc.is_null)
-            {
-                IDictionary data_user = fc.fire_document[0].Get_IDictionary();
+            Fire_Document fd = new(s_data);
+            IDictionary data_user = fd.Get_IDictionary();
+            if (data_user!=null)
                 this.show_info_user_by_data(data_user);
-            }
             else
-            {
                 this.carrot.show_msg(PlayerPrefs.GetString("acc_info", "Account Information"), "Account not found", Msg_Icon.Alert);
-            }
         }
 
         private void Act_show_user_by_id_fail(string s_error)

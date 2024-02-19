@@ -61,6 +61,7 @@ namespace Carrot
 
         private void Act_user_login_done(string s_data)
         {
+            Debug.Log("Login success:" + s_data);
             this.carrot.hide_loading();
             Fire_Collection fc = new(s_data);
             if (!fc.is_null)
