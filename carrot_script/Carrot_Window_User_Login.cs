@@ -17,7 +17,7 @@ namespace Carrot
 
         public UnityAction act_after_login_success;
 
-        private bool is_model_login_email = true;
+        private bool is_model_login_email = false;
 
         public void On_load(Carrot carrot)
         {
@@ -76,7 +76,7 @@ namespace Carrot
                     IDictionary u = fc.fire_document[i].Get_IDictionary();
                     u["user_id"] = u["id"].ToString();
                     this.carrot.user.set_data_user_login(u);
-                    this.carrot.user.show_info_user_by_data(u);
+                    this.carrot.user.Show_info_user_by_data(u);
                     if (this.act_after_login_success != null) this.act_after_login_success();
                     this.close();
                     return;

@@ -233,7 +233,7 @@ namespace Carrot
             if (fields[key] != null)
             {
                 IDictionary val = (IDictionary)fields[key];
-                return val["stringValue"].ToString();
+                return val["stringValue"];
             }
             return null;
         }

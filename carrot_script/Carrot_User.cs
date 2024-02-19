@@ -105,18 +105,19 @@ namespace Carrot
         {
             this.carrot.play_sound_click();
             if (this.s_data_user_login != "")
-                this.show_user_cur_info();
+                this.Show_user_cur_info();
             else
                 this.carrot.user.show_window_login(act_afte_login);
         }
 
-        private void show_user_cur_info()
+        private void Show_user_cur_info()
         {
+            Debug.Log("Show_user_cur_info:"+this.s_data_user_login);
             IDictionary data_user = (IDictionary)Json.Deserialize(this.s_data_user_login);
-            show_info_user_by_data(data_user);
+            Show_info_user_by_data(data_user);
         }
 
-        public Carrot_Box show_info_user_by_data(IDictionary data_user)
+        public Carrot_Box Show_info_user_by_data(IDictionary data_user)
         {
             if (this.box_list != null) this.box_list.close();
             this.box_list = this.carrot.Create_Box();
@@ -131,9 +132,9 @@ namespace Carrot
                     info_avatar.set_icon(this.carrot.icon_carrot_avatar);
                     info_avatar.set_title(PlayerPrefs.GetString("user_avatar", "Avatar"));
                     info_avatar.set_tip(data_user["avatar"].ToString());
-                    Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_" + data_user["id"]);
+                    Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_" + data_user["user_id"].ToString());
                     if (sp_avatar != null) info_avatar.set_icon_white(sp_avatar);
-                    else this.carrot.get_img_and_save_playerPrefs(data_user["avatar"].ToString(), info_avatar.img_icon, "avatar_user_" + data_user["id"]);
+                    else this.carrot.get_img_and_save_playerPrefs(data_user["avatar"].ToString(), info_avatar.img_icon, "avatar_user_" + data_user["user_id"].ToString());
                 }
             }
 
@@ -147,7 +148,7 @@ namespace Carrot
             else
             {
                 if (this.box_list != null) this.box_list.close();
-                this.act_logout();
+                this.Act_logout();
                 return null;
             }
 
@@ -221,14 +222,14 @@ namespace Carrot
                     btn_edit.set_label(PlayerPrefs.GetString("edit", "Edit"));
                     btn_edit.set_label_color(Color.white);
                     btn_edit.set_bk_color(this.carrot.color_highlight);
-                    btn_edit.set_act_click(() => act_show_edit_user(data_user));
+                    btn_edit.set_act_click(() => Act_show_edit_user(data_user));
 
                     Carrot_Button_Item btn_logout = panel_btn.create_btn("btn_logout");
                     btn_logout.set_icon(this.icon_user_logout);
                     btn_logout.set_label(PlayerPrefs.GetString("logout", "Log out"));
                     btn_logout.set_label_color(Color.white);
                     btn_logout.set_bk_color(this.carrot.color_highlight);
-                    btn_logout.set_act_click(() => this.act_logout());
+                    btn_logout.set_act_click(() => this.Act_logout());
 
 
                     Carrot_Button_Item btn_canel = panel_btn.create_btn("btn_cancel");
@@ -236,7 +237,7 @@ namespace Carrot
                     btn_canel.set_label(PlayerPrefs.GetString("cancel", "Cancel"));
                     btn_canel.set_label_color(Color.white);
                     btn_canel.set_bk_color(this.carrot.color_highlight);
-                    btn_canel.set_act_click(() => this.act_close_box());
+                    btn_canel.set_act_click(() => this.Act_close_box());
                 }
             }
 
@@ -249,12 +250,12 @@ namespace Carrot
             return this.box_list;
         }
 
-        private void act_show_edit_user(IDictionary data_user)
+        private void Act_show_edit_user(IDictionary data_user)
         {
-            this.edit_or_add_by_data(data_user);
+            this.Edit_or_add_by_data(data_user);
         }
 
-        private void act_logout()
+        private void Act_logout()
         {
             this.delete_data_user_login();
             this.check_and_show_item_login_setting();
@@ -329,21 +330,19 @@ namespace Carrot
             StructuredQuery q = new("user-" + this.carrot.lang.get_key_lang());
             if(this.item_email.get_val()!="")q.Add_where("email",Query_OP.EQUAL,this.item_email.get_val());
             if(this.item_phone.get_val()!="") q.Add_where("phone",Query_OP.EQUAL,this.item_phone.get_val());
+            q.Set_limit(1);
             this.carrot.server.Get_doc(q.ToJson(), Act_done_lost_password_done, Act_done_lost_password_fail);
         }
 
         private void Act_done_lost_password_done(string s_data)
         {
             this.carrot.hide_loading();
-            Fire_Collection fc = new Fire_Collection(s_data);
+            Fire_Collection fc = new(s_data);
             if (!fc.is_null)
             {
-                for(int i=0;i<fc.fire_document.Length;i++)
-                {
-                    IDictionary u = fc.fire_document[i].Get_IDictionary();
-                    if (u["password"] != null) this.carrot.show_msg(PlayerPrefs.GetString("pass_acc_msg", "The password for the account is:" + u["password"].ToString()));
-                    return;
-                };
+                string password =fc.fire_document[0].Get_val("password").ToString();
+                if (password!=null) this.carrot.show_msg(PlayerPrefs.GetString("pass_acc_msg", "The password for the account is:")+password);
+                return;
             }
             else
             {
@@ -416,7 +415,7 @@ namespace Carrot
         public void show_user_register()
         {
             this.s_id_user_login = "";
-            this.edit_or_add_by_data(null);
+            this.Edit_or_add_by_data(null);
         }
 
         public void check_and_show_item_login_setting()
@@ -451,7 +450,7 @@ namespace Carrot
             }
         }
 
-        private void edit_or_add_by_data(IDictionary data)
+        private void Edit_or_add_by_data(IDictionary data)
         {
             if (this.box_list != null) this.box_list.close();
             this.box_list = this.carrot.Create_Box();
@@ -462,7 +461,7 @@ namespace Carrot
                 this.box_list.set_title(PlayerPrefs.GetString("acc_edit", "Update account information"));
 
             this.btn_model_nomal = this.box_list.create_btn_menu_header(this.carrot.icon_carrot_nomal);
-            this.btn_model_nomal.set_act(this.act_model_nomal_register);
+            this.btn_model_nomal.set_act(this.Act_model_nomal_register);
             if (this.is_model_nomal) this.btn_model_nomal.set_icon_color(this.carrot.color_highlight);
 
             this.btn_model_advanced = this.box_list.create_btn_menu_header(this.carrot.icon_carrot_advanced);
@@ -623,7 +622,7 @@ namespace Carrot
             btn_canel.set_label(PlayerPrefs.GetString("cancel", "Cancel"));
             btn_canel.set_label_color(Color.white);
             btn_canel.set_bk_color(this.carrot.color_highlight);
-            btn_canel.set_act_click(act_close_box);
+            btn_canel.set_act_click(Act_close_box);
 
             this.box_list.update_gamepad_cosonle_control();
         }
@@ -675,7 +674,7 @@ namespace Carrot
                 date_create = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ")
             };
 
-
+            this.carrot.show_loading();
             string user_id_new = "";
             if(this.s_id_user_login=="")
                 user_id_new="user" +this.carrot.generateID();
@@ -688,6 +687,7 @@ namespace Carrot
 
         private void Act_done_register_done(string s_data)
         {
+            this.carrot.hide_loading();
             if (this.s_id_user_login == "")
                 this.carrot.show_msg(PlayerPrefs.GetString("register", "Register Account"), PlayerPrefs.GetString("register_success", "Account registration is successful!"), Msg_Icon.Success);
             else
@@ -723,7 +723,7 @@ namespace Carrot
             Fire_Document fd = new(s_data);
             IDictionary data_user = fd.Get_IDictionary();
             if (data_user!=null)
-                this.show_info_user_by_data(data_user);
+                this.Show_info_user_by_data(data_user);
             else
                 this.carrot.show_msg(PlayerPrefs.GetString("acc_info", "Account Information"), "Account not found", Msg_Icon.Alert);
         }
@@ -752,12 +752,12 @@ namespace Carrot
             return data_user["lang"].ToString();
         }
 
-        private void act_close_box()
+        private void Act_close_box()
         {
             if (this.box_list != null) this.box_list.close();
         }
 
-        private void act_model_nomal_register()
+        private void Act_model_nomal_register()
         {
             this.carrot.play_sound_click();
             this.btn_model_advanced.set_icon_color(Color.gray);
@@ -837,15 +837,15 @@ namespace Carrot
                 box_list_avatar.set_type(Carrot_Box_Type.Grid_Box);
 
                 Carrot_Box_Btn_Item btn_all = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_all_category);
-                btn_all.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.all));
+                btn_all.set_act(() => this.Act_set_type_show_list_avatar(Type_List_Avatar.all));
                 if (type_list_avatar == Type_List_Avatar.all) btn_all.set_icon_color(this.carrot.color_highlight);
 
                 Carrot_Box_Btn_Item btn_boy = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_sex_boy);
-                btn_boy.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.boy));
+                btn_boy.set_act(() => this.Act_set_type_show_list_avatar(Type_List_Avatar.boy));
                 if (type_list_avatar == Type_List_Avatar.boy) btn_boy.set_icon_color(this.carrot.color_highlight);
 
                 Carrot_Box_Btn_Item btn_girl = this.box_list_avatar.create_btn_menu_header(this.carrot.icon_carrot_sex_girl);
-                btn_girl.set_act(() => this.act_set_type_show_list_avatar(Type_List_Avatar.girl));
+                btn_girl.set_act(() => this.Act_set_type_show_list_avatar(Type_List_Avatar.girl));
                 if (type_list_avatar == Type_List_Avatar.girl) btn_girl.set_icon_color(this.carrot.color_highlight);
 
                 for (int i = 0; i < fc.fire_document.Length; i++)
@@ -859,7 +859,6 @@ namespace Carrot
                 }
             }
         }
-
 
         private void Add_item_avatar_to_list_box(IDictionary avatar_data)
         {
@@ -875,7 +874,7 @@ namespace Carrot
             avatar_item.set_act(() => Select_avatar(s_url_icon, avatar_item.img_icon.sprite));
         }
 
-        private void act_set_type_show_list_avatar(Type_List_Avatar type_list)
+        private void Act_set_type_show_list_avatar(Type_List_Avatar type_list)
         {
             this.type_list_avatar = type_list;
             this.Act_show_list_avatar();
@@ -889,6 +888,5 @@ namespace Carrot
             if (this.box_list_avatar != null) this.box_list_avatar.close();
         }
         #endregion
-
     }
 }
