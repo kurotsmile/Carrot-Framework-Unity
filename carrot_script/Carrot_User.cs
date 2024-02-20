@@ -128,13 +128,26 @@ namespace Carrot
             {
                 if (data_user["avatar"].ToString() != "")
                 {
-                    Carrot_Box_Item info_avatar = this.box_list.create_item("info_avatar");
-                    info_avatar.set_icon(this.carrot.icon_carrot_avatar);
-                    info_avatar.set_title(PlayerPrefs.GetString("user_avatar", "Avatar"));
-                    info_avatar.set_tip(data_user["avatar"].ToString());
-                    Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_" + data_user["user_id"].ToString());
-                    if (sp_avatar != null) info_avatar.set_icon_white(sp_avatar);
-                    else this.carrot.get_img_and_save_playerPrefs(data_user["avatar"].ToString(), info_avatar.img_icon, "avatar_user_" + data_user["user_id"].ToString());
+                    string user_id = "";
+                    if (data_user["user_id"] != null)
+                    {
+                        user_id = data_user["user_id"].ToString();
+                    }
+                    else
+                    {
+                        if(data_user["id"]!=null) user_id = data_user["id"].ToString();
+                    }
+
+                    if (user_id != "")
+                    {
+                        Carrot_Box_Item info_avatar = this.box_list.create_item("info_avatar");
+                        info_avatar.set_icon(this.carrot.icon_carrot_avatar);
+                        info_avatar.set_title(PlayerPrefs.GetString("user_avatar", "Avatar"));
+                        info_avatar.set_tip(data_user["avatar"].ToString());
+                        Sprite sp_avatar = this.carrot.get_tool().get_sprite_to_playerPrefs("avatar_user_" + user_id);
+                        if (sp_avatar != null) info_avatar.set_icon_white(sp_avatar);
+                        else this.carrot.get_img_and_save_playerPrefs(data_user["avatar"].ToString(), info_avatar.img_icon, "avatar_user_" + user_id);
+                    }
                 }
             }
 

@@ -71,16 +71,12 @@ namespace Carrot
                 else
                     PlayerPrefs.SetString("login_username_phone", this.inp_login_username.text);
 
-                for(int i=0;i<fc.fire_document.Length;i++)
-                {
-                    IDictionary u = fc.fire_document[i].Get_IDictionary();
-                    u["user_id"] = u["id"].ToString();
-                    this.carrot.user.set_data_user_login(u);
-                    this.carrot.user.Show_info_user_by_data(u);
-                    if (this.act_after_login_success != null) this.act_after_login_success();
-                    this.close();
-                    return;
-                };
+                IDictionary u = fc.fire_document[0].Get_IDictionary();
+                u["user_id"] = u["id"].ToString();
+                this.carrot.user.set_data_user_login(u);
+                this.carrot.user.Show_info_user_by_data(u);
+                if (this.act_after_login_success != null) this.act_after_login_success();
+                this.close();
             }
             else
             {
