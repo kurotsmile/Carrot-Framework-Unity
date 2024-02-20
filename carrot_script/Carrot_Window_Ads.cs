@@ -25,15 +25,15 @@ namespace Carrot
 
         public void load_data_ads(IDictionary data_ads)
         {
-            Fire_Document fd = new(data_ads);
+            string id_app = data_ads["id"].ToString();
             this.pic_img_ads.GetComponent<Animator>().enabled = true;
             this.is_show_ads = true;
             this.slider_timer_ads.value = 0;
             this.button_close_ads.SetActive(false);
-            this.txt_ads_product_title.text = fd.Get_val("name_"+this.carrot.lang.get_key_lang()).ToString();
-            this.txt_ads_product_tip.text = fd.Get_val("describe_" +this.carrot.lang.get_key_lang()).ToString();
+            this.txt_ads_product_title.text = data_ads["name_"+this.carrot.lang.get_key_lang()].ToString();
+            this.txt_ads_product_tip.text = data_ads["describe_" +this.carrot.lang.get_key_lang()].ToString();
             this.url_ads_download = data_ads[this.carrot.store_public.ToString().ToLower()].ToString();
-            Sprite icon_app = this.carrot.get_tool().get_sprite_to_playerPrefs(fd.Get_id());
+            Sprite icon_app = this.carrot.get_tool().get_sprite_to_playerPrefs(id_app);
             if (icon_app != null)
             {
                 this.pic_img_ads.sprite = icon_app;
@@ -41,7 +41,7 @@ namespace Carrot
             }
             else
             {
-                this.carrot.get_img(fd.Get_val("icon").ToString(), this.pic_img_ads);
+                this.carrot.get_img(data_ads["icon"].ToString(), this.pic_img_ads);
             }     
         }
 
