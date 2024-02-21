@@ -120,14 +120,14 @@ namespace Carrot
         }
 
         [ContextMenu("Add test")]
-        public void test()
+        public void Test()
         {
             string jsonPayload = "{\"fields\": {\"fieldName\": {\"stringValue\": \"fieldValue\"}}}";
             this.Add_Document_To_Collection("app", "a", jsonPayload);
         }
 
         [ContextMenu("Del test")]
-        public void delete_test()
+        public void Delete_test()
         {
             this.Delete_Doc("app", "a");
         }
@@ -142,16 +142,24 @@ namespace Carrot
                 {
                     if (obj_IDictionary[key] != null)
                     {
-                        IDictionary data_user = (IDictionary)obj_IDictionary[key];
-                        s_json += "\"user\":{\"mapValue\":"+this.Get_Mapvalue_json_user(data_user)+"},";
+                        IDictionary data_obj = (IDictionary)obj_IDictionary[key];
+                        s_json += "\"user\":{\"mapValue\":"+this.Get_Mapvalue(data_obj) +"},";
                     }
                 }
                 else if(key.ToString()== "address")
                 {
                     if (obj_IDictionary[key] != null)
                     {
-                        IDictionary data_user = (IDictionary)obj_IDictionary[key];
-                        s_json += "\"address\":{\"mapValue\":"+this.Get_Mapvalue_json_user(data_user)+ "},";
+                        IDictionary data_obj = (IDictionary)obj_IDictionary[key];
+                        s_json += "\"address\":{\"mapValue\":"+this.Get_Mapvalue(data_obj) + "},";
+                    }
+                }
+                else if(key.ToString()== "reports")
+                {
+                    if (obj_IDictionary[key] != null)
+                    {
+                        IList list_obj = (IList)obj_IDictionary[key];
+                        s_json += "\"reports\":{\"arrayValue\":" + this.Get_ArrayValue(list_obj) + "},";
                     }
                 }
                 else
@@ -163,16 +171,56 @@ namespace Carrot
             return s_json += "}}";
         }
 
-        private string Get_Mapvalue_json_user(IDictionary data_user)
+        private string Get_Mapvalue(IDictionary obj_IDictionary)
         {
             string s_json = "{";
             s_json += "\"fields\":{";
-            foreach (var key in data_user.Keys)
+            foreach (var key in obj_IDictionary.Keys)
             {
-                s_json += "\"" + key + "\":{\"stringValue\":\"" + data_user[key] + "\"},";
+                if (key.ToString() == "user")
+                {
+                    if (obj_IDictionary[key] != null)
+                    {
+                        IDictionary data_obj = (IDictionary)obj_IDictionary[key];
+                        s_json += "\"user\":{\"mapValue\":" + this.Get_Mapvalue(data_obj) + "},";
+                    }
+                }
+                else if (key.ToString() == "address")
+                {
+                    if (obj_IDictionary[key] != null)
+                    {
+                        IDictionary data_obj = (IDictionary)obj_IDictionary[key];
+                        s_json += "\"address\":{\"mapValue\":" + this.Get_Mapvalue(data_obj) + "},";
+                    }
+                }
+                else if (key.ToString() == "reports")
+                {
+                    if (obj_IDictionary[key] != null)
+                    {
+                        IList list_obj = (IList)obj_IDictionary[key];
+                        s_json += "\"reports\":{\"arrayValue\":" + this.Get_ArrayValue(list_obj) + "},";
+                    }
+                }
+                else
+                {
+                    s_json += "\"" + key + "\":{\"stringValue\":\"" + obj_IDictionary[key] + "\"},";
+                }
             }
             s_json = s_json[..^1];
             return s_json += "}}";
+        }
+
+        private string Get_ArrayValue(IList datas)
+        {
+            string s_json = "{";
+            s_json += "\"values\":[";
+            for(int i=0;i<datas.Count;i++)
+            {
+                IDictionary obj_data = (IDictionary) datas[i];
+                s_json += "{\"mapValue\":" +this.Get_Mapvalue(obj_data) + "},";
+            }
+            s_json = s_json[..^1];
+            return s_json += "]}";
         }
 
         public void Delete_Doc(string id_Collection, string id_document, UnityAction<string> act_done = null, UnityAction<string> act_fail = null)
@@ -184,20 +232,18 @@ namespace Carrot
         {
             string url = "https://firestore.googleapis.com/v1/projects/" + projectId + "/databases/(default)/documents/" + id_Collection + "/" + id_document + "?key=" + this.key_api;
 
-            using (UnityWebRequest www = UnityWebRequest.Delete(url))
-            {
-                yield return www.SendWebRequest();
+            using UnityWebRequest www = UnityWebRequest.Delete(url);
+            yield return www.SendWebRequest();
 
-                if (www.result != UnityWebRequest.Result.Success)
-                {
-                    Debug.LogError("Error: " + www.error);
-                    act_fail?.Invoke(www.error);
-                }
-                else
-                {
-                    Debug.Log("Delete successful!");
-                    act_done?.Invoke(www.downloadHandler.text);
-                }
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Error: " + www.error);
+                act_fail?.Invoke(www.error);
+            }
+            else
+            {
+                Debug.Log("Delete successful!");
+                act_done?.Invoke(www.downloadHandler.text);
             }
         }
     }
@@ -256,6 +302,13 @@ namespace Carrot
                         IDictionary mapValue = (IDictionary)val["mapValue"];
                         obj_d[key] = this.Get_mapValue(mapValue);
                     }
+
+                    if (val["arrayValue"] != null)
+                    {
+                        IDictionary values = (IDictionary)val["arrayValue"];
+                        IList arrayValue = (IList)values["values"];
+                        obj_d[key] = this.Get_ArrayValue(arrayValue);
+                    }
                 }
             }
             obj_d["id"] = this.Get_id();
@@ -276,6 +329,34 @@ namespace Carrot
                 }
             }
             return obj_d;
+        }
+
+        public IList Get_ArrayValue(IList datamap)
+        {
+            IList list = (IList)Json.Deserialize("[]");
+            for(int i=0;i<datamap.Count;i++)
+            {
+                IDictionary val = (IDictionary)datamap[i];
+                if (val["stringValue"] != null)
+                {
+                    string s_val = val["stringValue"].ToString();
+                    list.Add(s_val);
+                }
+
+                if (val["mapValue"] != null)
+                {
+                    IDictionary mapValue = (IDictionary)val["mapValue"];
+                    list.Add(this.Get_mapValue(mapValue));
+                }
+
+                if (val["arrayValue"] != null)
+                {
+                    IDictionary values=(IDictionary)val["arrayValue"];
+                    IList arrayValue = (IList)values["values"];
+                    list.Add(this.Get_ArrayValue(arrayValue));
+                }
+            }
+            return list;
         }
     }
 
