@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,6 +56,8 @@ namespace Carrot
         public Sprite[] icon_rank_player;
         private string s_data_offline_rank_player;
         private int index_edit_rank = -1;
+        private int rank_scores_temp = 0;
+        private int rank_type_temp = 0;
 
         public void Load_carrot_game()
         {
@@ -628,62 +631,68 @@ namespace Carrot
 
         public void update_scores_player(int scores,int type=0)
         {
-            /**
+            this.rank_type_temp = type;
+            this.rank_scores_temp = scores;
+
             string user_id_login = this.carrot.user.get_id_user_login();
             if (user_id_login=="") return;
-            CollectionReference RateDbRef = this.carrot.db.Collection("app");
-            DocumentReference RankRef = RateDbRef.Document(this.carrot.Carrotstore_AppId);
-            RankRef.GetSnapshotAsync().ContinueWithOnMainThread((task) => {
-                var snapshot = task.Result;
-                if (snapshot.Exists)
+            this.carrot.show_loading();
+            this.carrot.server.Get_doc_by_path("app", this.carrot.Carrotstore_AppId, Act_get_data_app_done, Act_update_scores_fail);
+        }
+
+        private void Act_get_data_app_done(string s_data)
+        {
+            this.carrot.hide_loading();
+            string user_id_login = this.carrot.user.get_id_user_login();
+            Fire_Document fd = new(s_data);
+            IDictionary app = fd.Get_IDictionary();
+            IList rank;
+            if (app["rank"] != null) rank = (IList)app["rank"];
+            else rank = (IList)Json.Deserialize("[]");
+
+            Carrot_rank_data rank_item = new Carrot_rank_data();
+            rank_item.type = this.rank_type_temp.ToString();
+            rank_item.scores = this.rank_scores_temp.ToString();
+            rank_item.date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            Carrot_Rate_user_data user_login = new Carrot_Rate_user_data();
+            user_login.name = this.carrot.user.get_data_user_login("name");
+            user_login.id = this.carrot.user.get_id_user_login();
+            user_login.lang = this.carrot.user.get_lang_user_login();
+            user_login.avatar = this.carrot.user.get_data_user_login("avatar");
+            rank_item.user = user_login;
+
+            this.index_edit_rank = -1;
+            if (rank.Count > 0)
+            {
+                for (int i = 0; i < rank.Count; i++)
                 {
-                    this.carrot.hide_loading();
-                    IDictionary app = snapshot.ToDictionary();
-                    IList rank;
-                    if (app["rank"] != null) rank = (IList)app["rank"];
-                    else rank = (IList)Json.Deserialize("[]");
-
-                    Carrot_rank_data rank_item = new Carrot_rank_data();
-                    rank_item.type = type.ToString();
-                    rank_item.scores = scores.ToString();
-                    rank_item.date = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ");
-                    Carrot_Rate_user_data user_login = new Carrot_Rate_user_data(); 
-                    user_login.name = this.carrot.user.get_data_user_login("name");
-                    user_login.id = this.carrot.user.get_id_user_login();
-                    user_login.lang = this.carrot.user.get_lang_user_login();
-                    user_login.avatar = this.carrot.user.get_data_user_login("avatar");
-                    rank_item.user = user_login;
-
-                    this.index_edit_rank = -1;
-                    if (rank.Count > 0)
+                    IDictionary data_rank = (IDictionary)rank[i];
+                    if (data_rank["user"] != null)
                     {
-                        for(int i = 0; i < rank.Count; i++)
+                        IDictionary user_rank = (IDictionary)data_rank["user"];
+                        if (user_rank["id"].ToString() == user_id_login)
                         {
-                            IDictionary data_rank = (IDictionary) rank[i];
-                            if (data_rank["user"] != null)
-                            {
-                                IDictionary user_rank = (IDictionary)data_rank["user"];
-                                if(user_rank["id"].ToString()== user_id_login)
-                                {
-                                    this.index_edit_rank = i;
-                                    break;
-                                }
-                            }
+                            this.index_edit_rank = i;
+                            break;
                         }
                     }
-                    if (this.index_edit_rank == -1)
-                        rank.Add(rank_item);
-                    else
-                        rank[this.index_edit_rank] = rank_item;
-                    Dictionary<string, object> UpdateData = new Dictionary<string, object> { { "rank", rank } };
-                    RankRef.UpdateAsync(UpdateData);
                 }
-                else
-                {
-                    this.carrot.log(String.Format("Document {0} does not exist!", snapshot.Id));
-                }
-            });
-            */
+            }
+            if (this.index_edit_rank == -1)
+                rank.Add(rank_item);
+            else
+                rank[this.index_edit_rank] = rank_item;
+
+            app["rank"] = rank;
+            IDictionary app_data = (IDictionary)Json.Deserialize(JsonConvert.SerializeObject(app));
+            string s_json = this.carrot.server.Convert_IDictionary_to_json(app_data);
+            this.carrot.server.Add_Document_To_Collection("app", this.carrot.Carrotstore_AppId, s_json);
+        }
+
+
+        private void Act_update_scores_fail(string s_error)
+        {
+            this.carrot.show_msg("Player rankings", s_error, Msg_Icon.Error);
         }
         #endregion
     }

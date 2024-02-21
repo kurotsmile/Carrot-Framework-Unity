@@ -201,6 +201,14 @@ namespace Carrot
                         s_json += "\"reports\":{\"arrayValue\":" + this.Get_ArrayValue(list_obj) + "},";
                     }
                 }
+                else if (key.ToString() == "rank")
+                {
+                    if (obj_IDictionary[key] != null)
+                    {
+                        IList list_obj = (IList)obj_IDictionary[key];
+                        s_json += "\"rank\":{\"arrayValue\":" + this.Get_ArrayValue(list_obj) + "},";
+                    }
+                }
                 else
                 {
                     s_json += "\"" + key + "\":{\"stringValue\":\"" + obj_IDictionary[key] + "\"},";
