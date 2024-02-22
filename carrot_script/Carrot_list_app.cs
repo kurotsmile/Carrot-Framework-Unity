@@ -35,6 +35,25 @@ namespace Carrot
             }
         }
 
+        private StructuredQuery Get_Query()
+        {
+            StructuredQuery q = new("app");
+            q.Add_select("name_" + this.carrot.lang.get_key_lang());
+            q.Add_select("name_en");
+            q.Add_select("uptodown");
+            q.Add_select("icon");
+            q.Add_select("type");
+            q.Add_select("amazon_app_store");
+            q.Add_select("google_play");
+            q.Add_select("huawei_store");
+            q.Add_select("itch");
+            q.Add_select("microsoft_store");
+            q.Add_select("uptodown");
+            q.Set_limit(20);
+            q.Add_where("status", Query_OP.EQUAL, "publish");
+            return q;
+        }
+
         [ContextMenu("show_list_carrot_app")]
         public void show_list_carrot_app()
         {
@@ -44,10 +63,7 @@ namespace Carrot
             {
                 if (this.s_data_carrotapp_all == "")
                 {
-                    StructuredQuery q = new("app");
-                    q.Set_limit(20);
-                    q.Add_where("status", Query_OP.EQUAL, "publish");
-                    this.carrot.server.Get_doc(q.ToJson(), get_data_app_done, get_data_app_fail);
+                    this.carrot.server.Get_doc(this.Get_Query().ToJson(), get_data_app_done, get_data_app_fail);
                 }
                 else
                 {
@@ -59,9 +75,7 @@ namespace Carrot
             {
                 if (this.s_data_carrotapp_app == "")
                 {
-                    StructuredQuery q = new("app");
-                    q.Set_limit(20);
-                    q.Add_where("status", Query_OP.EQUAL, "publish");
+                    StructuredQuery q = this.Get_Query();
                     q.Add_where("type", Query_OP.EQUAL, "app");
                     this.carrot.server.Get_doc(q.ToJson(), get_data_app_done, get_data_app_fail);
                 }
@@ -73,9 +87,7 @@ namespace Carrot
             {
                 if (this.s_data_carrotapp_game == "")
                 {
-                    StructuredQuery q = new("app");
-                    q.Set_limit(20);
-                    q.Add_where("status", Query_OP.EQUAL, "publish");
+                    StructuredQuery q = this.Get_Query();
                     q.Add_where("type", Query_OP.EQUAL, "game");
                     this.carrot.server.Get_doc(q.ToJson(), get_data_app_done, get_data_app_fail);
                 }
@@ -135,10 +147,7 @@ namespace Carrot
                 for (int i = 0; i < fc.fire_document.Length; i++)
                 {
                     IDictionary app_data = fc.fire_document[i].Get_IDictionary();
-                    if (app_data["rates"] != null) app_data.Remove("rates");
-                    if (app_data["rank"] != null) app_data.Remove("rank");
                     add_item_to_list_box(app_data);
-
                 };
 
                 if (this.carrot.type_control != TypeControl.None)
@@ -237,10 +246,7 @@ namespace Carrot
             {
                 if (this.s_data_carrotapp_all == "")
                 {
-                    StructuredQuery q = new("app");
-                    q.Set_limit(20);
-                    q.Add_where("status", Query_OP.EQUAL, "publish");
-                    this.carrot.server.Get_doc(q.ToJson(), get_data_app_exit_done, get_data_app_exit_fail);
+                    this.carrot.server.Get_doc(this.Get_Query().ToJson(), get_data_app_exit_done, get_data_app_exit_fail);
                 }
                 else
                 {
@@ -252,9 +258,7 @@ namespace Carrot
             {
                 if (this.s_data_carrotapp_app == "")
                 {
-                    StructuredQuery q = new("app");
-                    q.Set_limit(20);
-                    q.Add_where("status", Query_OP.EQUAL, "publish");
+                    StructuredQuery q = this.Get_Query();
                     q.Add_where("type", Query_OP.EQUAL, "app");
                     this.carrot.server.Get_doc(q.ToJson(), get_data_app_exit_done, get_data_app_exit_fail);
                 }
@@ -266,9 +270,7 @@ namespace Carrot
             {
                 if (this.s_data_carrotapp_game == "")
                 {
-                    StructuredQuery q = new("app");
-                    q.Set_limit(20);
-                    q.Add_where("status", Query_OP.EQUAL, "publish");
+                    StructuredQuery q = this.Get_Query();
                     q.Add_where("type", Query_OP.EQUAL, "game");
                     this.carrot.server.Get_doc(q.ToJson(), get_data_app_exit_done, get_data_app_exit_fail);
                 }

@@ -12,7 +12,7 @@ namespace Carrot
         //Obj Carrot Ads
         public GameObject window_ads_prefab;
         private Carrot carrot;
-        private string s_data_carrotapp_all = "";
+        private string s_data_carrotapp_all_ads = "";
         //Config
         private int count_show_ads = 0;
         private bool is_ads = true;
@@ -52,7 +52,7 @@ namespace Carrot
 
             if (this.carrot.is_offline()&& this.is_ads)
             {
-                this.s_data_carrotapp_all = PlayerPrefs.GetString("s_data_carrotapp_all");
+                this.s_data_carrotapp_all_ads = PlayerPrefs.GetString("s_data_carrotapp_all_ads");
             }
         }
 
@@ -67,9 +67,9 @@ namespace Carrot
         [ContextMenu("Show Carrot Ads")]
         public void show_carrot_ads()
         {
-            if (this.s_data_carrotapp_all != "")
+            if (this.s_data_carrotapp_all_ads != "")
             {
-                this.Act_load_ads_data(this.s_data_carrotapp_all);
+                this.Act_load_ads_data(this.s_data_carrotapp_all_ads);
             }
             else
             {
@@ -83,15 +83,15 @@ namespace Carrot
         private void Act_show_carrot_ads_done(string s_data)
         {
             this.carrot.hide_loading();
-            this.s_data_carrotapp_all = s_data;
-            PlayerPrefs.SetString("s_data_carrotapp_all", s_data);
+            this.s_data_carrotapp_all_ads = s_data;
+            PlayerPrefs.SetString("s_data_carrotapp_all_ads", s_data);
             this.Act_load_ads_data(s_data);
         }
 
         private void Act_show_carrot_ads_fail(string s_error)
         {
             this.carrot.hide_loading();
-            if (this.s_data_carrotapp_all != "") this.Act_load_ads_data(this.s_data_carrotapp_all);
+            if (this.s_data_carrotapp_all_ads != "") this.Act_load_ads_data(this.s_data_carrotapp_all_ads);
         }
 
         private void Act_load_ads_data(string s_data)
