@@ -119,6 +119,43 @@ namespace Carrot
             }
         }
 
+        public void Update_Field_Document(string collectionId, string documentId, string fieldID, string jsonData, UnityAction<string> act_done = null, UnityAction<string> act_fail = null)
+        {
+            StartCoroutine(Act_update_document(collectionId, documentId, fieldID, jsonData, act_done, act_fail));
+        }
+
+        private IEnumerator Act_update_document(string collectionId, string documentId,string fieldID, string jsonData, UnityAction<string> act_done, UnityAction<string> act_fail)
+        {
+            string url = "https://firestore.googleapis.com/v1/projects/" + projectId + "/databases/(default)/documents/" + collectionId + "/" + documentId + "?updateMask.fieldPaths="+ fieldID;
+
+            var request = new UnityWebRequest(url, "PATCH");
+
+            TextAsset txtAsset = (TextAsset)Resources.Load("serviceAccountKey", typeof(TextAsset));
+
+            request.uploadHandler = new UploadHandlerRaw(txtAsset.bytes);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw)
+            {
+                contentType = "application/json"
+            };
+
+            yield return request.SendWebRequest();
+
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+                act_fail?.Invoke(request.error);
+            }
+            else
+            {
+                Debug.Log(request.downloadHandler.text);
+                act_done?.Invoke(request.downloadHandler.text);
+            }
+        }
+
         [ContextMenu("Add test")]
         public void Test()
         {
