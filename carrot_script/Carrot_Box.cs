@@ -93,7 +93,7 @@ namespace Carrot
             if (this.act_close != null) act_close();
             if (this.act_close_change_parameter != null)
             {
-                List<string> arr_item_change = new List<string>();
+                List<string> arr_item_change = new();
                 foreach(Transform tr in this.area_all_item)
                 {
                     if (tr.GetComponent<Carrot_Box_Item>()) if (tr.GetComponent<Carrot_Box_Item>().get_change_status()) arr_item_change.Add(tr.name);

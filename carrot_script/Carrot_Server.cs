@@ -162,6 +162,14 @@ namespace Carrot
                         s_json += "\"reports\":{\"arrayValue\":" + this.Get_ArrayValue(list_obj) + "},";
                     }
                 }
+                else if (key.ToString() == "rank")
+                {
+                    if (obj_IDictionary[key] != null)
+                    {
+                        IList list_obj = (IList)obj_IDictionary[key];
+                        s_json += "\"rank\":{\"arrayValue\":" + this.Get_ArrayValue(list_obj) + "},";
+                    }
+                }
                 else
                 {
                     s_json += "\"" + key + "\":{\"stringValue\":\"" + obj_IDictionary[key] + "\"},";
@@ -287,24 +295,27 @@ namespace Carrot
             if (fields[key] != null)
             {
                 IDictionary val = (IDictionary)fields[key];
-                return val["stringValue"];
+                if(val["stringValue"]!=null) return val["stringValue"];
+                if(val["mapValue"] !=null) return val["mapValue"];
+                if(val["arrayValue"] !=null) return val["arrayValue"];
             }
             return null;
         }
 
         public IDictionary Get_IDictionary()
         {
-            IDictionary fields = (IDictionary)this.doc["fields"];
             IDictionary obj_d = (IDictionary)Json.Deserialize("{}");
-            foreach (var key in fields.Keys)
+            if (this.doc["fields"] != null)
             {
-                IDictionary val = (IDictionary)fields[key];
-                if (val["stringValue"] != null)
+                IDictionary fields = (IDictionary)this.doc["fields"];
+                foreach (var key in fields.Keys)
                 {
-                    obj_d[key] = val["stringValue"];
-                }
-                else
-                {
+                    IDictionary val = (IDictionary)fields[key];
+                    if (val["stringValue"] != null)
+                    {
+                        obj_d[key] = val["stringValue"];
+                    }
+
                     if (val["mapValue"] != null)
                     {
                         IDictionary mapValue = (IDictionary)val["mapValue"];
@@ -334,6 +345,19 @@ namespace Carrot
                 {
                     string s_val = val["stringValue"].ToString();
                     obj_d[key] = s_val;
+                }
+
+                if (val["mapValue"] != null)
+                {
+                    IDictionary mapValue = (IDictionary)val["mapValue"];
+                    obj_d[key] = this.Get_mapValue(mapValue);
+                }
+
+                if (val["arrayValue"] != null)
+                {
+                    IDictionary values = (IDictionary)val["arrayValue"];
+                    IList arrayValue = (IList)values["values"];
+                    obj_d[key] = this.Get_ArrayValue(arrayValue);
                 }
             }
             return obj_d;

@@ -10,8 +10,6 @@ namespace Carrot
         public Image img_rank;
         public Text txt_user_name;
         public Text txt_user_scores;
-        public string user_id;
-        public string user_lang;
 
         private UnityAction act_click=null;
 
