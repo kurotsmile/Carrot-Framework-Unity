@@ -107,7 +107,7 @@ namespace Carrot
             window_ads.gameObject.SetActive(true);
             Carrot_Window_Ads ads = window_ads.GetComponent<Carrot_Window_Ads>();
             ads.On_load(this.carrot);
-            ads.load_data_ads(data_ads);
+            ads.Load_data_ads(data_ads);
         }
 
         private void setup_ads_Admob()

@@ -23,7 +23,7 @@ namespace Carrot
             this.UI.set_theme(this.carrot.color_highlight);
         }
 
-        public void load_data_ads(IDictionary data_ads)
+        public void Load_data_ads(IDictionary data_ads)
         {
             string id_app = data_ads["id"].ToString();
             this.pic_img_ads.GetComponent<Animator>().enabled = true;

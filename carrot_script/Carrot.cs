@@ -981,9 +981,9 @@ namespace Carrot
             int c_r_i = (int)this.color_highlight.r;
             int c_g_i = (int)this.color_highlight.g;
 
-            c_b_i = c_b_i + fade; if (c_b_i > 255) c_b_i = 255;
-            c_r_i = c_r_i + fade; if (c_r_i > 255) c_r_i = 255;
-            c_g_i = c_g_i + fade; if (c_g_i > 255) c_g_i = 255;
+            c_b_i += fade; if (c_b_i > 255) c_b_i = 255;
+            c_r_i += fade; if (c_r_i > 255) c_r_i = 255;
+            c_g_i += fade; if (c_g_i > 255) c_g_i = 255;
 
             byte c_b = (byte)c_b_i;
             byte c_r = (byte)c_r_i; ;
