@@ -180,10 +180,7 @@ namespace Carrot
             this.s_store = this.store_public.ToString().ToLower();
             this.s_os = this.os_app.ToString().ToLower();
 
-            if (this.type_app == TypeApp.App)
-                Destroy(this.GetComponent<Carrot_game>());
-            else
-                this.GetComponent<Carrot_game>().Load_carrot_game();
+            this.GetComponent<Carrot_game>().Load_carrot_game();
 
             this.tool = new Carrot_tool();
             this.lang.On_load(this);
