@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -577,9 +578,19 @@ namespace Carrot
                     Box_top_palyer.set_title("Player rankings");
 
                     string id_user_cur = this.carrot.user.get_id_user_login();
+
+                    IList<IDictionary> list_rank = new List<IDictionary>();
+
                     for (int i = 0; i < rank.Count; i++)
                     {
-                        IDictionary data_rank = (IDictionary)rank[i];
+                        list_rank.Add((IDictionary) rank[i]);
+                    }
+
+                    list_rank=this.SortListByScoresKey(list_rank);
+
+                    for (int i = 0; i < list_rank.Count; i++)
+                    {
+                        IDictionary data_rank = list_rank[i];
                         IDictionary data_user = (IDictionary)data_rank["user"];
 
                         var user_id = data_user["id"].ToString();
@@ -636,10 +647,21 @@ namespace Carrot
             }
         }
 
+        IList<IDictionary> SortListByScoresKey(IList<IDictionary> list)
+        {
+            return list.OrderByDescending(dict => int.Parse(dict["scores"].ToString())).ToList();
+        }
+
         private void Act_get_List_Top_player_fail(string s_error)
         {
             this.carrot.hide_loading();
             if (this.s_data_offline_rank_player != "") this.Act_get_List_Top_player_done(this.s_data_offline_rank_player);
+        }
+
+        [ContextMenu("Test update_scores_player")]
+        public void Test_update_scores_player()
+        {
+            this.update_scores_player(UnityEngine.Random.Range(0, 20), 0);
         }
 
         public void update_scores_player(int scores,int type=0)
