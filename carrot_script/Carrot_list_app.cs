@@ -144,11 +144,20 @@ namespace Carrot
             if (!fc.is_null)
             {
                 create_list_box_app();
+
+                IList<IDictionary> list_app = new List<IDictionary>();
+
                 for (int i = 0; i < fc.fire_document.Length; i++)
                 {
-                    IDictionary app_data = fc.fire_document[i].Get_IDictionary();
-                    add_item_to_list_box(app_data);
-                };
+                    list_app.Add(fc.fire_document[i].Get_IDictionary());
+                }
+
+                list_app = this.carrot.get_tool().Shuffle_Ilist(list_app);
+
+                for (int i = 0; i < list_app.Count; i++)
+                {
+                    add_item_to_list_box(list_app[i]);
+                }
 
                 if (this.carrot.type_control != TypeControl.None)
                 {
@@ -323,21 +332,26 @@ namespace Carrot
         private void Act_load_app_where_exit_by_data(string s_data)
         {
             Fire_Collection fc = new(s_data);
-            this.carrot.log("act_load_app_where_exit_by_query (" + this.type + ")");
 
             if (!fc.is_null)
             {
                 int count_app_exit = 0;
                 this.window_exit.panel_list_app_other.SetActive(true);
 
+                IList<IDictionary> list_app = new List<IDictionary>();
+
                 for (int i = 0; i < fc.fire_document.Length; i++)
                 {
-                    IDictionary app_data = fc.fire_document[i].Get_IDictionary();
-                    if (app_data["rates"] != null) app_data.Remove("rates");
-                    if (app_data["rank"] != null) app_data.Remove("rank");
-                    if (count_app_exit < 10) add_item_app_exit(app_data);
+                    list_app.Add(fc.fire_document[i].Get_IDictionary());
+                }
+
+                list_app = this.carrot.get_tool().Shuffle_Ilist(list_app);
+
+                for (int i = 0; i < list_app.Count; i++)
+                {
+                    if (count_app_exit < 10) add_item_app_exit(list_app[i]);
                     count_app_exit++;
-                };
+                }
 
                 this.list_btn_gamepad.Add(this.window_exit.UI.obj_gamepad[0]);
                 this.list_btn_gamepad.Add(this.window_exit.UI.obj_gamepad[1]);

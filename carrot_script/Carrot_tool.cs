@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -323,6 +324,19 @@ namespace Carrot
                 return true;
             else
                 return false;
+        }
+
+        public IList<IDictionary> Shuffle_Ilist(IList<IDictionary> list)
+        {
+            System.Random rng = new System.Random();
+            for (int i = list.Count - 1; i > 0; i--)
+            { 
+                int j = rng.Next(0, i + 1);
+                IDictionary temp = list[i];
+                list[i] = list[j];
+                list[j] = temp;
+            }
+            return list;
         }
     }
 }
