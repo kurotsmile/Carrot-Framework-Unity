@@ -29,7 +29,7 @@ namespace Carrot
         public Sprite icon_pause_music_game;
         public Sprite icon_play_music_game;
         public Sprite icon_waiting_music_game;
-        private AudioSource sound_bk_game;
+        private AudioSource sound_bk_game = null;
         public AudioSource sound_bk_game_test;
         private Carrot_Box_Item box_setting_item_bkmusic = null;
         private Carrot_Box box_list_music_game;
@@ -150,12 +150,15 @@ namespace Carrot
                         item_music_bk.set_tip("Please buy to use this track");
                         item_music_bk.set_act(() => this.act_buy_music_bk(id_bk_music, index_link));
 
-                        if (this.carrot.id_ads_Rewarded_android != "" || this.carrot.id_ads_Rewarded_ios != "")
+                        if (carrot.os_app != OS.Window)
                         {
-                            Carrot_Box_Btn_Item btn_ads = item_music_bk.create_item();
-                            btn_ads.set_icon(this.carrot.icon_carrot_ads);
-                            btn_ads.set_color(this.carrot.color_highlight);
-                            btn_ads.set_act(() => this.act_watch_ads_to_music_bk(id_bk_music, index_link));
+                            if (this.carrot.id_ads_Rewarded_android != "" || this.carrot.id_ads_Rewarded_ios != "")
+                            {
+                                Carrot_Box_Btn_Item btn_ads = item_music_bk.create_item();
+                                btn_ads.set_icon(this.carrot.icon_carrot_ads);
+                                btn_ads.set_color(this.carrot.color_highlight);
+                                btn_ads.set_act(() => this.act_watch_ads_to_music_bk(id_bk_music, index_link));
+                            }
                         }
                     }
                     else

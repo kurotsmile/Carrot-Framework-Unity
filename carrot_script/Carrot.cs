@@ -913,7 +913,10 @@ namespace Carrot
                 item_status_sound.set_icon(this.sp_icon_sound_off);
                 PlayerPrefs.SetInt("is_sound", 1);
                 this.is_sound = false;
-                if (this.type_app == TypeApp.Game) this.game.get_audio_source_bk().Stop();
+                if (this.type_app == TypeApp.Game)
+                {
+                    if(this.game.get_audio_source_bk()!=null) this.game.get_audio_source_bk().Stop();
+                }
             }
             else
             {
@@ -921,7 +924,10 @@ namespace Carrot
                 PlayerPrefs.SetInt("is_sound", 0);
                 this.is_sound = true;
                 this.play_sound_click();
-                if (this.type_app == TypeApp.Game) this.game.get_audio_source_bk().Play();
+                if (this.type_app == TypeApp.Game)
+                {
+                    if (this.game.get_audio_source_bk() != null) this.game.get_audio_source_bk().Play();
+                }
             }
             item_status_sound.set_change_status(true);
         }

@@ -304,7 +304,7 @@ namespace Carrot
             else
             {
                 Debug.Log("Delete successful!");
-                act_done?.Invoke(www.downloadHandler.text);
+                act_done?.Invoke("");
             }
         }
     }
