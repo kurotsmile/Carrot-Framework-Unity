@@ -215,6 +215,14 @@ namespace Carrot
                         s_json += "\"rates\":{\"arrayValue\":" + this.Get_ArrayValue(list_obj) + "},";
                     }
                 }
+                else if (key.ToString() == "datas")
+                {
+                    if (obj_IDictionary[key] != null)
+                    {
+                        IList list_obj = (IList)obj_IDictionary[key];
+                        s_json += "\"datas\":{\"arrayValue\":" + this.Get_ArrayValue(list_obj) + "},";
+                    }
+                }
                 else
                 {
                     s_json += "\"" + key + "\":{\"stringValue\":\"" + obj_IDictionary[key] + "\"},";
@@ -262,6 +270,14 @@ namespace Carrot
                         s_json += "\"rank\":{\"arrayValue\":" + this.Get_ArrayValue(list_obj) + "},";
                     }
                 }
+                else if (key.ToString() == "datas")
+                {
+                    if (obj_IDictionary[key] != null)
+                    {
+                        IList list_obj = (IList)obj_IDictionary[key];
+                        s_json += "\"datas\":{\"arrayValue\":" + this.Get_ArrayValue(list_obj) + "},";
+                    }
+                }
                 else
                 {
                     s_json += "\"" + key + "\":{\"stringValue\":\"" + obj_IDictionary[key] + "\"},";
@@ -271,7 +287,7 @@ namespace Carrot
             return s_json += "}}";
         }
 
-        private string Get_ArrayValue(IList datas)
+        public string Get_ArrayValue(IList datas)
         {
             string s_json = "{";
             s_json += "\"values\":[";
@@ -521,7 +537,7 @@ namespace Carrot
 
         public void Add_order(string s_field_orderby, Query_Order_Direction direction = Query_Order_Direction.ASCENDING)
         {
-            this.s_order = ",\"orderBy\":[{\"field\":{\"fieldPath\":\"" + s_field_orderby + "\"},\"direction\":\"" + direction.ToString() + "\"}]";
+            this.s_order = ",\"orderBy\":[{\"field\":{\"fieldPath\":\"" + s_field_orderby + "\"},\"direction\":\""+direction.ToString()+"\"}]";
         }
 
         public string ToJson()

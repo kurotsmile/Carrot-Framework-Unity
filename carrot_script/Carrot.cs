@@ -185,7 +185,7 @@ namespace Carrot
             this.tool = new Carrot_tool();
             this.lang.On_load(this);
             this.user.On_load(this);
-            this.camera_pro.load(this);
+            this.camera_pro.On_load();
             this.shop.load(this);
             this.shop.onCarrotPaySuccess += this.carrot_by_success;
             this.shop.onCarrotRestoreSuccess += this.carrot_restore_success;

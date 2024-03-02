@@ -8,7 +8,7 @@ namespace Carrot
 {
     public class Carrot_camera : MonoBehaviour
     {
-        private Carrot carrot;
+        public Carrot carrot;
         public GameObject window_camera_prefab;
         public GameObject window_photoshop_prefab;
         private Carrot_Box box_grid_list_photo;
@@ -16,9 +16,8 @@ namespace Carrot
         public GameObject prefab_item_list_img;
         int leng_img_photo = 0;
 
-        public void load(Carrot carrot)
+        public void On_load()
         {
-            this.carrot = carrot;
             this.leng_img_photo = PlayerPrefs.GetInt("leng_img_photo", 0);
         }
 
