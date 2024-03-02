@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Purchasing;
+
 namespace Carrot
 {
     interface Carrot_shop_event
     {
-        void carrot_by_success(string s_id_product);
-        void carrot_restore_success(string[] arr_id);
+        void Carrot_by_success(string s_id_product);
+        void Carrot_restore_success(string[] arr_id);
     }
 
     public class Carrot_shop : MonoBehaviour, IStoreListener
@@ -48,14 +49,6 @@ namespace Carrot
             if (this.carrot.pay_app == PayApp.CarrotPay)
             {
                 this.id_product_check = this.list_id_product[index_p];
-                string user_id = this.carrot.user.get_id_user_login();
-                string user_lang = PlayerPrefs.GetString("lang", "en");
-                if (user_id == "")
-                    user_id = SystemInfo.deviceUniqueIdentifier;
-                else
-                    user_lang = this.carrot.user.get_lang_user_login();
-                //string link_pay =this.carrot.get_url_host() + "/pay_inapp/" + this.list_id_product[index_p] + "/" + user_id + "/" + user_lang;
-                //Application.OpenURL(link_pay);
             }
             else
             {
@@ -68,20 +61,7 @@ namespace Carrot
             this.carrot.play_sound_click();
             if (this.carrot.pay_app == PayApp.CarrotPay)
             {
-                WWWForm frm_inapp = carrot.frm_act("restore_inapp");
-                string user_id = this.carrot.user.get_id_user_login();
-                string user_lang = PlayerPrefs.GetString("lang", "en");
-                if (user_id == "")
-                    user_id = SystemInfo.deviceUniqueIdentifier;
-                else
-                    user_lang = this.carrot.user.get_lang_user_login();
-                frm_inapp.AddField("user_id", user_id);
-                frm_inapp.AddField("user_lang", user_lang);
-                for (int i = 0; i < this.list_id_product.Count; i++)
-                {
-                    frm_inapp.AddField("inapp_id[]", this.list_id_product[i]);
-                }
-                //this.carrot.send(frm_inapp, act_restore_inapp_carrot);
+
             }
             else
             {
@@ -122,7 +102,7 @@ namespace Carrot
             }
             else if (Application.platform == RuntimePlatform.Android && StandardPurchasingModule.Instance().appStore == AppStore.GooglePlay)
             {
- 
+
             }
             else
             {
@@ -143,36 +123,6 @@ namespace Carrot
         {
             return this.list_id_product[index];
         }
-
-        void OnApplicationFocus(bool hasFocus)
-        {
-            if (this.id_product_check != "" && hasFocus&&this.carrot.pay_app==PayApp.CarrotPay)
-            {
-                WWWForm frm_inapp = carrot.frm_act("check_inapp");
-                string user_id = this.carrot.user.get_id_user_login();
-                string user_lang = PlayerPrefs.GetString("lang", "en");
-                if (user_id == "")
-                    user_id = SystemInfo.deviceUniqueIdentifier;
-                else
-                    user_lang = this.carrot.user.get_lang_user_login();
-                frm_inapp.AddField("inapp_id", this.id_product_check);
-                frm_inapp.AddField("user_id", user_id);
-                frm_inapp.AddField("user_lang", user_lang);
-                //this.carrot.send(frm_inapp, act_check_inapp);
-            }
-        }
-
-        private void act_check_inapp(string s_data)
-        {
-            this.carrot.hide_loading();
-            IDictionary data_inapp = (IDictionary)Json.Deserialize(s_data);
-            if (data_inapp["error"].ToString() == "1")
-                this.carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), PlayerPrefs.GetString(data_inapp["msg"].ToString(), data_inapp["msg_en"].ToString()), Msg_Icon.Alert);
-            else
-                this.onCarrotPaySuccess.Invoke(this.id_product_check);
-            this.id_product_check = "";
-        }
-
 
         void IStoreListener.OnInitializeFailed(InitializationFailureReason error)
         {
