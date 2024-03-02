@@ -254,6 +254,7 @@ namespace Carrot
                 }
             }
 
+            this.box_list.update_color_table_row();
             this.box_list.update_gamepad_cosonle_control();
             if (this.act_after_show_view_by_id != null)
             {
