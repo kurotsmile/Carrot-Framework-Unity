@@ -767,51 +767,49 @@ namespace Carrot
                 else this.item_setting_ads.gameObject.SetActive(false);
             }
 
-            if (this.type_app == TypeApp.Game)
-            {
-                if (this.index_inapp_buy_bk_music != -1)
-                {
-                    if (this.setting_soundtrack == Setting_Option.Show)
-                    {
-                        Carrot_Box_Item item_setting_bk_music = box_setting.create_item("list_bk_music");
-                        item_setting_bk_music.set_icon(this.sp_icon_bk_music);
-                        item_setting_bk_music.set_title(PlayerPrefs.GetString("list_bk_music", "Soundtrack"));
-                        item_setting_bk_music.set_tip(PlayerPrefs.GetString("list_bk_music_tip", "Select and change background music"));
-                        item_setting_bk_music.set_lang_data("list_bk_music", "list_bk_music_tip");
-                        item_setting_bk_music.set_act(() => this.game.show_list_music_game(item_setting_bk_music));
 
-                        if (this.tool.check_file_exist("music_bk"))
-                        {
-                            Carrot_Box_Btn_Item btn_del_bk_music = item_setting_bk_music.create_item();
-                            btn_del_bk_music.set_color(this.color_highlight);
-                            btn_del_bk_music.set_icon(this.sp_icon_del_data);
-                            btn_del_bk_music.GetComponent<Button>().onClick.RemoveAllListeners();
-                            btn_del_bk_music.GetComponent<Button>().onClick.AddListener(() => this.game.delete_bk_music());
-                            btn_del_bk_music.GetComponent<Button>().onClick.AddListener(() => this.reload_setting());
-                        }
+            if (this.index_inapp_buy_bk_music != -1)
+            {
+                if (this.setting_soundtrack == Setting_Option.Show)
+                {
+                    Carrot_Box_Item item_setting_bk_music = box_setting.create_item("list_bk_music");
+                    item_setting_bk_music.set_icon(this.sp_icon_bk_music);
+                    item_setting_bk_music.set_title(PlayerPrefs.GetString("list_bk_music", "Soundtrack"));
+                    item_setting_bk_music.set_tip(PlayerPrefs.GetString("list_bk_music_tip", "Select and change background music"));
+                    item_setting_bk_music.set_lang_data("list_bk_music", "list_bk_music_tip");
+                    item_setting_bk_music.set_act(() => this.game.show_list_music_game(item_setting_bk_music));
+
+                    if (this.tool.check_file_exist("music_bk"))
+                    {
+                        Carrot_Box_Btn_Item btn_del_bk_music = item_setting_bk_music.create_item();
+                        btn_del_bk_music.set_color(this.color_highlight);
+                        btn_del_bk_music.set_icon(this.sp_icon_del_data);
+                        btn_del_bk_music.GetComponent<Button>().onClick.RemoveAllListeners();
+                        btn_del_bk_music.GetComponent<Button>().onClick.AddListener(() => this.game.delete_bk_music());
+                        btn_del_bk_music.GetComponent<Button>().onClick.AddListener(() => this.reload_setting());
                     }
                 }
+            }
 
-                if (this.type_control != TypeControl.None)
+            if (this.type_control != TypeControl.None)
+            {
+                List<Carrot_Gamepad> list_gamepad = this.game.get_list_gamepad();
+                for (int i = list_gamepad.Count - 1; i >= 0; i--)
                 {
-                    List<Carrot_Gamepad> list_gamepad = this.game.get_list_gamepad();
-                    for (int i = list_gamepad.Count - 1; i >= 0; i--)
-                    {
-                        var i_index = i;
-                        Carrot_Box_Item item_setting_gamepad = box_setting.create_item("gamepad_control");
-                        if (this.type_control == TypeControl.GamePad) item_setting_gamepad.set_icon(this.icon_carrot_gamepad);
-                        if (this.type_control == TypeControl.D_pad) item_setting_gamepad.set_icon(this.icon_carrot_d_pad);
-                        item_setting_gamepad.set_title("Customize Gamepad (" + list_gamepad[i].get_id_gamepad() + ")");
-                        item_setting_gamepad.set_tip("Change the handle keys");
-                        item_setting_gamepad.set_act(list_gamepad[i].show_setting_gamepad);
-                        Carrot_Box_Btn_Item btn_enable_gamepad = item_setting_gamepad.create_item();
-                        if (list_gamepad[i].get_status_use_gampead())
-                            btn_enable_gamepad.icon.sprite = this.icon_carrot_gamepad_off;
-                        else
-                            btn_enable_gamepad.icon.sprite = this.icon_carrot_gamepad_on;
-                        btn_enable_gamepad.GetComponent<Button>().onClick.AddListener(() => list_gamepad[i_index].change_status_use_gamepad(btn_enable_gamepad));
-                        btn_enable_gamepad.GetComponent<Image>().color = this.color_highlight;
-                    }
+                    var i_index = i;
+                    Carrot_Box_Item item_setting_gamepad = box_setting.create_item("gamepad_control");
+                    if (this.type_control == TypeControl.GamePad) item_setting_gamepad.set_icon(this.icon_carrot_gamepad);
+                    if (this.type_control == TypeControl.D_pad) item_setting_gamepad.set_icon(this.icon_carrot_d_pad);
+                    item_setting_gamepad.set_title("Customize Gamepad (" + list_gamepad[i].get_id_gamepad() + ")");
+                    item_setting_gamepad.set_tip("Change the handle keys");
+                    item_setting_gamepad.set_act(list_gamepad[i].show_setting_gamepad);
+                    Carrot_Box_Btn_Item btn_enable_gamepad = item_setting_gamepad.create_item();
+                    if (list_gamepad[i].get_status_use_gampead())
+                        btn_enable_gamepad.icon.sprite = this.icon_carrot_gamepad_off;
+                    else
+                        btn_enable_gamepad.icon.sprite = this.icon_carrot_gamepad_on;
+                    btn_enable_gamepad.GetComponent<Button>().onClick.AddListener(() => list_gamepad[i_index].change_status_use_gamepad(btn_enable_gamepad));
+                    btn_enable_gamepad.GetComponent<Image>().color = this.color_highlight;
                 }
             }
 

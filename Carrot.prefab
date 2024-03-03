@@ -465,6 +465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 149ae561177ad474082a5bedb11882b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon_paypal: {fileID: 21300000, guid: 15afc2e3cd240504bb8dc67a19fb774f, type: 3}
 --- !u!114 &4614701476662799586
 MonoBehaviour:
   m_ObjectHideFlags: 0
