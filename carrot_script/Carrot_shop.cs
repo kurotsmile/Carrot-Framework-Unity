@@ -1,9 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Networking;
 using UnityEngine.Purchasing;
 
 namespace Carrot
@@ -26,6 +24,9 @@ namespace Carrot
 
         private IList list_product;
         private Carrot_Box box_shop;
+
+        private string user_id_pay = "";
+        private string product_id_pay= "";
 
         public void load(Carrot carrot)
         {
@@ -195,6 +196,9 @@ namespace Carrot
             else
                 user_id = SystemInfo.deviceUniqueIdentifier;
 
+            this.user_id_pay = user_id;
+            this.product_id_pay = data_product["id"].ToString();
+
             IDictionary defaultDescription = (IDictionary)data_product["defaultDescription"];
             IDictionary googlePrice = (IDictionary)data_product["googlePrice"];
             string price_product = googlePrice["num"].ToString();
@@ -237,7 +241,7 @@ namespace Carrot
             Carrot_Box_Btn_Panel panel_btn = box_shop.create_panel_btn();
             Carrot_Button_Item btn_paypal = panel_btn.create_btn();
             btn_paypal.set_icon_white(carrot.icon_carrot_link);
-            btn_paypal.set_label("Pay pal");
+            btn_paypal.set_label("Open link");
             btn_paypal.set_label_color(Color.white);
             btn_paypal.set_bk_color(carrot.color_highlight);
             btn_paypal.set_act_click(() => On_paypal(url_paypal));
@@ -248,6 +252,13 @@ namespace Carrot
             btn_share.set_label_color(Color.white);
             btn_share.set_bk_color(carrot.color_highlight);
             btn_share.set_act_click(() => carrot.show_share(url_paypal, "Ask someone else to buy this product for you!"));
+
+            Carrot_Button_Item btn_check = panel_btn.create_btn();
+            btn_check.set_icon_white(carrot.icon_carrot_advanced);
+            btn_check.set_label("Check Again!");
+            btn_check.set_label_color(Color.white);
+            btn_check.set_bk_color(carrot.color_highlight);
+            btn_check.set_act_click(() => Check_pay());
 
             Carrot_Button_Item btn_cancel = panel_btn.create_btn();
             btn_cancel.set_icon_white(carrot.icon_carrot_cancel);
@@ -280,10 +291,29 @@ namespace Carrot
                 for(int i=0;i<fc.fire_document.Length;i++)
                 {
                     IDictionary data_history = fc.fire_document[i].Get_IDictionary();
+                    var id_product = data_history["id_product"].ToString();
                     Carrot_Box_Item item_history = box_history.create_item("item_history_" + i);
-                    item_history.set_icon(carrot.icon_carrot_done);
+                    if (data_history["status"].ToString() == "COMPLETED")
+                    {
+                        item_history.set_icon(carrot.icon_carrot_done);
+
+                        if (data_history["type_product"].ToString() == "1")
+                        {
+                            if (onCarrotPaySuccess != null)
+                            {
+                                Carrot_Box_Btn_Item btn_download = item_history.create_item();
+                                btn_download.set_icon(carrot.icon_carrot_download);
+                                btn_download.set_color(carrot.color_highlight);
+                                btn_download.set_act(() => onCarrotPaySuccess(id_product));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        item_history.set_icon(carrot.icon_carrot_cancel);
+                    }
                     item_history.set_title(data_history["id_product"].ToString());
-                    item_history.set_tip(data_history["date"].ToString());
+                    item_history.set_tip(data_history["update_time"].ToString());
                 }
             }
             else
@@ -300,7 +330,9 @@ namespace Carrot
 
         private void Close_box_carrot_pay()
         {
-            carrot.play_sound_click();
+            if(carrot!=null) carrot.play_sound_click();
+            product_id_pay = "";
+            user_id_pay = "";
             if (box_shop != null) box_shop.close();
         }
 
@@ -310,6 +342,43 @@ namespace Carrot
             Application.OpenURL(url_pay);
         }
 
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus==true&&this.product_id_pay!="") Check_pay();
+        }
+
+        private void Check_pay()
+        {
+            this.carrot.show_loading();
+            Debug.Log("Check pay (" + this.product_id_pay + " - "+this.user_id_pay+") from server...");
+            StructuredQuery q = new("order");
+            q.Add_where("user_id", Query_OP.EQUAL, user_id_pay);
+            q.Add_where("id_product", Query_OP.EQUAL, this.product_id_pay);
+            carrot.server.Get_doc(q.ToJson(), Check_pay_done, Act_server_fail);
+        }
+
+        private void Check_pay_done(string s_data)
+        {
+            this.carrot.hide_loading();
+            Fire_Collection fc = new(s_data);
+            if (!fc.is_null)
+            {
+                product_id_pay = "";
+                user_id_pay = "";
+                IDictionary data_pay = fc.fire_document[0].Get_IDictionary();
+                onCarrotPaySuccess?.Invoke(data_pay["id_product"].ToString());
+                if (box_shop != null) box_shop.close();
+            }
+            else
+            {
+                this.carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), PlayerPrefs.GetString("shop_buy_fail", "Purchase failed, Please check your account balance, or try again at another time"), Msg_Icon.Error);
+                if (box_shop == null)
+                {
+                    user_id_pay = "";
+                    product_id_pay = "";
+                }
+            }
+        }
         #endregion
 
     }
