@@ -83,34 +83,9 @@ namespace Carrot
         {
             this.carrot.play_sound_click();
             if (this.carrot.pay_app == PayApp.CarrotPay)
-            {
-
-            }
+                this.Restrore_Carrot_pay();
             else
-            {
                 this.act_restore_unity_pay();
-            }
-        }
-
-        private void act_restore_inapp_carrot(string s_data)
-        {
-            IDictionary data_restore = (IDictionary)Json.Deserialize(s_data);
-            if (data_restore["error"].ToString() == "0")
-            {
-                this.OnTransactionsRestored(true);
-                IList list_inapp = (IList)data_restore["inapp_success"];
-                string[] arr_id = new string[list_inapp.Count];
-                for (int i = 0; i < list_inapp.Count; i++)
-                {
-                    arr_id[i] = list_inapp[i].ToString();
-                }
-                this.onCarrotRestoreSuccess.Invoke(arr_id);
-            }
-            else
-            {
-                this.OnTransactionsRestored(false);
-            }
-            this.carrot.log("Restore inapp:" + s_data);
         }
 
         #region Unity_Pay
@@ -378,6 +353,49 @@ namespace Carrot
                     product_id_pay = "";
                 }
             }
+        }
+
+        private void Restrore_Carrot_pay()
+        {
+            carrot.show_loading();
+            string user_id = carrot.user.get_id_user_login();
+            if (user_id=="") user_id = SystemInfo.deviceUniqueIdentifier;
+            StructuredQuery q = new("order");
+            q.Add_where("user_id",Query_OP.EQUAL,user_id);
+            carrot.server.Get_doc(q.ToJson(), Act_restore_carrot_pay_done, Act_server_fail);
+        }
+
+        private void Act_restore_carrot_pay_done(string s_data)
+        {
+            carrot.hide_loading();
+            Fire_Collection fc = new(s_data);
+
+            if (!fc.is_null)
+            {
+                this.OnTransactionsRestored(true);
+                IList list_inapp_restore = (IList)Json.Deserialize("[]");
+
+                for(int i = 0; i < fc.fire_document.Length; i++)
+                {
+                    IDictionary data_in_app = fc.fire_document[i].Get_IDictionary();
+                    if (data_in_app["status"].ToString() == "COMPLETED")
+                    {
+                        if (data_in_app["type_product"].ToString() == "1") list_inapp_restore.Add(data_in_app["id_product"].ToString());
+                    }
+                }
+
+                string[] arr_id = new string[list_inapp_restore.Count];
+                for (int i = 0; i < list_inapp_restore.Count; i++)
+                {
+                    arr_id[i] = list_inapp_restore[i].ToString();
+                }
+                this.onCarrotRestoreSuccess.Invoke(arr_id);
+            }
+            else
+            {
+                this.OnTransactionsRestored(false);
+            }
+
         }
         #endregion
 
