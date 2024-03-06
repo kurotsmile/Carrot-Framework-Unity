@@ -27,6 +27,8 @@ namespace Carrot
 
         private string user_id_pay = "";
         private string product_id_pay= "";
+        private string order_id_pay = "";
+        private string order_type_pay = "";
 
         public void load(Carrot carrot)
         {
@@ -159,6 +161,8 @@ namespace Carrot
         #region Carrot_Paypal
         private void Check_login_and_buy_product_paypal(IDictionary data_product)
         {
+            this.order_id_pay = "order" + carrot.generateID();
+
             string user_id = carrot.user.get_id_user_login();
             string user_lang = carrot.lang.get_key_lang();
             string user_name = "";
@@ -173,6 +177,7 @@ namespace Carrot
 
             this.user_id_pay = user_id;
             this.product_id_pay = data_product["id"].ToString();
+            this.order_type_pay = data_product["type"].ToString();
 
             IDictionary defaultDescription = (IDictionary)data_product["defaultDescription"];
             IDictionary googlePrice = (IDictionary)data_product["googlePrice"];
@@ -201,16 +206,17 @@ namespace Carrot
             Carrot_Box_Item item_type= box_shop.create_item("item_type");
             item_type.set_icon(carrot.icon_carrot_all_category);
             item_type.set_title("Type");
-            if (data_product["type"].ToString()=="0")
+            if (this.order_type_pay== "0")
                 item_type.set_tip("Consumable");
             else
                 item_type.set_tip("No Consumable");
 
             var url_paypal = carrot.mainhost + "?page=pay&id=" + data_product["id"].ToString() + "&title=" + defaultDescription["title"].ToString() + "&description=" + defaultDescription["description"].ToString();
-            url_paypal  +="&price="+price_product;
+            url_paypal += "&price="+price_product;
             url_paypal += "&user_id="+user_id;
             url_paypal += "&user_lang="+user_lang;
-            url_paypal += "&type="+data_product["type"].ToString();
+            url_paypal += "&type="+order_type_pay;
+            url_paypal += "&id_order="+order_id_pay;
             if (user_name != "") url_paypal += "&user_name=" + user_name;
 
             Carrot_Box_Btn_Panel panel_btn = box_shop.create_panel_btn();
@@ -327,8 +333,15 @@ namespace Carrot
             this.carrot.show_loading();
             Debug.Log("Check pay (" + this.product_id_pay + " - "+this.user_id_pay+") from server...");
             StructuredQuery q = new("order");
-            q.Add_where("user_id", Query_OP.EQUAL, user_id_pay);
-            q.Add_where("id_product", Query_OP.EQUAL, this.product_id_pay);
+            if (this.order_type_pay == "1")
+            {
+                q.Add_where("user_id", Query_OP.EQUAL, user_id_pay);
+                q.Add_where("id_product", Query_OP.EQUAL, this.product_id_pay);
+            }
+            else
+            {
+                q.Add_where("id_order", Query_OP.EQUAL, this.order_id_pay);
+            }
             carrot.server.Get_doc(q.ToJson(), Check_pay_done, Act_server_fail);
         }
 
@@ -338,8 +351,7 @@ namespace Carrot
             Fire_Collection fc = new(s_data);
             if (!fc.is_null)
             {
-                product_id_pay = "";
-                user_id_pay = "";
+                this.Reset_session_carrot_pay();
                 IDictionary data_pay = fc.fire_document[0].Get_IDictionary();
                 onCarrotPaySuccess?.Invoke(data_pay["id_product"].ToString());
                 if (box_shop != null) box_shop.close();
@@ -347,11 +359,7 @@ namespace Carrot
             else
             {
                 this.carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), PlayerPrefs.GetString("shop_buy_fail", "Purchase failed, Please check your account balance, or try again at another time"), Msg_Icon.Error);
-                if (box_shop == null)
-                {
-                    user_id_pay = "";
-                    product_id_pay = "";
-                }
+                if (box_shop == null) this.Reset_session_carrot_pay();
             }
         }
 
@@ -396,6 +404,14 @@ namespace Carrot
                 this.OnTransactionsRestored(false);
             }
 
+        }
+
+        private void Reset_session_carrot_pay()
+        {
+            user_id_pay = "";
+            product_id_pay = "";
+            order_type_pay = "";
+            order_id_pay = "";
         }
         #endregion
 
