@@ -141,6 +141,8 @@ namespace Carrot
         public Sprite icon_carrot_sex_girl;
         public Sprite icon_carrot_location;
         public Sprite icon_carrot_database;
+        public Sprite icon_carrot_buy;
+        public Sprite icon_carrot_price;
 
         [Header("Lost Internet")]
         public Carrot_lost_internet carrot_lost_internet;

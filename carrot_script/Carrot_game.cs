@@ -24,8 +24,6 @@ namespace Carrot
         private Carrot carrot;
         [Header("Music Background Game")]
         public Sprite icon_list_music_game;
-        public Sprite icon_free_music_game;
-        public Sprite icon_buy_music_game;
         public Sprite icon_pause_music_game;
         public Sprite icon_play_music_game;
         public Sprite icon_waiting_music_game;
@@ -144,7 +142,7 @@ namespace Carrot
                     if (is_buy)
                     {
                         Carrot_Box_Btn_Item btn_buy = item_music_bk.create_item();
-                        btn_buy.set_icon(this.icon_buy_music_game);
+                        btn_buy.set_icon(this.carrot.icon_carrot_buy);
                         btn_buy.set_color(this.carrot.color_highlight);
                         btn_buy.set_act(() => this.act_buy_music_bk(id_bk_music, index_link));
                         item_music_bk.set_tip("Please buy to use this track");

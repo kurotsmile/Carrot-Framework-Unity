@@ -23,6 +23,9 @@ namespace Carrot
         public UnityAction<string> onCarrotPaySuccess;
         public UnityAction<string[]> onCarrotRestoreSuccess;
 
+        private IList list_product;
+        private Carrot_Box box_shop;
+
         public void load(Carrot carrot)
         {
             this.carrot = carrot;
@@ -51,7 +54,7 @@ namespace Carrot
                 var asset = Resources.Load("IAPProductCatalog") as TextAsset;
                 Debug.Log(asset);
                 IDictionary data_inapp = (IDictionary)Json.Deserialize(asset.text);
-                IList list_product = (IList)data_inapp["products"];
+                list_product = (IList)data_inapp["products"];
 
                 foreach (IDictionary product in list_product)
                 {
@@ -65,7 +68,7 @@ namespace Carrot
             this.carrot.play_sound_click();
             if (this.carrot.pay_app == PayApp.CarrotPay)
             {
-                this.Check_login_and_buy_product_paypal(this.list_id_product[index_p]);
+                this.Check_login_and_buy_product_paypal((IDictionary)this.list_product[index_p]);
             }
             else
             {
@@ -177,34 +180,88 @@ namespace Carrot
         #endregion
 
         #region Carrot_Paypal
-        private void Check_login_and_buy_product_paypal(string s_id_product)
+        private void Check_login_and_buy_product_paypal(IDictionary data_product)
         {
-            Carrot_Box box_paypal = this.carrot.Create_Box();
-            box_paypal.set_title("Login PayPal");
-            box_paypal.set_icon_white(this.carrot.icon_carrot_all_category);
+            string user_id = carrot.user.get_id_user_login();
+            string user_lang = carrot.lang.get_key_lang();
+           
+            if (user_id != "")
+                user_lang = carrot.user.get_lang_user_login();
+            else
+                user_id = SystemInfo.deviceUniqueIdentifier;
 
-            Carrot_Box_Item item_product = box_paypal.create_item("item_product");
+            IDictionary defaultDescription = (IDictionary)data_product["defaultDescription"];
+            IDictionary googlePrice = (IDictionary)data_product["googlePrice"];
+            string price_product = googlePrice["num"].ToString();
+            price_product = price_product.Insert(1, ".");
+
+            string name_product = defaultDescription["title"].ToString();
+
+            box_shop=this.carrot.Create_Box();
+            box_shop.set_title(name_product);
+            box_shop.set_icon(this.carrot.icon_carrot_buy);
+
+            Carrot_Box_Item item_product = box_shop.create_item("item_product");
             item_product.set_icon(this.carrot.icon_carrot_database);
+            item_product.set_title(defaultDescription["title"].ToString());
+            item_product.set_tip(defaultDescription["description"].ToString());
 
-            Carrot_Box_Item item_email = box_paypal.create_item("item_mail");
-            item_email.set_icon(this.carrot.user.icon_user_name);
-            item_email.set_title("Email");
-            item_email.set_tip("Email paypal account");
-            item_email.set_type(Box_Item_Type.box_email_input);
-            item_email.check_type();
+            Carrot_Box_Item item_price = box_shop.create_item("item_price");
+            item_price.set_icon(carrot.icon_carrot_price);
+            item_price.set_title("Price of product");
+            item_price.set_tip(price_product+"$");
 
-            Carrot_Box_Item item_password = box_paypal.create_item("item_password");
-            item_password.set_icon(this.carrot.user.icon_user_change_password);
-            item_password.set_title("Password");
-            item_password.set_tip("Password paypal");
-            item_password.set_type(Box_Item_Type.box_password_input);
-            item_password.check_type();
+            Carrot_Box_Item item_type= box_shop.create_item("item_type");
+            item_type.set_icon(carrot.icon_carrot_all_category);
+            item_type.set_title("Type");
+            if (data_product["type"].ToString()=="0")
+                item_type.set_tip("Consumable");
+            else
+                item_type.set_tip("No Consumable");
 
-            Carrot_Box_Btn_Panel panel_btn = box_paypal.create_panel_btn();
-            Carrot_Button_Item btn_login = panel_btn.create_btn("btn_login");
-            btn_login.set_icon(this.carrot.icon_carrot_done);
-            btn_login.set_label("Login");
+            var url_paypal = carrot.mainhost + "?page=pay&id=" + data_product["id"].ToString() + "&title=" + defaultDescription["title"].ToString() + "&description=" + defaultDescription["description"].ToString();
+            url_paypal  +="&price="+price_product;
+            url_paypal += "&user_id="+user_id;
+            url_paypal += "&user_lang="+user_lang;
+            url_paypal += "&type"+data_product["type"].ToString();
+
+            Carrot_Box_Btn_Panel panel_btn = box_shop.create_panel_btn();
+            Carrot_Button_Item btn_paypal = panel_btn.create_btn();
+            btn_paypal.set_icon_white(carrot.icon_carrot_link);
+            btn_paypal.set_label("Pay pal");
+            btn_paypal.set_label_color(Color.white);
+            btn_paypal.set_bk_color(carrot.color_highlight);
+            btn_paypal.set_act_click(() => On_paypal(url_paypal));
+
+            Carrot_Button_Item btn_share = panel_btn.create_btn();
+            btn_share.set_icon_white(carrot.sp_icon_share);
+            btn_share.set_label(PlayerPrefs.GetString("share","Share"));
+            btn_share.set_label_color(Color.white);
+            btn_share.set_bk_color(carrot.color_highlight);
+            btn_share.set_act_click(() => carrot.show_share(url_paypal, "Ask someone else to buy this product for you!"));
+
+            Carrot_Button_Item btn_cancel = panel_btn.create_btn();
+            btn_cancel.set_icon_white(carrot.icon_carrot_cancel);
+            btn_cancel.set_label(PlayerPrefs.GetString("cancel","Cancel"));
+            btn_cancel.set_label_color(Color.white);
+            btn_cancel.set_bk_color(carrot.color_highlight);
+            btn_cancel.set_act_click(() => Close_box_carrot_pay());
+
+            this.On_paypal(url_paypal);
         }
+
+        private void Close_box_carrot_pay()
+        {
+            carrot.play_sound_click();
+            if (box_shop != null) box_shop.close();
+        }
+
+        private void On_paypal(string url_pay)
+        {
+            carrot.play_sound_click();
+            Application.OpenURL(url_pay);
+        }
+
         #endregion
 
     }

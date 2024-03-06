@@ -419,6 +419,8 @@ MonoBehaviour:
     type: 3}
   icon_carrot_database: {fileID: 21300000, guid: 58edc83812032a14399057ee06a50fc3,
     type: 3}
+  icon_carrot_buy: {fileID: 21300000, guid: 14d9cfee3bc91d74091d7370486c78f9, type: 3}
+  icon_carrot_price: {fileID: 21300000, guid: 8a903a2320992ef4ab1e2539b952200e, type: 3}
   carrot_lost_internet: {fileID: 0}
   icon_lost_internet: {fileID: 21300000, guid: d2201876ae5060e48babd277eb80364d, type: 3}
   sp_icon_sound_on: {fileID: 21300000, guid: 092f5fc30a7cf2347b2617fc9a203ebc, type: 3}
@@ -465,7 +467,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 149ae561177ad474082a5bedb11882b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon_paypal: {fileID: 21300000, guid: 15afc2e3cd240504bb8dc67a19fb774f, type: 3}
 --- !u!114 &4614701476662799586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,10 +480,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon_list_music_game: {fileID: 21300000, guid: 96ba5e279fa55d940b8c504e0a405161,
-    type: 3}
-  icon_free_music_game: {fileID: 21300000, guid: fd01247be9ba67b49bdb2720deefe5bc,
-    type: 3}
-  icon_buy_music_game: {fileID: 21300000, guid: 14d9cfee3bc91d74091d7370486c78f9,
     type: 3}
   icon_pause_music_game: {fileID: 21300000, guid: 4bd87f00c1468be45b1a98b7695b371f,
     type: 3}
