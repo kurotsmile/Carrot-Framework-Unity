@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -184,9 +185,13 @@ namespace Carrot
         {
             string user_id = carrot.user.get_id_user_login();
             string user_lang = carrot.lang.get_key_lang();
+            string user_name = "";
            
             if (user_id != "")
+            {
                 user_lang = carrot.user.get_lang_user_login();
+                user_name = carrot.user.get_data_user_login("name");
+            }  
             else
                 user_id = SystemInfo.deviceUniqueIdentifier;
 
@@ -200,6 +205,9 @@ namespace Carrot
             box_shop=this.carrot.Create_Box();
             box_shop.set_title(name_product);
             box_shop.set_icon(this.carrot.icon_carrot_buy);
+
+            Carrot_Box_Btn_Item btn_history = box_shop.create_btn_menu_header(carrot.sp_icon_restore);
+            btn_history.set_act(() => Show_history_pay(user_id));
 
             Carrot_Box_Item item_product = box_shop.create_item("item_product");
             item_product.set_icon(this.carrot.icon_carrot_database);
@@ -223,7 +231,8 @@ namespace Carrot
             url_paypal  +="&price="+price_product;
             url_paypal += "&user_id="+user_id;
             url_paypal += "&user_lang="+user_lang;
-            url_paypal += "&type"+data_product["type"].ToString();
+            url_paypal += "&type="+data_product["type"].ToString();
+            if (user_name != "") url_paypal += "&user_name=" + user_name;
 
             Carrot_Box_Btn_Panel panel_btn = box_shop.create_panel_btn();
             Carrot_Button_Item btn_paypal = panel_btn.create_btn();
@@ -248,6 +257,45 @@ namespace Carrot
             btn_cancel.set_act_click(() => Close_box_carrot_pay());
 
             this.On_paypal(url_paypal);
+        }
+
+        private void Show_history_pay(string s_id_user)
+        {
+            carrot.show_loading();
+            StructuredQuery q = new("order");
+            q.Add_where("user_id", Query_OP.EQUAL, s_id_user);
+            carrot.server.Get_doc(q.ToJson(),Act_get_list_history_done,Act_server_fail);
+        }
+
+        private void Act_get_list_history_done(string s_data)
+        {
+            carrot.hide_loading();
+            Fire_Collection fc = new(s_data);
+            if (!fc.is_null)
+            {
+                Carrot_Box box_history = carrot.Create_Box();
+                box_history.set_title("History Pay");
+                box_history.set_icon(carrot.sp_icon_restore);
+
+                for(int i=0;i<fc.fire_document.Length;i++)
+                {
+                    IDictionary data_history = fc.fire_document[i].Get_IDictionary();
+                    Carrot_Box_Item item_history = box_history.create_item("item_history_" + i);
+                    item_history.set_icon(carrot.icon_carrot_done);
+                    item_history.set_title(data_history["id_product"].ToString());
+                    item_history.set_tip(data_history["date"].ToString());
+                }
+            }
+            else
+            {
+                carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), "You have not purchased any products yet!", Msg_Icon.Alert);
+            }
+        }
+
+        private void Act_server_fail(string s_error)
+        {
+            carrot.hide_loading();
+            carrot.show_msg("Error", s_error, Msg_Icon.Error);
         }
 
         private void Close_box_carrot_pay()
