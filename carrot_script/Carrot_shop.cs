@@ -222,7 +222,7 @@ namespace Carrot
             Carrot_Box_Btn_Panel panel_btn = box_shop.create_panel_btn();
             Carrot_Button_Item btn_paypal = panel_btn.create_btn();
             btn_paypal.set_icon_white(carrot.icon_carrot_link);
-            btn_paypal.set_label("Open link");
+            btn_paypal.set_label("Pay now");
             btn_paypal.set_label_color(Color.white);
             btn_paypal.set_bk_color(carrot.color_highlight);
             btn_paypal.set_act_click(() => On_paypal(url_paypal));
