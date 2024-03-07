@@ -31,8 +31,9 @@ namespace Carrot
 
     public class Carrot_Server : MonoBehaviour
     {
+        [Header("Obj Main")]
+        public Carrot carrot;
         private readonly string projectId = "carrotstore";
-        public string key_api = "";
 
         public void Get_doc(string query, UnityAction<string> act_done = null, UnityAction<string> act_fail = null)
         {
@@ -72,7 +73,7 @@ namespace Carrot
 
         IEnumerator Act_get_doc_by_path(string id_Collection, string id_document, UnityAction<string> act_done = null, UnityAction<string> act_fail = null)
         {
-            string url = "https://firestore.googleapis.com/v1/projects/" + projectId + "/databases/(default)/documents/" + id_Collection + "/" + id_document + "?key=" + this.key_api;
+            string url = "https://firestore.googleapis.com/v1/projects/" + projectId + "/databases/(default)/documents/" + id_Collection + "/" + id_document + "?key=" + this.carrot.key_api_rest_firestore;
             using UnityWebRequest www = UnityWebRequest.Get(url);
             yield return www.SendWebRequest();
             if (www.result != UnityWebRequest.Result.Success)
@@ -307,7 +308,7 @@ namespace Carrot
 
         IEnumerator DeleteDoc(string id_Collection, string id_document, UnityAction<string> act_done = null, UnityAction<string> act_fail = null)
         {
-            string url = "https://firestore.googleapis.com/v1/projects/" + projectId + "/databases/(default)/documents/" + id_Collection + "/" + id_document + "?key=" + this.key_api;
+            string url = "https://firestore.googleapis.com/v1/projects/" + projectId + "/databases/(default)/documents/" + id_Collection + "/" + id_document + "?key=" + this.carrot.key_api_rest_firestore;
 
             using UnityWebRequest www = UnityWebRequest.Delete(url);
             yield return www.SendWebRequest();

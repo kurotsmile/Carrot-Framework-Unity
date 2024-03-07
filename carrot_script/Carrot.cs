@@ -22,8 +22,10 @@ namespace Carrot
     public class On_event_change : UnityEvent { };
     public class Carrot : MonoBehaviour
     {
-        [Header("Config App")]
+        [Header("Config Server")]
         public string mainhost = "https://carrotstore.web.app";
+        public string key_api_rest_firestore = "";
+        [Header("Config App")]
         public ModelApp model_app;
         public OS os_app;
         public Store store_public;

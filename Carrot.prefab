@@ -312,6 +312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainhost: https://carrotstore.web.app
+  key_api_rest_firestore: 
   model_app: 1
   os_app: 0
   store_public: 0
@@ -356,69 +357,47 @@ MonoBehaviour:
   location: {fileID: 3353702974751351471}
   theme: {fileID: 6474188085226842489}
   server: {fileID: 3560113166446709643}
-  window_msg_prefab: {fileID: 1750426150788012, guid: 064e59bc4fa60ed48b452c77919d6473,
-    type: 3}
-  window_loading_prefab: {fileID: 2632683814581162851, guid: af7a7fddea11b0b4ca4aa617dd48a44e,
-    type: 3}
-  window_exit_prefab: {fileID: 2646574534074554939, guid: 93cb11e1d2cdb424f9711d3b049a4eb9,
-    type: 3}
-  window_share_prefab: {fileID: 8931901680464516206, guid: 5352021e1d7360346a888c6a18453013,
-    type: 3}
-  window_rate_prefab: {fileID: 4367381263703764290, guid: b42cce79f5a6d0645a1d345529f520a2,
-    type: 3}
-  window_box_prefab: {fileID: 8069877992500042153, guid: 3da1e2ad199493144a25cd7c1a4766c1,
-    type: 3}
-  window_input_prefab: {fileID: 8647905767766004373, guid: 469ef270088c30d499ca92f137fb16aa,
-    type: 3}
-  window_photoshop_prefab: {fileID: 5526278223078399678, guid: 4570a9d1de7c1f54e898fe9b557e10a0,
-    type: 3}
-  carrot_btn_prefab: {fileID: 3002890018135523355, guid: 784c412c7c4cc1443b97d64918aca0c5,
-    type: 3}
+  window_msg_prefab: {fileID: 1750426150788012, guid: 064e59bc4fa60ed48b452c77919d6473, type: 3}
+  window_loading_prefab: {fileID: 2632683814581162851, guid: af7a7fddea11b0b4ca4aa617dd48a44e, type: 3}
+  window_exit_prefab: {fileID: 2646574534074554939, guid: 93cb11e1d2cdb424f9711d3b049a4eb9, type: 3}
+  window_share_prefab: {fileID: 8931901680464516206, guid: 5352021e1d7360346a888c6a18453013, type: 3}
+  window_rate_prefab: {fileID: 4367381263703764290, guid: b42cce79f5a6d0645a1d345529f520a2, type: 3}
+  window_box_prefab: {fileID: 8069877992500042153, guid: 3da1e2ad199493144a25cd7c1a4766c1, type: 3}
+  window_input_prefab: {fileID: 8647905767766004373, guid: 469ef270088c30d499ca92f137fb16aa, type: 3}
+  window_photoshop_prefab: {fileID: 5526278223078399678, guid: 4570a9d1de7c1f54e898fe9b557e10a0, type: 3}
+  carrot_btn_prefab: {fileID: 3002890018135523355, guid: 784c412c7c4cc1443b97d64918aca0c5, type: 3}
   icon_carrot: {fileID: 21300000, guid: b63a8f4bccedbd24b9953bf74ea47451, type: 3}
-  icon_carrot_all_category: {fileID: 21300000, guid: 5d155587204a0194cb1e4c182869be45,
-    type: 3}
+  icon_carrot_all_category: {fileID: 21300000, guid: 5d155587204a0194cb1e4c182869be45, type: 3}
   icon_carrot_app: {fileID: 21300000, guid: 56eda39d357752945af264dde61b3ced, type: 3}
   icon_carrot_game: {fileID: 21300000, guid: 25a8ff83e06a17f4eab6b33f7bbc519a, type: 3}
   icon_carrot_search: {fileID: 21300000, guid: e185f71bd1cc76747a92e664dac2a0db, type: 3}
   icon_carrot_write: {fileID: 21300000, guid: a8703811f3779d54aa57bb9b3030dc86, type: 3}
-  icon_carrot_gamepad: {fileID: 21300000, guid: 8f29873cdd38a194790278f8021b620a,
-    type: 3}
+  icon_carrot_gamepad: {fileID: 21300000, guid: 8f29873cdd38a194790278f8021b620a, type: 3}
   icon_carrot_bug: {fileID: 21300000, guid: 5bb9d70cb18087049837e41781771ff1, type: 3}
   icon_carrot_d_pad: {fileID: 21300000, guid: 7b81c630983811c44a91a5fab124b448, type: 3}
   icon_carrot_ads: {fileID: 21300000, guid: 9afe00141c4eca446807e1efdaa3c4ca, type: 3}
   icon_carrot_link: {fileID: 21300000, guid: bf275863fc69c6b41a9be320169630bc, type: 3}
-  icon_carrot_download: {fileID: 21300000, guid: b66cfc6d22476ec4c95d3cb80c7d35b5,
-    type: 3}
+  icon_carrot_download: {fileID: 21300000, guid: b66cfc6d22476ec4c95d3cb80c7d35b5, type: 3}
   sp_icon_setting: {fileID: 21300000, guid: 20db880507d35dc4281aa788c7c1bcd4, type: 3}
   sp_icon_dev: {fileID: 21300000, guid: 187cb1daeb2f68a449e986807e2a20e3, type: 3}
-  icon_carrot_gamepad_off: {fileID: 21300000, guid: 548bbc991b0d77448bf18397067e51f1,
-    type: 3}
-  icon_carrot_gamepad_on: {fileID: 21300000, guid: 25a8ff83e06a17f4eab6b33f7bbc519a,
-    type: 3}
+  icon_carrot_gamepad_off: {fileID: 21300000, guid: 548bbc991b0d77448bf18397067e51f1, type: 3}
+  icon_carrot_gamepad_on: {fileID: 21300000, guid: 25a8ff83e06a17f4eab6b33f7bbc519a, type: 3}
   icon_carrot_done: {fileID: 21300000, guid: fd01247be9ba67b49bdb2720deefe5bc, type: 3}
   icon_carrot_cancel: {fileID: 21300000, guid: 1c48fd66d0a61544181c1560678904d9, type: 3}
-  icon_carrot_visible_off: {fileID: 21300000, guid: 17ae478c8ad27084f9c054e22c327da7,
-    type: 3}
-  icon_carrot_visible_on: {fileID: 21300000, guid: ac9d915922ceada42bb68b217b9e4f9d,
-    type: 3}
+  icon_carrot_visible_off: {fileID: 21300000, guid: 17ae478c8ad27084f9c054e22c327da7, type: 3}
+  icon_carrot_visible_on: {fileID: 21300000, guid: ac9d915922ceada42bb68b217b9e4f9d, type: 3}
   icon_carrot_nomal: {fileID: 21300000, guid: b3f0ba7f6248f0e43827c291096a4260, type: 3}
-  icon_carrot_advanced: {fileID: 21300000, guid: bc54183615f3759478665fb882ce6117,
-    type: 3}
+  icon_carrot_advanced: {fileID: 21300000, guid: bc54183615f3759478665fb882ce6117, type: 3}
   icon_carrot_add: {fileID: 21300000, guid: e5dd7e7a1dce1084eb559ebde059d840, type: 3}
   icon_carrot_mail: {fileID: 21300000, guid: 20b69cadec4d03f41be956408a00a42a, type: 3}
   icon_carrot_phone: {fileID: 21300000, guid: afa1d90b868b10e49a1f2ae238e9a78c, type: 3}
-  icon_carrot_address: {fileID: 21300000, guid: 22d21ea8dc1037f498cca0bd8d3fe0c3,
-    type: 3}
+  icon_carrot_address: {fileID: 21300000, guid: 22d21ea8dc1037f498cca0bd8d3fe0c3, type: 3}
   icon_carrot_avatar: {fileID: 21300000, guid: 26117a546c2b06445b81097d129f4df5, type: 3}
   icon_carrot_sex: {fileID: 21300000, guid: 70cc62a2713c9314989c8ca5252c1d8c, type: 3}
-  icon_carrot_sex_boy: {fileID: 21300000, guid: 6208b510c5037644b89a34a5213990f9,
-    type: 3}
-  icon_carrot_sex_girl: {fileID: 21300000, guid: 55538982356e0ef4cb5bc2459757b329,
-    type: 3}
-  icon_carrot_location: {fileID: 21300000, guid: 2192c1071baa57e45b5dbf180d701056,
-    type: 3}
-  icon_carrot_database: {fileID: 21300000, guid: 58edc83812032a14399057ee06a50fc3,
-    type: 3}
+  icon_carrot_sex_boy: {fileID: 21300000, guid: 6208b510c5037644b89a34a5213990f9, type: 3}
+  icon_carrot_sex_girl: {fileID: 21300000, guid: 55538982356e0ef4cb5bc2459757b329, type: 3}
+  icon_carrot_location: {fileID: 21300000, guid: 2192c1071baa57e45b5dbf180d701056, type: 3}
+  icon_carrot_database: {fileID: 21300000, guid: 58edc83812032a14399057ee06a50fc3, type: 3}
   icon_carrot_buy: {fileID: 21300000, guid: 14d9cfee3bc91d74091d7370486c78f9, type: 3}
   icon_carrot_price: {fileID: 21300000, guid: 8a903a2320992ef4ab1e2539b952200e, type: 3}
   carrot_lost_internet: {fileID: 0}
@@ -433,12 +412,9 @@ MonoBehaviour:
   sp_icon_del_data: {fileID: 21300000, guid: aa33c4a3c7174104eb0e1ce1e74fb4c3, type: 3}
   sp_icon_bk_music: {fileID: 21300000, guid: 96ba5e279fa55d940b8c504e0a405161, type: 3}
   sp_icon_vibrate_on: {fileID: 21300000, guid: d454c596f4484b440932afa111b1d17b, type: 3}
-  sp_icon_vibrate_off: {fileID: 21300000, guid: bc7987e3f8f1f4144b8b786670b0994e,
-    type: 3}
-  sp_icon_theme_color: {fileID: 21300000, guid: c690de2972df1ca4fb0f27724ea0eb32,
-    type: 3}
-  sp_icon_picker_color: {fileID: 21300000, guid: 0a382b6beac8e7f43a80a538c365428f,
-    type: 3}
+  sp_icon_vibrate_off: {fileID: 21300000, guid: bc7987e3f8f1f4144b8b786670b0994e, type: 3}
+  sp_icon_theme_color: {fileID: 21300000, guid: c690de2972df1ca4fb0f27724ea0eb32, type: 3}
+  sp_icon_picker_color: {fileID: 21300000, guid: 0a382b6beac8e7f43a80a538c365428f, type: 3}
   sound_click: {fileID: 7774974848483370864}
 --- !u!114 &292901969
 MonoBehaviour:
@@ -479,20 +455,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 239fc7ee2d0c26149aa88874caacd560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon_list_music_game: {fileID: 21300000, guid: 96ba5e279fa55d940b8c504e0a405161,
-    type: 3}
-  icon_pause_music_game: {fileID: 21300000, guid: 4bd87f00c1468be45b1a98b7695b371f,
-    type: 3}
-  icon_play_music_game: {fileID: 21300000, guid: 443cdc4ae6c8a30479b118a6e35aadee,
-    type: 3}
-  icon_waiting_music_game: {fileID: 21300000, guid: d716d72d584e1c5479acf98e5b6a0e22,
-    type: 3}
+  icon_list_music_game: {fileID: 21300000, guid: 96ba5e279fa55d940b8c504e0a405161, type: 3}
+  icon_pause_music_game: {fileID: 21300000, guid: 4bd87f00c1468be45b1a98b7695b371f, type: 3}
+  icon_play_music_game: {fileID: 21300000, guid: 443cdc4ae6c8a30479b118a6e35aadee, type: 3}
+  icon_waiting_music_game: {fileID: 21300000, guid: d716d72d584e1c5479acf98e5b6a0e22, type: 3}
   sound_bk_game_test: {fileID: 7977285874268033645}
-  obj_gamepad_prefab: {fileID: 3088375454328611850, guid: da7ed5c1b98a17642b7ba6477c695bb1,
-    type: 3}
+  obj_gamepad_prefab: {fileID: 3088375454328611850, guid: da7ed5c1b98a17642b7ba6477c695bb1, type: 3}
   icon_top_player: {fileID: 21300000, guid: 2e78053b6ff70004d8ac3db19e5b85c4, type: 3}
-  item_top_player_prefab: {fileID: 9017743497284892556, guid: 28f16e3fd80edf542a874c4de0865342,
-    type: 3}
+  item_top_player_prefab: {fileID: 9017743497284892556, guid: 28f16e3fd80edf542a874c4de0865342, type: 3}
   icon_rank_player:
   - {fileID: 1742048843, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
   - {fileID: 1136403910, guid: 55e90c267e0fdd34c95f0298c27c873f, type: 3}
@@ -518,8 +488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2243a549f9620c7419f374fbd545d2e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  window_ads_prefab: {fileID: 7528647998446531272, guid: b8f60ea6adef9c746baa8327ecef6318,
-    type: 3}
+  window_ads_prefab: {fileID: 7528647998446531272, guid: b8f60ea6adef9c746baa8327ecef6318, type: 3}
 --- !u!114 &4645516730937484055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,12 +501,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5325301532b1b843a26721e008bcad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon_user_login_true: {fileID: 21300000, guid: 41608187babc5ee4391b9b31bbecbbbc,
-    type: 3}
-  icon_user_login_false: {fileID: 21300000, guid: 754b3bab866dcbc4b8db6fa388bf48c3,
-    type: 3}
-  window_login_prefab: {fileID: 7208411555534302970, guid: 97f7a7f0c121e2a43b4194851c8879c5,
-    type: 3}
+  icon_user_login_true: {fileID: 21300000, guid: 41608187babc5ee4391b9b31bbecbbbc, type: 3}
+  icon_user_login_false: {fileID: 21300000, guid: 754b3bab866dcbc4b8db6fa388bf48c3, type: 3}
+  window_login_prefab: {fileID: 7208411555534302970, guid: 97f7a7f0c121e2a43b4194851c8879c5, type: 3}
   list_id_field_advanced:
   - status
   - address
@@ -549,8 +515,7 @@ MonoBehaviour:
   icon_user_info: {fileID: 21300000, guid: 99da3a4d2d2948544a1d55af85b60f3d, type: 3}
   icon_user_logout: {fileID: 21300000, guid: 3c3af017ee959024885b09d5cc86689f, type: 3}
   icon_user_done: {fileID: 21300000, guid: fd01247be9ba67b49bdb2720deefe5bc, type: 3}
-  icon_user_change_password: {fileID: 21300000, guid: 26ca8fd801b015c4ab5591268c1981d8,
-    type: 3}
+  icon_user_change_password: {fileID: 21300000, guid: 26ca8fd801b015c4ab5591268c1981d8, type: 3}
   color_edit:
     serializedVersion: 2
     rgba: 4291552511
@@ -574,12 +539,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carrot: {fileID: 5170736565810424378}
-  window_camera_prefab: {fileID: 5526278223078399678, guid: bf93105bd558aad4298f2d999c12777f,
-    type: 3}
-  window_photoshop_prefab: {fileID: 5526278223078399678, guid: 4570a9d1de7c1f54e898fe9b557e10a0,
-    type: 3}
-  prefab_item_list_img: {fileID: 6742574292218062837, guid: 0cb5453e9f9221e408506c790d8780b7,
-    type: 3}
+  window_camera_prefab: {fileID: 5526278223078399678, guid: bf93105bd558aad4298f2d999c12777f, type: 3}
+  window_photoshop_prefab: {fileID: 5526278223078399678, guid: 4570a9d1de7c1f54e898fe9b557e10a0, type: 3}
+  prefab_item_list_img: {fileID: 6742574292218062837, guid: 0cb5453e9f9221e408506c790d8780b7, type: 3}
 --- !u!114 &3353702974751351471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -619,4 +581,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a85d4b03e2ea934b954f2a557f007a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key_api: 
+  carrot: {fileID: 5170736565810424378}
