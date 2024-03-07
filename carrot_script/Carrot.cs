@@ -754,7 +754,7 @@ namespace Carrot
             item_setting_sound.set_title(PlayerPrefs.GetString("sound_app", "Sound"));
             item_setting_sound.set_tip(PlayerPrefs.GetString("sound_app_tip", "On or Off Sound click"));
             item_setting_sound.set_lang_data("sound_app", "sound_app_tip");
-            item_setting_sound.set_act(() => this.change_status_sound(item_setting_sound));
+            item_setting_sound.set_act(() => this.Change_status_sound(item_setting_sound));
 
             if (this.index_inapp_remove_ads != -1)
             {
@@ -906,11 +906,11 @@ namespace Carrot
             }
         }
 
-        private void change_status_sound(Carrot_Box_Item item_status_sound)
+        public void Change_status_sound(Carrot_Box_Item item_status_sound)
         {
             if (this.is_sound)
             {
-                item_status_sound.set_icon(this.sp_icon_sound_off);
+                if(item_status_sound!=null) item_status_sound.set_icon(this.sp_icon_sound_off);
                 PlayerPrefs.SetInt("is_sound", 1);
                 this.is_sound = false;
                 if (this.type_app == TypeApp.Game)
@@ -920,7 +920,7 @@ namespace Carrot
             }
             else
             {
-                item_status_sound.set_icon(this.sp_icon_sound_on);
+                if (item_status_sound != null) item_status_sound.set_icon(this.sp_icon_sound_on);
                 PlayerPrefs.SetInt("is_sound", 0);
                 this.is_sound = true;
                 this.play_sound_click();
@@ -929,7 +929,7 @@ namespace Carrot
                     if (this.game.get_audio_source_bk() != null) this.game.get_audio_source_bk().Play();
                 }
             }
-            item_status_sound.set_change_status(true);
+            if (item_status_sound != null) item_status_sound.set_change_status(true);
         }
 
         private void change_status_vibrate(Carrot_Box_Item item_status_vibrate)
