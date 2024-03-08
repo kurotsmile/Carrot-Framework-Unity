@@ -25,6 +25,8 @@ namespace Carrot
         [Header("Config Server")]
         public string mainhost = "https://carrotstore.web.app";
         public string key_api_rest_firestore = "";
+        public string key_api_google_location_map= "";
+
         [Header("Config App")]
         public ModelApp model_app;
         public OS os_app;
