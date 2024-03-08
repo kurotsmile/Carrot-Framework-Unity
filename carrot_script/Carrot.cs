@@ -243,17 +243,17 @@ namespace Carrot
                 {
                     int index_box_check = this.list_Window.Count - 1;
 
+                    if (this.list_Window[index_box_check] != null)
+                    {
+                        this.close_window(index_box_check);
+                        return;
+                    }
+
                     if (this.list_Window[index_box_check].name == "window_ads") return;
 
                     if (this.list_Window[index_box_check].name == "window_exit")
                     {
                         this.app_exit();
-                        return;
-                    }
-
-                    if (this.list_Window[index_box_check] != null)
-                    {
-                        this.close_window(index_box_check);
                         return;
                     }
                 }
