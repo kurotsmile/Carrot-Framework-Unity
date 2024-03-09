@@ -464,7 +464,7 @@ namespace Carrot
         public void delete_all_data()
         {
             this.play_sound_click();
-            this.msg_delete_all_data = this.show_msg(PlayerPrefs.GetString("delete_all_data", "Clear all application data"), PlayerPrefs.GetString("question_delete_all_data", "Confirm erase all data and set up?"), this.act_delete_all_data_yes, this.act_delete_all_data_no);
+            this.msg_delete_all_data = this.show_msg(PlayerPrefs.GetString("delete_all_data", "Clear all application data"), PlayerPrefs.GetString("delete_all_data_tip", "Confirm erase all data and set up")+"?", this.act_delete_all_data_yes, this.act_delete_all_data_no);
         }
 
         private void act_delete_all_data_yes()
