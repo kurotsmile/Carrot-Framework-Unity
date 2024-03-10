@@ -476,5 +476,10 @@ namespace Carrot
         {
             return this.is_ads;
         }
+
+        public void set_status_ads(bool is_status)
+        {
+            this.is_ads = is_status;
+        }
     }
 }

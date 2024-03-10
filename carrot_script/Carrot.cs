@@ -1142,11 +1142,13 @@ namespace Carrot
             {
                 this.box_setting.set_icon(this.sp_icon_dev);
                 this.model_app = ModelApp.Develope;
+                this.ads.set_status_ads(false);
             }
             else
             {
                 this.box_setting.set_icon(this.sp_icon_setting);
                 this.model_app = ModelApp.Publish;
+                this.ads.set_status_ads(true);
             }
             this.show_msg("Change Model App Success!!!", this.model_app.ToString(), Msg_Icon.Success);
         }
