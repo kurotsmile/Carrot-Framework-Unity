@@ -102,7 +102,7 @@ namespace Carrot
                 if (this.sound_bk_game != null) this.sound_bk_game.Stop();
                 if (this.box_list_music_game != null) this.box_list_music_game.close();
                 this.box_list_music_game = this.carrot.Create_Box("carrot_list_bk_music");
-                box_list_music_game.set_title("Background music games");
+                box_list_music_game.set_title(PlayerPrefs.GetString("list_bk_music","Background music games"));
                 box_list_music_game.set_icon(this.icon_list_music_game);
                 box_list_music_game.set_act_before_closing(this.act_close_list_music);
 
@@ -111,7 +111,6 @@ namespace Carrot
                 this.id_select_play_bk_music = "";
                 this.id_buy_bk_music_temp = "";
                 this.index_buy_music_link_temp = -1;
-
 
                 for (int i = 0; i < list_music.Count; i++)
                 {
@@ -576,7 +575,7 @@ namespace Carrot
                     IList rank = (IList)app["rank"];
                     Carrot_Box Box_top_palyer = this.carrot.Create_Box();
                     Box_top_palyer.set_icon(this.icon_top_player);
-                    Box_top_palyer.set_title("Player rankings");
+                    Box_top_palyer.set_title(PlayerPrefs.GetString("top_player","Player rankings"));
 
                     string id_user_cur = this.carrot.user.get_id_user_login();
 
