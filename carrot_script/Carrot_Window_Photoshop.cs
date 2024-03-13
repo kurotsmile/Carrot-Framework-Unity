@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,27 +19,29 @@ namespace Carrot
         private int index_photo_edit;
         private int sel_tool_edit_photo = 0;
 
-        public void show(Texture2D photo_Texture)
+        public void show(Texture2D photo_Texture,float scale)
         {
-            RectTransform component = this.rawImage_Photo.rectTransform;
-
-            float aspectRatio = (float)photo_Texture.width / (float)photo_Texture.height;
-
-            if (aspectRatio >= 1f)
+            if (scale != 0f)
             {
-                float newHeight = component.sizeDelta.x / aspectRatio;
-                component.sizeDelta = new Vector2(component.sizeDelta.x, newHeight);
-            }
-            else
-            {
-                float newWidth = component.sizeDelta.y * aspectRatio;
-                component.sizeDelta = new Vector2(newWidth, component.sizeDelta.y);
-            }
+                RectTransform component = this.rawImage_Photo.rectTransform;
 
-            float y = component.sizeDelta.x * (float)photo_Texture.height / (float)photo_Texture.width;
-            float x= component.sizeDelta.y * (float)photo_Texture.width / (float)photo_Texture.height;
-            component.sizeDelta = new Vector2(y/2, x/2);
+                float aspectRatio = (float)photo_Texture.width / (float)photo_Texture.height;
 
+                if (aspectRatio >= 1f)
+                {
+                    float newHeight = component.sizeDelta.x / aspectRatio;
+                    component.sizeDelta = new Vector2(component.sizeDelta.x, newHeight);
+                }
+                else
+                {
+                    float newWidth = component.sizeDelta.y * aspectRatio;
+                    component.sizeDelta = new Vector2(newWidth, component.sizeDelta.y);
+                }
+
+                float y = component.sizeDelta.x * (float)photo_Texture.height / (float)photo_Texture.width;
+                float x = component.sizeDelta.y * (float)photo_Texture.width / (float)photo_Texture.height;
+                component.sizeDelta = new Vector2(y / scale, x / scale);
+            }
             this.rawImage_Photo.texture = photo_Texture;
             this.panel_edit_photo_tool_val.SetActive(false);
             this.panel_edit_photo_tool_menu.SetActive(true);

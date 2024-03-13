@@ -104,11 +104,11 @@ namespace Carrot
             PlayerPrefs.SetInt("leng_img_photo", this.leng_img_photo);
         }
 
-        public void show_photoshop(Texture2D photo)
+        public void show_photoshop(Texture2D photo,float scale=0f)
         {
             GameObject window_photoshop=this.carrot.create_window(this.window_photoshop_prefab);
             Carrot_Window_Photoshop photoshop = window_photoshop.GetComponent<Carrot_Window_Photoshop>();
-            photoshop.show(photo);
+            photoshop.show(photo,scale);
             photoshop.UI.set_theme(this.carrot.color_highlight);
             if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(photoshop.UI.get_list_btn());
         }

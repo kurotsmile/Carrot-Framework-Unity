@@ -3,6 +3,7 @@ using GoogleMobileAds.Ump.Api;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Advertisements;
 using UnityEngine.Events;
 
 namespace Carrot
@@ -49,6 +50,12 @@ namespace Carrot
                 this.setup_ads_Admob();
 #endif
             }
+
+            if (this.carrot.type_ads == TypeAds.Unity_Ads)
+            {
+                Advertisement.Initialize(carrot.id_ads_unity_App_android, false);
+            }
+
 
             if (this.carrot.is_offline()&& this.is_ads)
             {

@@ -13,7 +13,7 @@ namespace Carrot
     public enum Store { Google_Play, Samsung_Galaxy_Store, Microsoft_Store, Amazon_app_store, Carrot_store, Huawei_store, Itch,Uptodown};
     public enum TypeApp { App, Game }
     public enum TypeRate { Market_Android, Ms_Windows_Store, Amazon_app_store, Link_Share_CarrotApp }
-    public enum TypeAds { Admob_Ads, Carrot_Ads }
+    public enum TypeAds { Admob_Ads,Unity_Ads,Carrot_Ads }
     public enum TypeControl { None, GamePad, D_pad }
     public enum Setting_Option { Show, Hide }
 
@@ -89,6 +89,12 @@ namespace Carrot
         public string id_ads_Interstitial_ios = "unused";
         public string id_ads_Banner_ios = "unused";
         public string id_ads_Rewarded_ios = "unused";
+
+        [Header("Unity Ads Android config")]
+        public string id_ads_unity_App_android;
+        public string id_ads_unity_Interstitial_android;
+        public string id_ads_unity_Banner_android;
+        public string id_ads_unity_Rewarded_android;
 
         [Header("Carrot Obj")]
         public Carrot_lang lang;
@@ -476,15 +482,15 @@ namespace Carrot
             this.get_tool().delete_file("lang_icon");
             if (type_app == TypeApp.Game) this.get_tool().delete_file("music_bk");
             if (model_app == ModelApp.Develope) Debug.Log("Delete All Data Success!!!");
-            this.delay_function(1f, this.restart_app);
+            this.delay_function(1f, this.Restart_app);
         }
 
-        private void restart_app()
+        private void Restart_app()
         {
             this.msg_delete_all_data.close();
             this.close_all_window();
             this.Load_Carrot(this.act_check_exit_app);
-            if (this.act_after_delete_all_data != null) this.act_after_delete_all_data();
+            this.act_after_delete_all_data?.Invoke();
         }
 
         private void act_delete_all_data_no()
