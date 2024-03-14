@@ -387,8 +387,15 @@ namespace Carrot
             }
             else
             {
-                this.show_carrot_ads();
-                this.carrot.log("Interstitial ad is not ready yet! (id:" + this.id_ads_Interstitial_admob + ")");
+                if (carrot.type_ads == TypeAds.Admod_Unity_Carrot)
+                {
+                    this.Unity_ShowVideoAd();
+                }
+                else
+                {
+                    this.show_carrot_ads();
+                    this.carrot.log("Interstitial ad is not ready yet! (id:" + this.id_ads_Interstitial_admob + ")");
+                }
                 this.Admob_LoadInterstitialAd();
             }
         }
