@@ -137,6 +137,43 @@ namespace Carrot
             this.is_ads = is_status;
         }
 
+        public void Show_box_dev_test()
+        {
+            Carrot_Box box_test = carrot.Create_Box();
+            box_test.set_icon(carrot.icon_carrot_ads);
+            box_test.set_title("Ads Test");
+
+            Carrot_Box_Item item_admob_video = box_test.create_item();
+            item_admob_video.set_title("Admob Video Ads");
+            item_admob_video.set_tip("Interstitia ID:" + this.id_ads_Interstitial_admob);
+            item_admob_video.set_icon(carrot.game.icon_play_music_game);
+            item_admob_video.set_act(() => Admob_Show_InterstitialAd());
+
+            Carrot_Box_Item item_unity_video = box_test.create_item();
+            item_unity_video.set_title("Unity Video Ads");
+            item_unity_video.set_tip("Interstitia ID:" + this.carrot.id_ads_unity_Interstitial_android);
+            item_unity_video.set_icon(carrot.game.icon_play_music_game);
+            item_unity_video.set_act(() => Unity_ShowVideoAd());
+
+            Carrot_Box_Item item_admob_Rewarded = box_test.create_item();
+            item_admob_Rewarded.set_title("Admob Rewarded Ads");
+            item_admob_Rewarded.set_tip("Ads ID:" + this.id_ads_Rewarded_admob);
+            item_admob_Rewarded.set_icon(carrot.game.icon_play_music_game);
+            item_admob_Rewarded.set_act(() => Admob_ShowRewardedAd());
+
+            Carrot_Box_Item item_unity_Rewarded = box_test.create_item();
+            item_unity_Rewarded.set_title("Unity Rewarded Ads");
+            item_unity_Rewarded.set_tip("Ads ID:" + this.carrot.id_ads_unity_Rewarded_android);
+            item_unity_Rewarded.set_icon(carrot.game.icon_play_music_game);
+            item_unity_Rewarded.set_act(() => Unity_ShowRewardedAd());
+
+            Carrot_Box_Item item_carrot_ads = box_test.create_item();
+            item_carrot_ads.set_title("Carrot Ads");
+            item_carrot_ads.set_tip("App ID:" + this.carrot.Carrotstore_AppId);
+            item_carrot_ads.set_icon(carrot.game.icon_play_music_game);
+            item_carrot_ads.set_act(() => show_carrot_ads());
+        }
+
         #region Carrot Ads
         [ContextMenu("Show Carrot Ads")]
         public void show_carrot_ads()

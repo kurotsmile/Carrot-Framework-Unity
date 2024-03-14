@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -883,6 +884,16 @@ namespace Carrot
                 item_setting_bug.set_tip("Review the application activity log");
                 item_setting_bug.set_lang_data("carrot_bug", "carrot_bug_tip");
                 item_setting_bug.set_act(this.show_log);
+
+                Carrot_Box_Btn_Item btn_dev_info = item_setting_bug.create_item();
+                btn_dev_info.set_icon(user.icon_user_info);
+                btn_dev_info.set_color(this.color_highlight);
+                btn_dev_info.set_act(() => Show_box_dev_info());
+
+                Carrot_Box_Btn_Item btn_dev_ads = item_setting_bug.create_item();
+                btn_dev_ads.set_icon(icon_carrot_ads);
+                btn_dev_ads.set_color(this.color_highlight);
+                btn_dev_ads.set_act(() => ads.Show_box_dev_test());
             }
 
             Carrot_Box_Item item_setting_del_data = box_setting.create_item();
@@ -1180,6 +1191,28 @@ namespace Carrot
         public string generateID()
         {
             return Guid.NewGuid().ToString("N");
+        }
+
+        private void Show_box_dev_info()
+        {
+            Carrot_Box box_dev = this.Create_Box();
+            box_dev.set_title("Info");
+            box_dev.set_icon(user.icon_user_info);
+
+            FieldInfo[] fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.Public);
+            foreach (FieldInfo field in fields)
+            {
+                if (field.DeclaringType == GetType())
+                {
+                    object value = field.GetValue(this);
+                    Carrot_Box_Item item_info = box_dev.create_item();
+                    item_info.set_title(field.Name);
+                    if(value!=null)
+                        item_info.set_tip(value.ToString());
+                    else
+                        item_info.set_tip("Null");
+                }
+            }
         }
     }
 }
