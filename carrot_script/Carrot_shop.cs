@@ -30,7 +30,7 @@ namespace Carrot
         private string order_id_pay = "";
         private string order_type_pay = "";
 
-        public void load(Carrot carrot)
+        public void On_load(Carrot carrot)
         {
             this.carrot = carrot;
             list_id_product = new List<string>();

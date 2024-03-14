@@ -2,13 +2,14 @@ using GoogleMobileAds.Api;
 using GoogleMobileAds.Ump.Api;
 using System;
 using System.Collections;
+using System.Security.AccessControl;
 using UnityEngine;
 using UnityEngine.Advertisements;
 using UnityEngine.Events;
 
 namespace Carrot
 {
-    public class Carrot_ads : MonoBehaviour
+    public class Carrot_ads : MonoBehaviour, IUnityAdsShowListener, IUnityAdsInitializationListener, IUnityAdsLoadListener
     {
         //Obj Carrot Ads
         public GameObject window_ads_prefab;
@@ -22,7 +23,6 @@ namespace Carrot
         private InterstitialAd interstitialAd;
         private BannerView _bannerView;
         private RewardedAd rewardedAd;
-        private bool is_ads_admob = false;
 
         private string id_ads_Interstitial_admob;
         private string id_ads_Banner_admob;
@@ -34,7 +34,7 @@ namespace Carrot
         //Consent Form
         ConsentForm _consentForm;
 
-        public void load(Carrot carrot)
+        public void On_load(Carrot carrot)
         {
             this.carrot = carrot;
             if (PlayerPrefs.GetInt("is_ads", 0) == 0)
@@ -44,20 +44,21 @@ namespace Carrot
 
             this.set_enable_all_emp_btn_removeads(this.is_ads);
 
-            if (this.carrot.type_ads == TypeAds.Admob_Ads)
+            if (this.carrot.type_ads == TypeAds.Admod_Unity_Carrot || this.carrot.type_ads == TypeAds.Unity_Admob_Carrot)
             {
 #if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
                 this.setup_ads_Admob();
 #endif
             }
 
-            if (this.carrot.type_ads == TypeAds.Unity_Ads)
+            if (this.carrot.type_ads == TypeAds.Admod_Unity_Carrot || this.carrot.type_ads == TypeAds.Unity_Admob_Carrot)
             {
-                Advertisement.Initialize(carrot.id_ads_unity_App_android, false);
+#if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
+                Advertisement.Initialize(carrot.id_ads_unity_App_android, carrot.ads_uniy_test_mode, this);
+#endif
             }
 
-
-            if (this.carrot.is_offline()&& this.is_ads)
+            if (this.carrot.is_offline() && this.is_ads)
             {
                 this.s_data_carrotapp_all_ads = PlayerPrefs.GetString("s_data_carrotapp_all_ads");
             }
@@ -71,6 +72,72 @@ namespace Carrot
             }
         }
 
+
+        public void create_banner_ads()
+        {
+            if (this.is_ads)
+            {
+                if (carrot.type_ads == TypeAds.Admod_Unity_Carrot)
+                {
+                    if (id_ads_Banner_admob != "") this.Admob_CreateBannerView();
+                }
+
+                if (carrot.type_ads == TypeAds.Unity_Admob_Carrot)
+                {
+                    if (carrot.id_ads_unity_Banner_android!="") this.Unity_ShowBannerAd();
+                }
+            }
+        }
+
+        public void show_ads_Interstitial()
+        {
+            if (this.is_ads)
+            {
+                this.count_show_ads++;
+                if (this.count_show_ads >= this.carrot.click_show_ads)
+                {
+                    if (this.carrot.type_ads == TypeAds.Admod_Unity_Carrot)
+                        this.Admob_Show_InterstitialAd();
+                    else if (this.carrot.type_ads == TypeAds.Unity_Admob_Carrot)
+                        this.Unity_ShowVideoAd();
+                    else
+                        this.show_carrot_ads();
+                    this.count_show_ads = 0;
+                }
+            }
+        }
+
+        public void set_act_Rewarded_Success(UnityAction act)
+        {
+            this.onRewardedSuccess = act;
+        }
+
+        public void show_ads_Rewarded()
+        {
+            if(carrot.type_ads==TypeAds.Admod_Unity_Carrot) this.Admob_ShowRewardedAd();
+            if (carrot.type_ads == TypeAds.Unity_Admob_Carrot) this.Unity_ShowRewardedAd();
+        }
+
+        public void remove_ads()
+        {
+            this.Destroy_Banner_Ad();
+            this.Destroy_Interstitial_Ad();
+            PlayerPrefs.SetInt("is_ads", 1);
+            this.is_ads = false;
+            this.set_enable_all_emp_btn_removeads(this.is_ads);
+        }
+
+        public bool get_status_ads()
+        {
+            return this.is_ads;
+        }
+
+        public void set_status_ads(bool is_status)
+        {
+            this.is_ads = is_status;
+        }
+
+        #region Carrot Ads
         [ContextMenu("Show Carrot Ads")]
         public void show_carrot_ads()
         {
@@ -116,7 +183,55 @@ namespace Carrot
             ads.On_load(this.carrot);
             ads.Load_data_ads(data_ads);
         }
+        #endregion
 
+        #region ConsentForm For Admob
+        void OnConsentInfoUpdated(FormError error)
+        {
+            if (error != null)
+            {
+                UnityEngine.Debug.LogError(error);
+                return;
+            }
+
+            if (ConsentInformation.IsConsentFormAvailable())
+            {
+                LoadConsentForm();
+            }
+        }
+
+        void LoadConsentForm()
+        {
+            ConsentForm.Load(OnLoadConsentForm);
+        }
+
+        void OnLoadConsentForm(ConsentForm consentForm, FormError error)
+        {
+            if (error != null)
+            {
+                UnityEngine.Debug.LogError(error);
+                return;
+            }
+            _consentForm = consentForm;
+            if (ConsentInformation.ConsentStatus == ConsentStatus.Required)
+            {
+                _consentForm.Show(OnShowForm);
+            }
+        }
+
+
+        void OnShowForm(FormError error)
+        {
+            if (error != null)
+            {
+                UnityEngine.Debug.LogError(error);
+                return;
+            }
+            LoadConsentForm();
+        }
+        #endregion
+
+        #region Admob Ads
         private void setup_ads_Admob()
         {
 
@@ -138,83 +253,20 @@ namespace Carrot
                 DebugGeography = DebugGeography.EEA
             };
 
-            // Here false means users are not under age.
             ConsentRequestParameters request = new ConsentRequestParameters
             {
                 TagForUnderAgeOfConsent = false,
                 ConsentDebugSettings = debugSettings,
             };
-
-            // Check the current consent information status.
             ConsentInformation.Update(request, OnConsentInfoUpdated);
         }
 
-        #region ConsentForm
-        void OnConsentInfoUpdated(FormError error)
-        {
-            if (error != null)
-            {
-                // Handle the error.
-                UnityEngine.Debug.LogError(error);
-                return;
-            }
-
-            if (ConsentInformation.IsConsentFormAvailable())
-            {
-                LoadConsentForm();
-            }
-            // If the error is null, the consent information state was updated.
-            // You are now ready to check if a form is available.
-        }
-
-        void LoadConsentForm()
-        {
-            // Loads a consent form.
-            ConsentForm.Load(OnLoadConsentForm);
-        }
-
-        void OnLoadConsentForm(ConsentForm consentForm, FormError error)
-        {
-            if (error != null)
-            {
-                // Handle the error.
-                UnityEngine.Debug.LogError(error);
-                return;
-            }
-
-            // The consent form was loaded.
-            // Save the consent form for future requests.
-            _consentForm = consentForm;
-
-            // You are now ready to show the form.
-            if (ConsentInformation.ConsentStatus == ConsentStatus.Required)
-            {
-                _consentForm.Show(OnShowForm);
-            }
-        }
-
-
-        void OnShowForm(FormError error)
-        {
-            if (error != null)
-            {
-                // Handle the error.
-                UnityEngine.Debug.LogError(error);
-                return;
-            }
-
-            // Handle dismissal by reloading form.
-            LoadConsentForm();
-        }
-        #endregion
-
         private void HandleInitCompleteAction_admob(InitializationStatus obj)
         {
-            this.is_ads_admob = true;
             this.carrot.log("HandleInitCompleteAction admob !");
             if (this.id_ads_Interstitial_admob != "") this.Admob_LoadInterstitialAd();
             if (this.id_ads_Rewarded_admob != "") this.Admob_LoadRewardedAd();
-            if (this.carrot.show_banner_ads_start) this.create_banner_ads();
+            this.create_banner_ads();
         }
 
         private AdRequest get_AdRequest_Admob()
@@ -228,7 +280,6 @@ namespace Carrot
             return adRequest;
         }
 
-        #region Event Admob Ads
         private void Admob_LoadInterstitialAd()
         {
             if (interstitialAd != null)
@@ -238,12 +289,9 @@ namespace Carrot
             }
 
             this.carrot.log("Loading the interstitial ad. (" + this.id_ads_Interstitial_admob + ")");
-
-            // send the request to load the ad.
             InterstitialAd.Load(this.id_ads_Interstitial_admob, this.get_AdRequest_Admob(),
                 (InterstitialAd ad, LoadAdError error) =>
                 {
-                    // if error is not null, the load request failed.
                     if (error != null || ad == null)
                     {
                         this.carrot.log("interstitial ad failed to load an ad with error : " + error);
@@ -326,6 +374,8 @@ namespace Carrot
                 Destroy_Banner_Ad();
             }
 
+            if (this.id_ads_Banner_admob == "") return;
+
             _bannerView = new BannerView(this.id_ads_Banner_admob, AdSize.Banner, AdPosition.Top);
 
             // send the request to load the ad.
@@ -342,6 +392,7 @@ namespace Carrot
             _bannerView.OnBannerAdLoadFailed += (LoadAdError error) =>
             {
                 this.carrot.log("Banner view failed to load an ad with error : " + error);
+                if (this.carrot.type_ads == TypeAds.Admod_Unity_Carrot) this.Unity_ShowBannerAd();
             };
 
             // Raised when the ad is estimated to have earned money.
@@ -380,11 +431,12 @@ namespace Carrot
                 _bannerView.Destroy();
                 _bannerView = null;
             }
+
+            if (carrot.id_ads_unity_Banner_android != "") Advertisement.Banner.Hide();
         }
 
         private void Admob_LoadRewardedAd()
         {
-            // Clean up the old ad before loading a new one.
             if (rewardedAd != null)
             {
                 rewardedAd.Destroy();
@@ -393,10 +445,7 @@ namespace Carrot
 
             this.carrot.log("Loading the rewarded ad. (" + this.id_ads_Rewarded_admob + ")");
 
-            // create our request used to load the ad.
             var adRequest = new AdRequest.Builder().Build();
-
-            // send the request to load the ad.
             RewardedAd.Load(this.id_ads_Rewarded_admob, adRequest,
                 (RewardedAd ad, LoadAdError error) =>
                 {
@@ -405,9 +454,7 @@ namespace Carrot
                         this.carrot.log("Rewarded ad failed to load an ad " + "with error : " + error);
                         return;
                     }
-
                     this.carrot.log("Rewarded ad loaded with response : " + ad.GetResponseInfo());
-
                     rewardedAd = ad;
                 });
         }
@@ -422,71 +469,111 @@ namespace Carrot
                     this.carrot.log(String.Format("Rewarded ad rewarded the user. Type: {0}, amount: {1}.", reward.Type, reward.Amount));
                 });
             }
+            else
+            {
+                if (this.carrot.type_ads == TypeAds.Admod_Unity_Carrot) this.Unity_ShowRewardedAd();
+            }
         }
-
         #endregion
 
-        public void create_banner_ads()
+        #region Unity Ads
+        public void Unity_ShowBannerAd()
         {
-            if (this.is_ads && this.is_ads_admob)
+            if (this.carrot.id_ads_unity_Banner_android != "")
             {
-                if (this.id_ads_Banner_admob != "") this.Admob_CreateBannerView();
+                Advertisement.Banner.SetPosition(BannerPosition.TOP_CENTER);
+                Advertisement.Banner.Show(this.carrot.id_ads_unity_Banner_android);
             }
         }
 
-
-        public void show_ads_Interstitial()
+        public void Unity_HideBannerAd()
         {
-            if (this.is_ads)
+            Advertisement.Banner.Hide();
+        }
+
+        public void Unity_ShowVideoAd()
+        {
+            if(this.carrot.id_ads_unity_Interstitial_android!="") Advertisement.Show(this.carrot.id_ads_unity_Interstitial_android, this);
+        }
+
+        public void Unity_ShowRewardedAd()
+        {
+            if(this.carrot.id_ads_unity_Rewarded_android!="") Advertisement.Show(carrot.id_ads_unity_Rewarded_android, this);
+        }
+
+        public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
+        {
+            Debug.Log("Unity Ads show fail:" + placementId + " ->" + message);
+            if (placementId == this.carrot.id_ads_unity_Interstitial_android)
             {
-                this.count_show_ads++;
-                if (this.count_show_ads >= this.carrot.click_show_ads)
+                if (carrot.type_ads == TypeAds.Unity_Admob_Carrot)
+                    this.Admob_Show_InterstitialAd();
+                else
+                    this.show_carrot_ads();
+            }
+
+            if (placementId == this.carrot.id_ads_unity_Rewarded_android)
+            {
+                if (carrot.type_ads == TypeAds.Unity_Admob_Carrot)
+                    this.Admob_ShowRewardedAd();
+                else
+                    this.show_carrot_ads();
+            }
+
+            if (placementId == this.carrot.id_ads_unity_Banner_android)
+            {
+                if (carrot.type_ads == TypeAds.Unity_Admob_Carrot)
                 {
-                    this.count_show_ads = 0;
-                    if (this.is_ads_admob)
-                    {
-                        this.Admob_Show_InterstitialAd();
-                    }
-                    else
-                    {
-                        this.show_carrot_ads();
-                    }
+                    this.Admob_CreateBannerView();
                 }
             }
-
         }
 
-        public void set_act_Rewarded_Success(UnityAction act)
+        public void OnUnityAdsShowStart(string placementId)
         {
-            this.onRewardedSuccess = act;
+            Debug.Log("Unity Ads Show start:" + placementId);
         }
 
-        public void show_ads_Rewarded()
+        public void OnUnityAdsShowClick(string placementId)
         {
-            if (this.is_ads_admob) this.Admob_ShowRewardedAd();
+            Debug.Log("Unity Ads click:" + placementId);
         }
 
-        public void remove_ads()
+        public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
         {
-            if (this.is_ads_admob)
+            Debug.Log("Unity Ads show complete:" + placementId);
+            if (placementId == this.carrot.id_ads_unity_Rewarded_android)
             {
-                this.Destroy_Banner_Ad();
-                this.Destroy_Interstitial_Ad();
+                if (showCompletionState == UnityAdsShowCompletionState.COMPLETED) onRewardedSuccess?.Invoke();
             }
-
-            PlayerPrefs.SetInt("is_ads", 1);
-            this.is_ads = false;
-            this.set_enable_all_emp_btn_removeads(this.is_ads);
         }
 
-        public bool get_status_ads()
+        public void OnInitializationComplete()
         {
-            return this.is_ads;
+            Advertisement.Load(this.carrot.id_ads_unity_Banner_android, this);
+            Advertisement.Load(this.carrot.id_ads_unity_Interstitial_android, this);
+            Advertisement.Load(this.carrot.id_ads_unity_Rewarded_android, this);
+            Debug.Log("Unity Ads setup success!");
         }
 
-        public void set_status_ads(bool is_status)
+        public void OnInitializationFailed(UnityAdsInitializationError error, string message)
         {
-            this.is_ads = is_status;
+            Debug.Log("Unity Ads setup fail:" + message);
         }
+
+        public void OnUnityAdsAdLoaded(string placementId)
+        {
+            Debug.Log("Unity Ads load success:" + placementId);
+        }
+
+        public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
+        {
+            Debug.Log("Unity Ads Load fail:" + placementId + " ->" + message);
+            if (placementId == this.carrot.id_ads_unity_Banner_android)
+            {
+                if (this.carrot.type_ads == TypeAds.Unity_Admob_Carrot) this.Admob_CreateBannerView();
+            }
+        }
+        #endregion
     }
 }

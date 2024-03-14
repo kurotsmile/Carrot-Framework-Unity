@@ -13,7 +13,7 @@ namespace Carrot
     public enum Store { Google_Play, Samsung_Galaxy_Store, Microsoft_Store, Amazon_app_store, Carrot_store, Huawei_store, Itch,Uptodown};
     public enum TypeApp { App, Game }
     public enum TypeRate { Market_Android, Ms_Windows_Store, Amazon_app_store, Link_Share_CarrotApp }
-    public enum TypeAds { Admob_Ads,Unity_Ads,Carrot_Ads }
+    public enum TypeAds {Admod_Unity_Carrot,Unity_Admob_Carrot, Carrot}
     public enum TypeControl { None, GamePad, D_pad }
     public enum Setting_Option { Show, Hide }
 
@@ -77,7 +77,6 @@ namespace Carrot
 
         [Header("Ads Config")]
         public int click_show_ads = 5;
-        public bool show_banner_ads_start = true;
         public GameObject[] emp_btn_remove_ads;
 
         [Header("Admob Ads Android config")]
@@ -91,6 +90,7 @@ namespace Carrot
         public string id_ads_Rewarded_ios = "unused";
 
         [Header("Unity Ads Android config")]
+        public bool ads_uniy_test_mode;
         public string id_ads_unity_App_android;
         public string id_ads_unity_Interstitial_android;
         public string id_ads_unity_Banner_android;
@@ -198,10 +198,10 @@ namespace Carrot
             this.lang.On_load(this);
             this.user.On_load(this);
             this.camera_pro.On_load();
-            this.shop.load(this);
+            this.shop.On_load(this);
             this.shop.onCarrotPaySuccess += this.carrot_by_success;
             this.shop.onCarrotRestoreSuccess += this.carrot_restore_success;
-            this.ads.load(this);
+            this.ads.On_load(this);
             this.theme.on_load(this);
 
             if (this.type_app == TypeApp.Game) this.ads.onRewardedSuccess += this.GetComponent<Carrot_game>().OnRewardedSuccess;
@@ -666,10 +666,10 @@ namespace Carrot
         public void delay_function(float timer, UnityAction act_func)
         {
             if (this.is_ready) if (this.model_app == ModelApp.Develope) this.log("Delay function " + timer + "s");
-            StartCoroutine(act_try_connect(timer, act_func));
+            StartCoroutine(act_delay_function(timer, act_func));
         }
 
-        private IEnumerator act_try_connect(float timer, UnityAction act_func)
+        private IEnumerator act_delay_function(float timer, UnityAction act_func)
         {
             yield return new WaitForSeconds(timer);
             act_func();
