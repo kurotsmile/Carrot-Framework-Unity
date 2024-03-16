@@ -193,7 +193,7 @@ namespace Carrot
             this.s_store = this.store_public.ToString().ToLower();
             this.s_os = this.os_app.ToString().ToLower();
 
-            this.GetComponent<Carrot_game>().Load_carrot_game();
+            this.game.Load_carrot_game();
 
             this.tool = new Carrot_tool();
             this.lang.On_load(this);
@@ -205,7 +205,7 @@ namespace Carrot
             this.ads.On_load(this);
             this.theme.on_load(this);
 
-            if (this.type_app == TypeApp.Game) this.ads.onRewardedSuccess += this.GetComponent<Carrot_game>().OnRewardedSuccess;
+            if (this.type_app == TypeApp.Game) this.ads.onRewardedSuccess += this.game.OnRewardedSuccess;
             this.ads.onRewardedSuccess += this.theme.onRewardedSuccess;
 
             this.carrot_list_app = new Carrot_list_app(this);

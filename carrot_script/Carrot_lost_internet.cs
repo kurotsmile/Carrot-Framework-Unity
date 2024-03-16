@@ -14,20 +14,31 @@ namespace Carrot
 
         public On_Action_where_online act_when_online;
         public On_Action_where_online act_when_offline;
+        public bool call_full_when_on_start=true;
+        private bool is_status_offline;
 
         public void set_model_by_status_internet(bool is_offline)
         {
+            this.is_status_offline= is_offline;
             if (is_offline) {
                 for (int i = 0; i < this.emp_offline.Length; i++) this.emp_offline[i].SetActive(true);
                 for (int i = 0; i < this.emp_online.Length; i++) this.emp_online[i].SetActive(false);
-                this.act_when_offline.Invoke();
+                if(this.call_full_when_on_start) this.act_when_offline.Invoke();
             }
             else
             {
                 for (int i = 0; i < this.emp_offline.Length; i++) this.emp_offline[i].SetActive(false);
                 for (int i = 0; i < this.emp_online.Length; i++) this.emp_online[i].SetActive(true);
-                this.act_when_online.Invoke();
+                if (this.call_full_when_on_start) this.act_when_online.Invoke();
             }
+        }
+
+        public void Call_when_func()
+        {
+            if (this.is_status_offline)
+                this.act_when_offline.Invoke();
+            else
+                this.act_when_online.Invoke();
         }
 
         public void try_connect()
