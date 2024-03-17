@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -1278,6 +1281,11 @@ namespace Carrot
         [ContextMenu("Set public Itch(Web)")]
         public void Set_public_Itch_Web()
         {
+#if UNITY_EDITOR
+            PlayerSettings.defaultWebScreenWidth = 1024;
+            PlayerSettings.defaultWebScreenHeight = 640;
+#endif
+
             this.store_public = Store.Itch;
             this.os_app = OS.Web;
             this.type_ads = TypeAds.Carrot;
@@ -1288,6 +1296,11 @@ namespace Carrot
         [ContextMenu("Set public Itch(Desktop)")]
         public void Set_public_Itch_Desktop()
         {
+#if UNITY_EDITOR
+            PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
+            PlayerSettings.defaultScreenWidth = 1024;
+            PlayerSettings.defaultScreenHeight = 620;
+#endif
             this.store_public = Store.Itch;
             this.os_app = OS.Window;
             this.type_ads = TypeAds.Carrot;
