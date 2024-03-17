@@ -1214,5 +1214,75 @@ namespace Carrot
                 }
             }
         }
+
+        [ContextMenu("Set public Goople play")]
+        public void Set_public_Gooogle_play()
+        {
+            this.store_public = Store.Google_Play;
+            this.os_app = OS.Android;
+            this.type_ads = TypeAds.Admod_Unity_Carrot;
+            this.type_rate = TypeRate.Market_Android;
+            this.pay_app = PayApp.UnitySDKPay;
+        }
+
+        [ContextMenu("Set public Amazon")]
+        public void Set_public_Amazon()
+        {
+            this.store_public = Store.Amazon_app_store;
+            this.os_app = OS.Android;
+            this.type_ads = TypeAds.Admod_Unity_Carrot;
+            this.type_rate = TypeRate.Amazon_app_store;
+            this.pay_app = PayApp.UnitySDKPay;
+        }
+
+        [ContextMenu("Set public Huawei")]
+        public void Set_public_Huawei()
+        {
+            this.store_public = Store.Huawei_store;
+            this.os_app = OS.Android;
+            this.type_ads = TypeAds.Admod_Unity_Carrot;
+            this.type_rate = TypeRate.Market_Android;
+            this.pay_app = PayApp.CarrotPay;
+        }
+
+        [ContextMenu("Set public Uptodown")]
+        public void Set_public_Itch_Uptodown()
+        {
+            this.store_public = Store.Uptodown;
+            this.os_app = OS.Android;
+            this.type_ads = TypeAds.Admod_Unity_Carrot;
+            this.type_rate = TypeRate.Market_Android;
+            this.pay_app = PayApp.CarrotPay;
+        }
+
+        [ContextMenu("Set public Itch(Mobile Android)")]
+        public void Set_public_Itch_Android()
+        {
+            this.store_public = Store.Itch;
+            this.os_app = OS.Android;
+            this.type_ads = TypeAds.Admod_Unity_Carrot;
+            this.type_rate = TypeRate.Market_Android;
+            this.pay_app = PayApp.CarrotPay;
+        }
+
+        [ContextMenu("Set public Itch(Web)")]
+        public void Set_public_Itch_Web()
+        {
+            this.store_public = Store.Itch;
+            this.os_app = OS.Web;
+            this.type_ads = TypeAds.Carrot;
+            this.type_rate = TypeRate.Ms_Windows_Store;
+            this.pay_app = PayApp.CarrotPay;
+        }
+
+        [ContextMenu("Set public Itch(Desktop)")]
+        public void Set_public_Itch_Desktop()
+        {
+            this.store_public = Store.Itch;
+            this.os_app = OS.Window;
+            this.type_ads = TypeAds.Carrot;
+            this.type_rate = TypeRate.Ms_Windows_Store;
+            this.pay_app = PayApp.CarrotPay;
+        }
     }
 }
