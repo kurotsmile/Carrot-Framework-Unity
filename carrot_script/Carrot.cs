@@ -1246,13 +1246,23 @@ namespace Carrot
         }
 
         [ContextMenu("Set public Uptodown")]
-        public void Set_public_Itch_Uptodown()
+        public void Set_public_Uptodown()
         {
             this.store_public = Store.Uptodown;
             this.os_app = OS.Android;
             this.type_ads = TypeAds.Admod_Unity_Carrot;
             this.type_rate = TypeRate.Market_Android;
             this.pay_app = PayApp.CarrotPay;
+        }
+
+        [ContextMenu("Set public Microsoft Store")]
+        public void Set_public_Microsoft_Store()
+        {
+            this.store_public = Store.Microsoft_Store;
+            this.os_app = OS.Window;
+            this.type_ads = TypeAds.Carrot;
+            this.type_rate = TypeRate.Ms_Windows_Store;
+            this.pay_app = PayApp.UnitySDKPay;
         }
 
         [ContextMenu("Set public Itch(Mobile Android)")]
