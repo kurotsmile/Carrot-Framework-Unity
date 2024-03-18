@@ -1261,6 +1261,9 @@ namespace Carrot
         [ContextMenu("Set public Microsoft Store")]
         public void Set_public_Microsoft_Store()
         {
+#if UNITY_EDITOR
+            PlayerSettings.fullScreenMode = FullScreenMode.FullScreenWindow;
+#endif
             this.store_public = Store.Microsoft_Store;
             this.os_app = OS.Window;
             this.type_ads = TypeAds.Carrot;
