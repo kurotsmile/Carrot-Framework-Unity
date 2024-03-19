@@ -32,7 +32,7 @@ namespace Carrot
                     img.color = Color.white;
                 }
                 this.PlayerPrefs_Save_texture2D(s_key, tex);
-                if (act_done != null) act_done(tex);
+                act_done?.Invoke(tex);
             }
         }
 

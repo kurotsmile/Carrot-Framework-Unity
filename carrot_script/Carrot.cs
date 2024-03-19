@@ -40,8 +40,6 @@ namespace Carrot
         public TypeRate type_rate;
         public TypeAds type_ads;
         public TypeControl type_control;
-        private string s_os;
-        private string s_store;
         public string collection_document_lang;
         public string WindowUWP_ProductId;
         public string Carrotstore_AppId;
@@ -192,9 +190,6 @@ namespace Carrot
         public void Load_Carrot()
         {
             this.list_log = new List<string>();
-
-            this.s_store = this.store_public.ToString().ToLower();
-            this.s_os = this.os_app.ToString().ToLower();
 
             this.game.Load_carrot_game();
 

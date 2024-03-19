@@ -133,12 +133,20 @@ namespace Carrot
             item_lang.set_icon(this.icon);
             if (data_lang["name"] != null) item_lang.set_title(data_lang["name"].ToString());
             item_lang.set_tip(s_key_lang);
-            string s_id_icon_lang = "icon_" + s_key_lang;
-            Sprite sp_icon_lang = this.carrot.get_tool().get_sprite_to_playerPrefs(s_id_icon_lang);
-            if (sp_icon_lang != null)
-                item_lang.set_icon_white(sp_icon_lang);
+
+            if (this.carrot.os_app == OS.Web)
+            {
+                if (data_lang["icon"] != null) this.carrot.get_img(data_lang["icon"].ToString(), item_lang.img_icon);
+            }
             else
-                if (data_lang["icon"] != null) this.carrot.get_img_and_save_playerPrefs(data_lang["icon"].ToString(), item_lang.img_icon, s_id_icon_lang);
+            {
+                string s_id_icon_lang = "icon_" + s_key_lang;
+                Sprite sp_icon_lang = this.carrot.get_tool().get_sprite_to_playerPrefs(s_id_icon_lang);
+                if (sp_icon_lang != null)
+                    item_lang.set_icon_white(sp_icon_lang);
+                else
+                    if (data_lang["icon"] != null) this.carrot.get_img_and_save_playerPrefs(data_lang["icon"].ToString(), item_lang.img_icon, s_id_icon_lang);
+            }
 
             if (s_key_lang == this.s_lang_key) item_lang.GetComponent<Image>().color = this.carrot.get_color_highlight_blur(50);
 
