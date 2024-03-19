@@ -740,8 +740,8 @@ namespace Carrot
             {
                 Carrot_Box_Item item_setting_top_player = box_setting.create_item("top_player");
                 item_setting_top_player.set_icon(this.game.icon_top_player);
-                item_setting_top_player.set_title("Player rankings");
-                item_setting_top_player.set_tip("User score leaderboard");
+                item_setting_top_player.set_title(lang.Val("top_player", "Player rankings"));
+                item_setting_top_player.set_tip(lang.Val("top_player_tip","User score leaderboard"));
                 item_setting_top_player.set_act(this.game.Show_List_Top_player);
                 item_setting_top_player.set_lang_data("top_player", "top_player_tip");
             }

@@ -687,12 +687,12 @@ namespace Carrot
                 }
                 else
                 {
-                    this.carrot.show_msg("Player rankings", "There are no ranks in the list");
+                    this.carrot.show_msg(this.carrot.lang.Val("top_player", "Player rankings"), carrot.lang.Val("top_player_none", "No player scores have been ranked yet, log in and play to add points to the rankings!"));
                 }
             }
             else
             {
-                this.carrot.show_msg("Player rankings", "There are no ranks in the list");
+                this.carrot.show_msg(this.carrot.lang.Val("top_player", "Player rankings"), carrot.lang.Val("top_player_none", "No player scores have been ranked yet, log in and play to add points to the rankings!"));
             }
         }
 
@@ -784,7 +784,7 @@ namespace Carrot
 
         private void Act_update_scores_fail(string s_error)
         {
-            this.carrot.show_msg("Player rankings", s_error, Msg_Icon.Error);
+            this.carrot.show_msg(this.carrot.lang.Val("top_player", "Player rankings"), s_error, Msg_Icon.Error);
         }
         #endregion
     }
