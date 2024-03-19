@@ -40,7 +40,7 @@ namespace Carrot
         public void show_list_img(UnityAction<Texture2D> act_after_take_photo)
         {
             this.box_grid_list_photo = this.carrot.show_grid();
-            this.box_grid_list_photo.set_title(PlayerPrefs.GetString("list_photo_camera", "List Photo Cameras"));
+            this.box_grid_list_photo.set_title(this.carrot.lang.Val("list_photo_camera", "List Photo Cameras"));
             this.box_grid_list_photo.set_item_size(new Vector2(100f, 130f));
             for (int i = 0; i < this.leng_img_photo; i++)
             {

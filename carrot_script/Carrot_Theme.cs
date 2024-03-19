@@ -36,7 +36,7 @@ namespace Carrot
             box_list = this.carrot.Create_Box("list_color");
             box_list.set_item_size(new Vector2(50f, 50f));
             box_list.set_icon(this.carrot.sp_icon_theme_color);
-            box_list.set_title(PlayerPrefs.GetString("setting_color", "Color Select"));
+            box_list.set_title(this.carrot.lang.Val("setting_color", "Color Select"));
 
             Carrot_Box_Btn_Item btn_get_new_color = box_list.create_btn_menu_header(this.carrot.sp_icon_restore);
             btn_get_new_color.set_act(() => this.show_list_color(act_done));
@@ -96,7 +96,7 @@ namespace Carrot
             box_list = this.carrot.Create_Box("list_color");
             box_list.set_item_size(new Vector2(50f, 50f));
             box_list.set_icon(this.carrot.sp_icon_picker_color);
-            box_list.set_title(PlayerPrefs.GetString("setting_color", "Color Select"));
+            box_list.set_title(this.carrot.lang.Val("setting_color", "Color Select"));
 
             this.item_color_preview = this.box_list.create_item("preview");
             item_color_preview.set_icon(this.carrot.sp_icon_theme_color);
@@ -144,7 +144,7 @@ namespace Carrot
 
             Carrot_Box_Btn_Panel obj_panel_btn = this.box_list.create_panel_btn();
 
-            string s_done_label_txt = PlayerPrefs.GetString("done", "Done");
+            string s_done_label_txt = this.carrot.lang.Val("done", "Done");
             Carrot_Button_Item obj_btn_done = obj_panel_btn.create_btn("btn_done");
             obj_btn_done.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
             obj_btn_done.set_bk_color(this.carrot.color_highlight);
@@ -153,7 +153,7 @@ namespace Carrot
             obj_btn_done.set_label(s_done_label_txt);
             obj_btn_done.set_icon(this.carrot.icon_carrot_done);
 
-            string s_cancel_label_txt = PlayerPrefs.GetString("cancel", "Cancel");
+            string s_cancel_label_txt = this.carrot.lang.Val("cancel", "Cancel");
             Carrot_Button_Item obj_btn_cancel = obj_panel_btn.create_btn("btn_cancel");
             obj_btn_cancel.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
             obj_btn_cancel.set_act_click(act_close_box);

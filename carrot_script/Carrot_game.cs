@@ -110,7 +110,7 @@ namespace Carrot
                 if (this.sound_bk_game != null) this.sound_bk_game.Stop();
                 if (this.box_list != null) this.box_list.close();
                 this.box_list = this.carrot.Create_Box("carrot_list_bk_music");
-                box_list.set_title(PlayerPrefs.GetString("list_bk_music","Background music games"));
+                box_list.set_title(this.carrot.lang.Val("list_bk_music","Background music games"));
                 box_list.set_icon(this.icon_list_music_game);
                 box_list.set_act_before_closing(this.act_close_list_music);
 
@@ -335,7 +335,7 @@ namespace Carrot
             {
                 PlayerPrefs.SetInt("is_buy_bk_" +this.id_buy_bk_music_temp, 1);
                 this.act_change_bk_music_game(this.id_buy_bk_music_temp,this.index_buy_music_link_temp);
-                this.carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), PlayerPrefs.GetString("buy_bk_success", "Buy background music successfully!"), Msg_Icon.Success);
+                this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("buy_bk_success", "Buy background music successfully!"), Msg_Icon.Success);
                 this.id_buy_bk_music_temp = "";
             }
         }
@@ -348,7 +348,7 @@ namespace Carrot
                 {
                     Debug.Log("buy music:" + this.id_buy_bk_music_temp.ToString());
                     this.act_change_bk_music_game(this.id_buy_bk_music_temp, this.index_buy_music_link_temp);
-                    this.carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), "You have received the background music reward!", Msg_Icon.Success);
+                    this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), "You have received the background music reward!", Msg_Icon.Success);
                     this.id_buy_bk_music_temp = "";
                 }
 
@@ -468,12 +468,15 @@ namespace Carrot
 
         private void set_list_button_gamepad_console(List<GameObject> objs)
         {
-            List<GameObject> list_obj = new List<GameObject>();
-            for (int i = 0; i < objs.Count; i++) if (objs[i].gameObject.activeInHierarchy) list_obj.Add(objs[i]);
-            this.is_user_gampad_for_console = true;
-            this.scrollRect_gamepad_console = null;
-            this.list_obj_gamapad_console = list_obj;
-            this.set_index_button_gamepad_console(0);
+            if (objs != null)
+            {
+                List<GameObject> list_obj = new List<GameObject>();
+                for (int i = 0; i < objs.Count; i++) if (objs[i].activeInHierarchy) list_obj.Add(objs[i]);
+                this.is_user_gampad_for_console = true;
+                this.scrollRect_gamepad_console = null;
+                this.list_obj_gamapad_console = list_obj;
+                this.set_index_button_gamepad_console(0);
+            }
         }
 
         public void set_list_button_gamepad_console(List<GameObject> objs, int fade_color_sel=100)
@@ -601,7 +604,7 @@ namespace Carrot
                     IList rank = (IList)app["rank"];
                     box_list = this.carrot.Create_Box();
                     box_list.set_icon(this.icon_top_player);
-                    box_list.set_title(PlayerPrefs.GetString("top_player","Player rankings"));
+                    box_list.set_title(this.carrot.lang.Val("top_player","Player rankings"));
 
                     string id_user_cur = this.carrot.user.get_id_user_login();
 

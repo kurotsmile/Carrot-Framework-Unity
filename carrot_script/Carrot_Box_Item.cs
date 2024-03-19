@@ -66,7 +66,7 @@ namespace Carrot
                 if (type == Box_Item_Type.box_value_input)
                 {
                     this.inp_val.gameObject.SetActive(true);
-                    this.txt_placeholder_tip.text = PlayerPrefs.GetString("inp_tip", "Enter your data here ...");
+                    this.txt_placeholder_tip.text =this.carrot.lang.Val("inp_tip", "Enter your data here ...");
                     Destroy(this.GetComponent<Button>());
                 }
 
@@ -74,7 +74,7 @@ namespace Carrot
                 {
                     this.inp_val.gameObject.SetActive(true);
                     this.inp_val.contentType = InputField.ContentType.IntegerNumber;
-                    this.txt_placeholder_tip.text = PlayerPrefs.GetString("inp_tip", "Enter your data here ...");
+                    this.txt_placeholder_tip.text = this.carrot.lang.Val("inp_tip", "Enter your data here ...");
                     Destroy(this.GetComponent<Button>());
                 }
 
@@ -82,7 +82,7 @@ namespace Carrot
                 {
                     this.inp_val.gameObject.SetActive(true);
                     this.inp_val.contentType = InputField.ContentType.EmailAddress;
-                    this.txt_placeholder_tip.text = PlayerPrefs.GetString("inp_tip", "Enter your data here ...");
+                    this.txt_placeholder_tip.text = this.carrot.lang.Val("inp_tip", "Enter your data here ...");
                     Destroy(this.GetComponent<Button>());
                 }
 
@@ -90,7 +90,7 @@ namespace Carrot
                 {
                     this.inp_val.gameObject.SetActive(true);
                     this.inp_val.contentType = InputField.ContentType.Password;
-                    this.txt_placeholder_tip.text = PlayerPrefs.GetString("inp_tip", "Enter your data here ...");
+                    this.txt_placeholder_tip.text = this.carrot.lang.Val("inp_tip", "Enter your data here ...");
                     if (btn_password_visible != null) Destroy(btn_password_visible.gameObject);
                     btn_password_visible = this.create_item();
                     btn_password_visible.set_icon(this.carrot.icon_carrot_visible_off);

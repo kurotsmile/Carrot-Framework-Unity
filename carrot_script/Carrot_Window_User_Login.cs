@@ -80,14 +80,14 @@ namespace Carrot
             }
             else
             {
-                this.carrot.show_msg(PlayerPrefs.GetString("login", "Login"), PlayerPrefs.GetString("acc_no", "This account information is not in the system!"));
+                this.carrot.show_msg(this.carrot.lang.Val("login", "Login"), this.carrot.lang.Val("acc_no", "This account information is not in the system!"));
             }
         }
 
         private void Act_user_login_fail(string s_error)
         {
             this.carrot.hide_loading();
-            this.carrot.show_msg(PlayerPrefs.GetString("login", "Login"), PlayerPrefs.GetString("login_fail", "Login failed, please try again!"));
+            this.carrot.show_msg(this.carrot.lang.Val("login", "Login"), this.carrot.lang.Val("login_fail", "Login failed, please try again!"));
         }
 
         public void close()
@@ -116,14 +116,14 @@ namespace Carrot
             {
                 this.inp_login_username.text = PlayerPrefs.GetString("login_username_mail");
                 this.img_icon_mode_login.sprite = this.carrot.icon_carrot_mail;
-                this.login_username_title.text = PlayerPrefs.GetString("user_email", "Email");
+                this.login_username_title.text = this.carrot.lang.Val("user_email", "Email");
                 this.inp_login_username.contentType = InputField.ContentType.EmailAddress;
             }
             else
             {
                 this.inp_login_username.text = PlayerPrefs.GetString("login_username_phone");
                 this.img_icon_mode_login.sprite = this.carrot.icon_carrot_phone;
-                this.login_username_title.text = PlayerPrefs.GetString("user_phone", "Phone");
+                this.login_username_title.text = this.carrot.lang.Val("user_phone", "Phone");
                 this.inp_login_username.contentType = InputField.ContentType.IntegerNumber;
             }
                 

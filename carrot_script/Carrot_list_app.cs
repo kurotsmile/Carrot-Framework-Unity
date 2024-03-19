@@ -176,7 +176,7 @@ namespace Carrot
             if (this.box_list_app != null) this.box_list_app.close();
             this.box_list_app = this.carrot.Create_Box();
             box_list_app.set_icon(this.carrot.icon_carrot);
-            box_list_app.set_title(PlayerPrefs.GetString("list_app_carrot", "Applications from the developer"));
+            box_list_app.set_title(this.carrot.lang.Val("list_app_carrot", "Applications from the developer"));
 
             this.btn_header_all = box_list_app.create_btn_menu_header(this.carrot.icon_carrot_all_category);
             this.btn_header_all.set_act(() => this.act_btn_header_box(Carrot_app_type.all));
@@ -247,8 +247,8 @@ namespace Carrot
             GameObject window_exit = this.carrot.create_window(this.carrot.window_exit_prefab);
             window_exit.name = "window_exit";
             this.window_exit = window_exit.GetComponent<Carrot_Window_Exit>();
-            this.window_exit.txt_exit_msg.text = PlayerPrefs.GetString("exit_msg", "Are you sure you want to exit the application?\nPlease press the back button one more time to exit");
-            this.window_exit.txt_title_app_other.text = PlayerPrefs.GetString("exit_app_other", "Perhaps you will enjoy our other applications");
+            this.window_exit.txt_exit_msg.text = this.carrot.lang.Val("exit_msg", "Are you sure you want to exit the application?\nPlease press the back button one more time to exit");
+            this.window_exit.txt_title_app_other.text = this.carrot.lang.Val("exit_app_other", "Perhaps you will enjoy our other applications");
             this.window_exit.panel_list_app_other.SetActive(false);
 
             if (this.type == Carrot_app_type.all)
@@ -389,7 +389,7 @@ namespace Carrot
 
         public void open_link_share(string s_link)
         {
-            this.carrot.show_share(s_link, PlayerPrefs.GetString("share_tip", "Choose the platform below to share this great app with your friends or others"));
+            this.carrot.show_share(s_link, this.carrot.lang.Val("share_tip", "Choose the platform below to share this great app with your friends or others"));
         }
 
         private void act_btn_header_box(Carrot_app_type type_show)

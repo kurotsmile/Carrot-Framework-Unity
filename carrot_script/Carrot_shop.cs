@@ -115,9 +115,9 @@ namespace Carrot
         void OnTransactionsRestored(bool success)
         {
             if (success)
-                this.carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), PlayerPrefs.GetString("shop_restore_success", "Successful recovery!"), Msg_Icon.Success);
+                this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_restore_success", "Successful recovery!"), Msg_Icon.Success);
             else
-                this.carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), PlayerPrefs.GetString("shop_restore_fail", "Restore failed!"), Msg_Icon.Error);
+                this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_restore_fail", "Restore failed!"), Msg_Icon.Error);
         }
 
         public string get_id_by_index(int index)
@@ -142,7 +142,7 @@ namespace Carrot
         void IStoreListener.OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
         {
             this.carrot.hide_loading();
-            this.carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), PlayerPrefs.GetString("shop_buy_fail", "Purchase failed, Please check your account balance, or try again at another time"), Msg_Icon.Error);
+            this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_buy_fail", "Purchase failed, Please check your account balance, or try again at another time"), Msg_Icon.Error);
         }
 
         void IStoreListener.OnInitialized(IStoreController controller, IExtensionProvider exten)
@@ -229,7 +229,7 @@ namespace Carrot
 
             Carrot_Button_Item btn_share = panel_btn.create_btn();
             btn_share.set_icon_white(carrot.sp_icon_share);
-            btn_share.set_label(PlayerPrefs.GetString("share","Share"));
+            btn_share.set_label(this.carrot.lang.Val("share","Share"));
             btn_share.set_label_color(Color.white);
             btn_share.set_bk_color(carrot.color_highlight);
             btn_share.set_act_click(() => carrot.show_share(url_paypal, "Ask someone else to buy this product for you!"));
@@ -243,7 +243,7 @@ namespace Carrot
 
             Carrot_Button_Item btn_cancel = panel_btn.create_btn();
             btn_cancel.set_icon_white(carrot.icon_carrot_cancel);
-            btn_cancel.set_label(PlayerPrefs.GetString("cancel","Cancel"));
+            btn_cancel.set_label(this.carrot.lang.Val("cancel","Cancel"));
             btn_cancel.set_label_color(Color.white);
             btn_cancel.set_bk_color(carrot.color_highlight);
             btn_cancel.set_act_click(() => Close_box_carrot_pay());
@@ -299,7 +299,7 @@ namespace Carrot
             }
             else
             {
-                carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), "You have not purchased any products yet!", Msg_Icon.Alert);
+                carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), "You have not purchased any products yet!", Msg_Icon.Alert);
             }
         }
 
@@ -358,7 +358,7 @@ namespace Carrot
             }
             else
             {
-                this.carrot.show_msg(PlayerPrefs.GetString("shop", "Shop"), PlayerPrefs.GetString("shop_buy_fail", "Purchase failed, Please check your account balance, or try again at another time"), Msg_Icon.Error);
+                this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_buy_fail", "Purchase failed, Please check your account balance, or try again at another time"), Msg_Icon.Error);
                 if (box_shop == null) this.Reset_session_carrot_pay();
             }
         }

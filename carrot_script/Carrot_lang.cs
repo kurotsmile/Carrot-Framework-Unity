@@ -101,7 +101,7 @@ namespace Carrot
 
             if (!fc.is_null)
             {
-                this.box_lang = this.carrot.Create_Box(PlayerPrefs.GetString("sel_lang_app", "Choose your language and country"), this.icon);
+                this.box_lang = this.carrot.Create_Box(this.carrot.lang.Val("sel_lang_app", "Choose your language and country"), this.icon);
                 foreach (var doc in fc.fire_document)
                 {
                     IDictionary lang = doc.Get_IDictionary();

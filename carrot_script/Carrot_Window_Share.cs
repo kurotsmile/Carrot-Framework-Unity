@@ -8,6 +8,7 @@ namespace Carrot
     {
         public Carrot_UI UI;
         private Carrot carrot;
+        public Text txt_share_title;
         public Text txt_share_tip;
         public InputField inp_link_share;
         public Transform area_all_item_share;
@@ -20,7 +21,8 @@ namespace Carrot
             this.carrot = carrot;
 
             if (this.carrot.is_offline()) this.s_data_json_share_offline = PlayerPrefs.GetString("s_data_json_share_offline");
-            this.txt_share_tip.text = PlayerPrefs.GetString("share_tip", "Choose the platform below to share this great app with your friends or others");
+            this.txt_share_title.text = this.carrot.lang.Val("share", "Share");
+            this.txt_share_tip.text = this.carrot.lang.Val("share_tip", "Choose the platform below to share this great app with your friends or others");
             this.UI.set_theme(this.carrot.color_highlight);
             if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.UI.get_list_btn());
             this.get_and_load_list_share();

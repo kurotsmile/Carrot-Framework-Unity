@@ -132,7 +132,7 @@ namespace Carrot
         private void Act_submit_rate_feedback_done(string s_data)
         {
             this.carrot.hide_loading();
-            this.carrot.show_msg(PlayerPrefs.GetString("send_feedback", "Send Feedback"), PlayerPrefs.GetString("rate_thanks", "Send your comments to the successful developer. Thanks for your feedback!"), Msg_Icon.Success);
+            this.carrot.show_msg(this.carrot.lang.Val("send_feedback", "Send Feedback"), this.carrot.lang.Val("rate_thanks", "Send your comments to the successful developer. Thanks for your feedback!"), Msg_Icon.Success);
         }
 
         private void Act_submit_rate_feedback_fail(string s_error)
