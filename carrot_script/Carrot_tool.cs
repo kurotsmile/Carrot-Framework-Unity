@@ -326,6 +326,14 @@ namespace Carrot
                 return false;
         }
 
+        public string get_file_path(string name_file)
+        {
+            if (Application.isEditor)
+                return Application.dataPath + "/" + name_file;
+            else
+                return Application.persistentDataPath + "/" + name_file;
+        }
+
         public IList<IDictionary> Shuffle_Ilist(IList<IDictionary> list)
         {
             System.Random rng = new System.Random();

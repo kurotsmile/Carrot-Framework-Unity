@@ -13,9 +13,10 @@ namespace Carrot
         private string s_lang_key;
         private string s_key_lang_temp = "";
 
-        private UnityAction<string> act_after_selecting_lang;
+        private UnityAction<string> act_after_selecting_lang = null;
         private Carrot_Box box_lang;
         private IDictionary data_lang_offline;
+        private IDictionary data_lang_value = null;
         public string s_data_json_list_lang_offline;
 
         private Transform tr_item_lang_systemLanguage = null;
@@ -26,8 +27,31 @@ namespace Carrot
             this.data_lang_offline = (IDictionary)Json.Deserialize("{}");
             if(this.carrot.is_offline()) this.s_data_json_list_lang_offline = PlayerPrefs.GetString("s_data_json_list_lang_offline");
             this.s_lang_key = PlayerPrefs.GetString("lang", "en");
+
+            this.Load_val_data_lang();
             this.Load_icon_lang();
             this.Load_lang_emp();
+        }
+
+        private void Load_val_data_lang()
+        {
+            string s_data_lang = PlayerPrefs.GetString("data_lang_value_" + this.s_lang_key,"");
+            if (s_data_lang != "")
+            {
+                Fire_Document fc = new(s_data_lang);
+                this.data_lang_value = fc.Get_IDictionary();
+            }
+
+            if(this.data_lang_value!= null)
+            {
+                string s_data_lang_customer = PlayerPrefs.GetString("data_lang_customer_value_" + this.s_lang_key, "");
+                if (s_data_lang_customer != "")
+                {
+                    Fire_Document fc = new(s_data_lang_customer);
+                    IDictionary lang_data_customer = fc.Get_IDictionary();
+                    foreach (var key in lang_data_customer.Keys) this.data_lang_value[key.ToString()] = lang_data_customer[key.ToString()].ToString();
+                }
+            }
         }
 
         private void Load_icon_lang()
@@ -153,8 +177,7 @@ namespace Carrot
         {
             if (this.carrot.emp_show_lang != null)
             {
-                for (int i = 0; i < this.carrot.emp_show_lang.key.Length; i++)
-                    if (PlayerPrefs.GetString(this.carrot.emp_show_lang.key[i], "") != "") this.carrot.emp_show_lang.emp[i].text = PlayerPrefs.GetString(this.carrot.emp_show_lang.key[i]);
+                for (int i = 0; i < this.carrot.emp_show_lang.key.Length; i++) if(this.Val(this.carrot.emp_show_lang.key[i])!="") this.carrot.emp_show_lang.emp[i].text =this.Val(this.carrot.emp_show_lang.key[i]);
             }
         }
 
@@ -172,11 +195,10 @@ namespace Carrot
 
         private void Act_sel_lang_done(string s_data)
         {
+            PlayerPrefs.SetString("data_lang_value_" + this.s_key_lang_temp, s_data);
             Fire_Document data_lang = new(s_data);
-            IDictionary lang_data = data_lang.Get_IDictionary();
-            foreach (var key in lang_data.Keys) PlayerPrefs.SetString(key.ToString(), lang_data[key.ToString()].ToString());
-            if (this.carrot.collection_document_lang == "") this.Change_lang(this.s_key_lang_temp);
-            this.data_lang_offline["lang_data_" + this.s_key_lang_temp] = Json.Serialize(lang_data);
+            this.data_lang_value = data_lang.Get_IDictionary();
+            this.data_lang_offline["lang_data_" + this.s_key_lang_temp] = Json.Serialize(this.data_lang_value);
             if (this.carrot.collection_document_lang != "") this.carrot.server.Get_doc_by_path(this.carrot.collection_document_lang, this.s_key_lang_temp, Act_sel_lang_customer_done);
         }
 
@@ -187,17 +209,17 @@ namespace Carrot
 
         private void Act_sel_lang_customer_done(string s_data)
         {
+            PlayerPrefs.SetString("data_lang_customer_value_" + this.s_key_lang_temp, s_data);
             Fire_Document data_lang = new(s_data);
             IDictionary lang_data_customer = data_lang.Get_IDictionary();
-            foreach (var key in lang_data_customer.Keys) PlayerPrefs.SetString(key.ToString(), lang_data_customer[key.ToString()].ToString());
+            foreach (var key in lang_data_customer.Keys) this.data_lang_value[key.ToString()] = lang_data_customer[key.ToString()].ToString();
             this.Change_lang(this.s_key_lang_temp);
             this.data_lang_offline["lang_data_customer_" + this.s_key_lang_temp] = Json.Serialize(lang_data_customer);
         }
 
         private void Select_lang_offline(string s_key)
         {
-            IDictionary lang_data = (IDictionary)Json.Deserialize(this.data_lang_offline["lang_data_" + s_key].ToString());
-            foreach (var key in lang_data.Keys) PlayerPrefs.SetString(key.ToString(), lang_data[key.ToString()].ToString());
+            this.data_lang_value=(IDictionary)Json.Deserialize(this.data_lang_offline["lang_data_" + s_key].ToString());
             if (this.carrot.collection_document_lang == "") this.Change_lang(s_key);
 
             if (this.carrot.collection_document_lang != "")
@@ -205,7 +227,7 @@ namespace Carrot
                 if (this.data_lang_offline["lang_data_customer_" + s_key] != null)
                 {
                     IDictionary lang_data_customer = (IDictionary)Json.Deserialize(this.data_lang_offline["lang_data_customer_" + s_key].ToString());
-                    foreach (var key in lang_data_customer.Keys) PlayerPrefs.SetString(key.ToString(), lang_data_customer[key.ToString()].ToString());
+                    foreach (var key in lang_data_customer.Keys) this.data_lang_value[key.ToString()] = lang_data_customer[key.ToString()];
                 }
                 this.Change_lang(s_key);
             }
@@ -217,9 +239,34 @@ namespace Carrot
             this.s_lang_key = s_key_new;
             this.Load_icon_lang();
             this.Load_lang_emp();
-            if (this.act_after_selecting_lang != null) act_after_selecting_lang(this.s_lang_key);
+            act_after_selecting_lang?.Invoke(this.s_lang_key);
             if (this.box_lang != null) this.box_lang.close();
             PlayerPrefs.SetString("lang", this.s_lang_key);
+        }
+
+        public string Val(string s_key,string s_default="")
+        {
+            if (data_lang_value != null)
+            {
+                if (s_key=="")
+                {
+                    return "";
+                }else if (s_key == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    if (this.data_lang_value[s_key] != null)
+                        return this.data_lang_value[s_key].ToString();
+                    else
+                        return s_default;
+                }
+            }
+            else
+            {
+                return s_default;
+            }
         }
     }
 }

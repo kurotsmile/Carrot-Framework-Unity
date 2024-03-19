@@ -146,10 +146,17 @@ namespace Carrot
 
         public void load_lang_data()
         {
-            string lang_title = PlayerPrefs.GetString(this.s_lang_title);
-            if (lang_title != "") this.txt_name.text = lang_title;
-            string lang_tip = PlayerPrefs.GetString(this.s_lang_tip);
-            if (lang_tip != "") this.txt_tip.text = lang_tip;
+            if (this.s_lang_title != "")
+            {
+                string lang_title = carrot.lang.Val(this.s_lang_title);
+                if (lang_title != "") this.txt_name.text = lang_title;
+            }
+
+            if (this.s_lang_tip != "")
+            {
+                string lang_tip = carrot.lang.Val(this.s_lang_tip);
+                if (lang_tip != "") this.txt_tip.text = lang_tip;
+            }
         }
 
         public void set_icon(Sprite sp_icon)

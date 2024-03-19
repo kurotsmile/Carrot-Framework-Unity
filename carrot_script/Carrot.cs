@@ -342,8 +342,8 @@ namespace Carrot
         {
             Carrot_Window_Msg msg = show_msg(s_title, s_msg);
             msg.set_icon(Msg_Icon.Question);
-            msg.add_btn_msg(PlayerPrefs.GetString("msg_yes", "Yes"), act_msg_yes);
-            msg.add_btn_msg(PlayerPrefs.GetString("cancel", "No"), act_msg_no);
+            msg.add_btn_msg(lang.Val("msg_yes", "Yes"), act_msg_yes);
+            msg.add_btn_msg(lang.Val("cancel", "No"), act_msg_no);
             msg.update_btns_gamepad_console();
             return msg;
         }
@@ -431,27 +431,13 @@ namespace Carrot
             StartCoroutine(this.tool.download_img_form_url(url, act_download_img));
         }
 
-        public WWWForm frm_act(string func)
-        {
-            if (this.model_app == ModelApp.Develope) this.log("Create Form:" + func);
-            WWWForm frm = new WWWForm();
-            frm.AddField("function", func);
-            frm.AddField("lang", PlayerPrefs.GetString("lang", "en"));
-            frm.AddField("lang_name", PlayerPrefs.GetString("lang_name", "English"));
-            frm.AddField("lang_sys", Application.systemLanguage.ToString());
-            frm.AddField("id_device", SystemInfo.deviceUniqueIdentifier);
-            frm.AddField("os", this.s_os);
-            frm.AddField("store", this.s_store);
-            return frm;
-        }
-
         public Carrot_Window_Input show_search(UnityAction<string> act_done_search, string s_search_tip = "Enter what you want to search for")
         {
             GameObject obj_search = this.create_window(this.window_input_prefab);
             Carrot_Window_Input box_search = obj_search.GetComponent<Carrot_Window_Input>();
             box_search.load(this);
             box_search.set_icon(this.icon_carrot_search);
-            box_search.set_title(PlayerPrefs.GetString("search", "Search"));
+            box_search.set_title(lang.Val("search", "Search"));
             box_search.set_tip(s_search_tip);
             box_search.set_act_done(act_done_search);
             return box_search;
@@ -474,13 +460,13 @@ namespace Carrot
         public void delete_all_data()
         {
             this.play_sound_click();
-            this.msg_delete_all_data = this.show_msg(PlayerPrefs.GetString("delete_all_data", "Clear all application data"), PlayerPrefs.GetString("delete_all_data_tip", "Confirm erase all data and set up")+"?", this.act_delete_all_data_yes, this.act_delete_all_data_no);
+            this.msg_delete_all_data = this.show_msg(lang.Val("delete_all_data", "Clear all application data"), lang.Val("delete_all_data_tip", "Confirm erase all data and set up")+"?", this.act_delete_all_data_yes, this.act_delete_all_data_no);
         }
 
         private void act_delete_all_data_yes()
         {
             this.msg_delete_all_data.close();
-            this.msg_delete_all_data = this.show_msg(PlayerPrefs.GetString("delete_all_data", "Clear all application data"), PlayerPrefs.GetString("delete_all_data_success", "Erase all settings settings and app data successfully!"), Msg_Icon.Success);
+            this.msg_delete_all_data = this.show_msg(lang.Val("delete_all_data", "Clear all application data"), lang.Val("delete_all_data_success", "Erase all settings settings and app data successfully!"), Msg_Icon.Success);
             this.user.delete_data_user_login();
             PlayerPrefs.DeleteAll();
             this.get_tool().delete_file("lang_icon");
@@ -653,10 +639,10 @@ namespace Carrot
             {
                 if (this.carrot_lost_internet != null) this.carrot_lost_internet.carrot = this;
                 this.msg_lost_interne = this.create_msg();
-                msg_lost_interne.set_title(PlayerPrefs.GetString("lost_connect", "Lost Internet connection"));
-                msg_lost_interne.set_msg(PlayerPrefs.GetString("lost_connect_msg", "Please check your network connection, currently the app cannot access the Internet"));
+                msg_lost_interne.set_title(lang.Val("lost_connect", "Lost Internet connection"));
+                msg_lost_interne.set_msg(lang.Val("lost_connect_msg", "Please check your network connection, currently the app cannot access the Internet"));
                 msg_lost_interne.set_icon_customer(this.icon_lost_internet);
-                msg_lost_interne.add_btn_msg(PlayerPrefs.GetString("lost_connect_try", "Try checking again!"), act_try_connect_internet);
+                msg_lost_interne.add_btn_msg(lang.Val("lost_connect_try", "Try checking again!"), act_try_connect_internet);
                 this.carrot_lost_internet.try_connect();
             }
             if (this.carrot_lost_internet != null) this.carrot_lost_internet.set_model_by_status_internet(status_internet_offline);
@@ -721,14 +707,14 @@ namespace Carrot
         public Carrot_Box Create_Setting(GameObject[] array_item_customer = null)
         {
             this.play_sound_click();
-            this.box_setting = this.Create_Box(PlayerPrefs.GetString("setting", "Setting"));
+            this.box_setting = this.Create_Box(lang.Val("setting", "Setting"));
             if (this.model_app == ModelApp.Publish)
                 this.box_setting.set_icon(this.sp_icon_setting);
             else
                 this.box_setting.set_icon(this.sp_icon_dev);
 
             box_setting.name = "Box Setting";
-            box_setting.set_title(PlayerPrefs.GetString("setting", "Setting"));
+            box_setting.set_title(lang.Val("setting", "Setting"));
             Button btn_icon_setting = this.box_setting.img_icon.gameObject.AddComponent<Button>();
             btn_icon_setting.onClick.AddListener(() => this.act_check_change_model_app());
 
@@ -738,7 +724,7 @@ namespace Carrot
             {
                 this.item_setting_lang = box_setting.create_item("lang");
                 item_setting_lang.set_icon_white(this.lang.get_sp_lang_cur());
-                item_setting_lang.set_title(PlayerPrefs.GetString("sel_lang_app", "Change application language"));
+                item_setting_lang.set_title(lang.Val("sel_lang_app", "Change application language"));
                 item_setting_lang.set_tip(this.lang.get_key_lang());
                 item_setting_lang.set_lang_data("sel_lang_app", "sel_lang_app_tip");
                 item_setting_lang.set_act(() => this.lang.show_list_lang(change_lang_in_setting));
@@ -765,8 +751,8 @@ namespace Carrot
                 item_setting_sound.set_icon(this.sp_icon_sound_on);
             else
                 item_setting_sound.set_icon(this.sp_icon_sound_off);
-            item_setting_sound.set_title(PlayerPrefs.GetString("sound_app", "Sound"));
-            item_setting_sound.set_tip(PlayerPrefs.GetString("sound_app_tip", "On or Off Sound click"));
+            item_setting_sound.set_title(lang.Val("sound_app", "Sound"));
+            item_setting_sound.set_tip(lang.Val("sound_app_tip", "On or Off Sound click"));
             item_setting_sound.set_lang_data("sound_app", "sound_app_tip");
             item_setting_sound.set_act(() => this.Change_status_sound(item_setting_sound));
 
@@ -774,8 +760,8 @@ namespace Carrot
             {
                 this.item_setting_ads = box_setting.create_item("remove_ads");
                 this.item_setting_ads.set_icon(this.sp_icon_removeads);
-                this.item_setting_ads.set_title(PlayerPrefs.GetString("remove_ads", "Remove Ads"));
-                this.item_setting_ads.set_tip(PlayerPrefs.GetString("remove_ads_tip", "Buy and remove advertising function, No ads in the app"));
+                this.item_setting_ads.set_title(lang.Val("remove_ads", "Remove Ads"));
+                this.item_setting_ads.set_tip(lang.Val("remove_ads_tip", "Buy and remove advertising function, No ads in the app"));
                 this.item_setting_ads.set_lang_data("remove_ads", "remove_ads_tip");
                 this.item_setting_ads.set_act(this.buy_inapp_removeads);
 
@@ -790,8 +776,8 @@ namespace Carrot
                 {
                     Carrot_Box_Item item_setting_bk_music = box_setting.create_item("list_bk_music");
                     item_setting_bk_music.set_icon(this.sp_icon_bk_music);
-                    item_setting_bk_music.set_title(PlayerPrefs.GetString("list_bk_music", "Soundtrack"));
-                    item_setting_bk_music.set_tip(PlayerPrefs.GetString("list_bk_music_tip", "Select and change background music"));
+                    item_setting_bk_music.set_title(lang.Val("list_bk_music", "Soundtrack"));
+                    item_setting_bk_music.set_tip(lang.Val("list_bk_music_tip", "Select and change background music"));
                     item_setting_bk_music.set_lang_data("list_bk_music", "list_bk_music_tip");
                     item_setting_bk_music.set_act(() => this.game.show_list_music_game(item_setting_bk_music));
 
@@ -836,8 +822,8 @@ namespace Carrot
                     item_setting_vibrate.set_icon(this.sp_icon_vibrate_on);
                 else
                     item_setting_vibrate.set_icon(this.sp_icon_vibrate_off);
-                item_setting_vibrate.set_title(PlayerPrefs.GetString("vibrate_app", "Vibrate"));
-                item_setting_vibrate.set_tip(PlayerPrefs.GetString("vibrate_app_tip", "Turn vibration on or off"));
+                item_setting_vibrate.set_title(lang.Val("vibrate_app", "Vibrate"));
+                item_setting_vibrate.set_tip(lang.Val("vibrate_app_tip", "Turn vibration on or off"));
                 item_setting_vibrate.set_lang_data("vibrate_app", "vibrate_app_tip");
                 item_setting_vibrate.set_act(() => this.change_status_vibrate(item_setting_vibrate));
             }
@@ -853,29 +839,29 @@ namespace Carrot
 
             Carrot_Box_Item item_setting_rate = box_setting.create_item("rate");
             item_setting_rate.set_icon(this.sp_icon_rate);
-            item_setting_rate.set_title(PlayerPrefs.GetString("rate", "Evaluate"));
-            item_setting_rate.set_tip(PlayerPrefs.GetString("rate_tip", "Please take a moment of your time to rate this app."));
+            item_setting_rate.set_title(lang.Val("rate", "Evaluate"));
+            item_setting_rate.set_tip(lang.Val("rate_tip", "Please take a moment of your time to rate this app."));
             item_setting_rate.set_lang_data("rate", "rate_tip");
             item_setting_rate.set_act(this.show_rate);
 
             Carrot_Box_Item item_setting_share = box_setting.create_item("share");
             item_setting_share.set_icon(this.sp_icon_share);
-            item_setting_share.set_title(PlayerPrefs.GetString("share", "Share"));
-            item_setting_share.set_tip(PlayerPrefs.GetString("share_tip", "Choose the platform below to share this great app with your friends or others"));
+            item_setting_share.set_title(lang.Val("share", "Share"));
+            item_setting_share.set_tip(lang.Val("share_tip", "Choose the platform below to share this great app with your friends or others"));
             item_setting_share.set_lang_data("share", "share_tip");
             item_setting_share.set_act(this.show_share);
 
             Carrot_Box_Item item_setting_other_app = box_setting.create_item();
             item_setting_other_app.set_icon(this.sp_icon_more_app);
-            item_setting_other_app.set_title(PlayerPrefs.GetString("list_app_carrot", "Applications from the developer"));
-            item_setting_other_app.set_tip(PlayerPrefs.GetString("exit_app_other", "Perhaps you will love our other apps"));
+            item_setting_other_app.set_title(lang.Val("list_app_carrot", "Applications from the developer"));
+            item_setting_other_app.set_tip(lang.Val("exit_app_other", "Perhaps you will love our other apps"));
             item_setting_other_app.set_lang_data("list_app_carrot", "exit_app_other");
             item_setting_other_app.set_act(this.show_list_carrot_app);
 
             Carrot_Box_Item item_setting_restore = box_setting.create_item("in_app_restore");
             item_setting_restore.set_icon(this.sp_icon_restore);
-            item_setting_restore.set_title(PlayerPrefs.GetString("in_app_restore", "Restore purchased items"));
-            item_setting_restore.set_tip(PlayerPrefs.GetString("in_app_restore_tip", "Restore purchased services and functions"));
+            item_setting_restore.set_title(lang.Val("in_app_restore", "Restore purchased items"));
+            item_setting_restore.set_tip(lang.Val("in_app_restore_tip", "Restore purchased services and functions"));
             item_setting_restore.set_lang_data("in_app_restore", "in_app_restore_tip");
             item_setting_restore.set_act(this.shop.restore_product);
 
@@ -901,8 +887,8 @@ namespace Carrot
 
             Carrot_Box_Item item_setting_del_data = box_setting.create_item();
             item_setting_del_data.set_icon(this.sp_icon_del_data);
-            item_setting_del_data.set_title(PlayerPrefs.GetString("delete_all_data", "Clear all application data"));
-            item_setting_del_data.set_tip(PlayerPrefs.GetString("delete_all_data_tip", "Erase all data and reinstall the app"));
+            item_setting_del_data.set_title(lang.Val("delete_all_data", "Clear all application data"));
+            item_setting_del_data.set_tip(lang.Val("delete_all_data_tip", "Erase all data and reinstall the app"));
             item_setting_del_data.set_lang_data("delete_all_data", "delete_all_data_tip");
             item_setting_del_data.set_act(this.delete_all_data);
             return box_setting;
@@ -980,7 +966,7 @@ namespace Carrot
             this.item_setting_lang.set_tip(this.lang.get_key_lang());
             this.item_setting_lang.set_icon_white(this.lang.get_sp_lang_cur());
             if (this.item_setting_lang != null) this.item_setting_lang.set_change_status(true);
-            this.box_setting.set_title(PlayerPrefs.GetString("setting", "Setting"));
+            this.box_setting.set_title(lang.Val("setting", "Setting"));
             foreach (Transform tr in this.box_setting.area_all_item)
             {
                 if (tr.gameObject.GetComponent<Carrot_Box_Item>()) tr.gameObject.GetComponent<Carrot_Box_Item>().load_lang_data();
@@ -1098,7 +1084,7 @@ namespace Carrot
         {
             if (item_setting_ads) Destroy(item_setting_ads.gameObject);
             this.ads.remove_ads();
-            this.show_msg(PlayerPrefs.GetString("shop", "Shop"), PlayerPrefs.GetString("ads_remove_success", "Ad removal successful!"), Msg_Icon.Success);
+            this.show_msg(lang.Val("shop", "Shop"), lang.Val("ads_remove_success", "Ad removal successful!"), Msg_Icon.Success);
         }
 
         public void play_sound_click()
