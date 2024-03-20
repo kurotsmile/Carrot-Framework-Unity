@@ -38,7 +38,7 @@ namespace Carrot
 
         private void after_select_lang(string s_data)
         {
-            this.GetComponent<Carrot_lang_show>().load_lang_emp(this.carrot.lang.get_sp_lang_cur());
+            this.GetComponent<Carrot_lang_show>().load_lang_emp(this.carrot.lang.get_sp_lang_cur(),carrot.lang);
         }
 
         public void btn_show_lost_password()

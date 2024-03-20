@@ -282,7 +282,7 @@ namespace Carrot
             this.cur_window_user_login = window_login.GetComponent<Carrot_Window_User_Login>();
             this.cur_window_user_login.On_load(this.carrot);
             this.cur_window_user_login.act_after_login_success = act_login_success;
-            window_login.GetComponent<Carrot_lang_show>().load_lang_emp(this.carrot.lang.get_sp_lang_cur());
+            window_login.GetComponent<Carrot_lang_show>().load_lang_emp(this.carrot.lang.get_sp_lang_cur(),carrot.lang);
             this.cur_window_user_login.Check_mode_login();
             if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.cur_window_user_login.UI.get_list_btn());
         }
