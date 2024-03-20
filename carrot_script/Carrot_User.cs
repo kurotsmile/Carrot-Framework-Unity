@@ -757,7 +757,10 @@ namespace Carrot
         public string get_data_user_login(string key_data)
         {
             IDictionary data_user = (IDictionary)Json.Deserialize(this.s_data_user_login);
-            return data_user[key_data].ToString();
+            if (data_user[key_data] != null)
+                return data_user[key_data].ToString();
+            else
+                return "";
         }
 
         public string get_lang_user_login()
