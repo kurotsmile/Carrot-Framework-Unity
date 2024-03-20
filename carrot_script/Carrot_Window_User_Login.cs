@@ -28,7 +28,7 @@ namespace Carrot
 
         public void btn_show_list_lang()
         {
-            this.carrot.lang.show_list_lang(this.after_select_lang);
+            this.carrot.lang.Show_list_lang(this.after_select_lang);
         }
 
         public void btn_show_register()
@@ -38,7 +38,7 @@ namespace Carrot
 
         private void after_select_lang(string s_data)
         {
-            this.GetComponent<Carrot_lang_show>().load_lang_emp(this.carrot.lang.get_sp_lang_cur(),carrot.lang);
+            this.GetComponent<Carrot_lang_show>().load_lang_emp(this.carrot.lang.Get_sp_lang_cur(),carrot.lang);
         }
 
         public void btn_show_lost_password()
@@ -49,7 +49,7 @@ namespace Carrot
         public void btn_user_login()
         {
             this.carrot.show_loading();
-            StructuredQuery q = new("user-" + this.carrot.lang.get_key_lang());
+            StructuredQuery q = new("user-" + this.carrot.lang.Get_key_lang());
             q.Add_where("password", Query_OP.EQUAL, inp_login_password.text);
             q.Set_limit(1);
             if (this.is_model_login_email)

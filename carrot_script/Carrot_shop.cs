@@ -164,7 +164,7 @@ namespace Carrot
             this.order_id_pay = "order" + carrot.generateID();
 
             string user_id = carrot.user.get_id_user_login();
-            string user_lang = carrot.lang.get_key_lang();
+            string user_lang = carrot.lang.Get_key_lang();
             string user_name = "";
            
             if (user_id != "")

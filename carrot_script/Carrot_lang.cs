@@ -60,7 +60,7 @@ namespace Carrot
             if (this.carrot.emp_show_lang != null) for (int i = 0; i < this.carrot.emp_show_lang.List_img_change_icon_lang.Length; i++) this.carrot.emp_show_lang.List_img_change_icon_lang[i].sprite = sp_lang_icon;
         }
 
-        public Sprite get_sp_lang_cur()
+        public Sprite Get_sp_lang_cur()
         {
             Sprite sp_lang_icon = this.carrot.get_tool().get_sprite_to_playerPrefs("icon_" + this.s_lang_key);
             if (sp_lang_icon == null)
@@ -118,7 +118,7 @@ namespace Carrot
             this.carrot.show_msg(s_error);
         }
 
-        public void show_list_lang(UnityAction<string> fnc_after_sel_lang)
+        public void Show_list_lang(UnityAction<string> fnc_after_sel_lang)
         {
             this.show_list_lang();
             this.act_after_selecting_lang = fnc_after_sel_lang;
@@ -184,7 +184,7 @@ namespace Carrot
             }
         }
 
-        public string get_key_lang()
+        public string Get_key_lang()
         {
             return this.s_lang_key;
         }

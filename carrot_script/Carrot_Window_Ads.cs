@@ -30,8 +30,8 @@ namespace Carrot
             this.is_show_ads = true;
             this.slider_timer_ads.value = 0;
             this.button_close_ads.SetActive(false);
-            this.txt_ads_product_title.text = data_ads["name_"+this.carrot.lang.get_key_lang()].ToString();
-            this.txt_ads_product_tip.text = data_ads["describe_" +this.carrot.lang.get_key_lang()].ToString();
+            this.txt_ads_product_title.text = data_ads["name_"+this.carrot.lang.Get_key_lang()].ToString();
+            this.txt_ads_product_tip.text = data_ads["describe_" +this.carrot.lang.Get_key_lang()].ToString();
             this.url_ads_download = data_ads[this.carrot.store_public.ToString().ToLower()].ToString();
             Sprite icon_app = this.carrot.get_tool().get_sprite_to_playerPrefs(id_app);
             if (icon_app != null)

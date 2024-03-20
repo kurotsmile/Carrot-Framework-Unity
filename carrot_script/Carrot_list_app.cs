@@ -38,7 +38,7 @@ namespace Carrot
         private StructuredQuery Get_Query()
         {
             StructuredQuery q = new("app");
-            q.Add_select("name_" + this.carrot.lang.get_key_lang());
+            q.Add_select("name_" + this.carrot.lang.Get_key_lang());
             q.Add_select("name_en");
             q.Add_select("uptodown");
             q.Add_select("icon");
@@ -193,7 +193,7 @@ namespace Carrot
 
         private void add_item_to_list_box(IDictionary data_item)
         {
-            string s_key_lang = this.carrot.lang.get_key_lang();
+            string s_key_lang = this.carrot.lang.Get_key_lang();
             string s_key_store_public = this.carrot.store_public.ToString().ToLower();
             string s_id_app = data_item["id"].ToString();
             Carrot_Box_Item item_app = box_list_app.create_item(s_id_app);
