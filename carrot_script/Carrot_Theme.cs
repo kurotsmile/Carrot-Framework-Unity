@@ -3,12 +3,14 @@ using UnityEngine.Events;
 
 namespace Carrot
 {
+    public enum Carrot_Theme_List_Type {list,grid,mix}
+
     public class Carrot_Theme : MonoBehaviour
     {
         private Carrot carrot;
         private Carrot_Box box_list;
         private Color32 color_ads_rewarded;
-        private UnityAction<Color32> act_box_list_color_done=null;
+        private UnityAction<Color32> Act_done=null;
         private bool is_ads_rewarded = false;
 
         [Header("Color Mix")]
@@ -17,9 +19,10 @@ namespace Carrot
         private Carrot_Box_Item item_color_g;
         private Carrot_Box_Item item_color_b;
 
-        private Color32 color_mix;
+        private Color color_mix;
+        private Carrot_Theme_List_Type type;
 
-        public void on_load(Carrot cr)
+        public void On_load(Carrot cr)
         {
             this.carrot = cr;
         }
@@ -29,26 +32,38 @@ namespace Carrot
             this.box_list = this.carrot.Create_Box("Theme");
         }
 
-        public Carrot_Box show_list_color(UnityAction<Color32> act_done)
+        public Carrot_Box Show_list_color(UnityAction<Color32> act_done,Carrot_Theme_List_Type type=Carrot_Theme_List_Type.list,string s_color_default="#ffffff")
         {
-            this.act_box_list_color_done = act_done;
+            this.type = type;
+            if (this.type == Carrot_Theme_List_Type.list)
+                return Show_box_list_item_color(act_done);
+            else if (this.type == Carrot_Theme_List_Type.grid)
+                return Show_box_grid_item_color(act_done);
+            else if(this.type==Carrot_Theme_List_Type.mix)
+                return Show_mix_color(act_done, s_color_default);
+            else
+                return Show_mix_color(act_done, s_color_default);
+        }
+
+        public Carrot_Box Show_box_list_item_color(UnityAction<Color32> act_done)
+        {
+            this.Act_done = act_done;
             if (this.box_list != null) this.box_list.close();
             box_list = this.carrot.Create_Box("list_color");
             box_list.set_item_size(new Vector2(50f, 50f));
             box_list.set_icon(this.carrot.sp_icon_theme_color);
             box_list.set_title(this.carrot.lang.Val("setting_color", "Color Select"));
 
-            Carrot_Box_Btn_Item btn_get_new_color = box_list.create_btn_menu_header(this.carrot.sp_icon_restore);
-            btn_get_new_color.set_act(() => this.show_list_color(act_done));
+            this.Header_menu_box(this.box_list);
 
             for (int i = 1; i <= 25; i++)
             {
-                Color32 color_mix = new Color32((byte)Random.Range(5, 255), (byte)Random.Range(5, 255), (byte)Random.Range(5, 255), 255);
+                Color32 color_mix = new((byte)Random.Range(5, 255), (byte)Random.Range(5, 255), (byte)Random.Range(5, 255), 255);
                 var c = color_mix;
                 Carrot_Box_Item item_color = box_list.create_item("item_color_" + i);
                 item_color.set_icon(this.carrot.sp_icon_theme_color);
                 item_color.set_title("Color " + i);
-                item_color.set_tip("R:" + color_mix.r + " G:" + color_mix.g + " B:" + color_mix.b);
+                item_color.set_tip(color_mix.ToString()+" - #"+ColorUtility.ToHtmlStringRGBA(color_mix));
                 item_color.img_icon.color = color_mix;
 
                 if (this.carrot.ads.get_status_ads())
@@ -58,45 +73,81 @@ namespace Carrot
                         Carrot_Box_Btn_Item btn_watch_ads = item_color.create_item();
                         btn_watch_ads.set_color(this.carrot.color_highlight);
                         btn_watch_ads.set_icon(this.carrot.icon_carrot_ads);
-                        btn_watch_ads.set_act(() => this.act_watch_ads_get_color(color_mix));
-                        item_color.set_act(() => this.act_watch_ads_get_color(color_mix));
+                        btn_watch_ads.set_act(() => this.Act_watch_ads_get_color(color_mix));
+                        item_color.set_act(() => this.Act_watch_ads_get_color(color_mix));
                     }
                     else
                     {
-                        item_color.set_act(() => act_select_color_item(c));
+                        item_color.set_act(() => Act_select_color_item(c));
                     }
                 }
                 else
                 {
-                    item_color.set_act(() => act_select_color_item(c));
+                    item_color.set_act(() => Act_select_color_item(c));
                 }
             }
             return box_list;
         }
 
-        public void act_select_color_item(Color32 color_new)
+        public Carrot_Box Show_box_grid_item_color(UnityAction<Color32> act_done)
         {
+            this.Act_done = act_done;
             if (this.box_list != null) this.box_list.close();
-            if (this.act_box_list_color_done != null) this.act_box_list_color_done(color_new);
+            box_list = this.carrot.show_grid();
+            box_list.set_item_size(new Vector2(60f, 60f));
+            box_list.set_icon(this.carrot.sp_icon_theme_color);
+            box_list.set_title(this.carrot.lang.Val("setting_color", "Color Select"));
+            box_list.Set_grid_col(7);
+             
+            this.Header_menu_box(box_list);
+
+            int step = 35;
+            int max_val = 220;
+
+            for (int i = max_val; i > 0; i -= step) Create_item_grid_color(new Color32(255, (byte)i, (byte)i, 255));
+            for (int i = max_val; i > 0; i -= step) Create_item_grid_color(new Color32((byte)i,255, (byte)i, 255));
+            for (int i = max_val; i > 0; i -= step) Create_item_grid_color(new Color32((byte)i, (byte)i,255, 255));
+            for (int i = max_val; i > 0; i -= step) Create_item_grid_color(new Color32(255,255, (byte)i, 255));
+            for (int i = max_val; i > 0; i -= step) Create_item_grid_color(new Color32((byte)i, 255,255, 255));
+            for (int i = max_val; i > 0; i -= step) Create_item_grid_color(new Color32(255, (byte)i, 255, 255));
+            for (int i = max_val; i > 0; i -= step) Create_item_grid_color(new Color32((byte)i, (byte)i, (byte)i, 255));
+
+            return box_list;
         }
 
-        public void act_watch_ads_get_color(Color32 color_new)
+        private void Create_item_grid_color(Color32 color_mix)
+        {
+            Carrot_Box_Item item_color = box_list.create_item("item_color");
+            item_color.set_icon(null);
+            item_color.img_icon.color = color_mix;
+            item_color.set_act(() => this.Act_select_color_item(color_mix));
+        }
+
+        private void Act_select_color_item(Color32 color_new)
+        {
+            if (this.box_list != null) this.box_list.close();
+            this.Act_done?.Invoke(color_new);
+        }
+
+        private void Act_watch_ads_get_color(Color32 color_new)
         {
             this.carrot.ads.show_ads_Rewarded();
             this.is_ads_rewarded = true;
             this.color_ads_rewarded = color_new;
         }
 
-        public void show_mix_color(Color32 color_show,UnityAction<Color32> act_done)
+        public Carrot_Box Show_mix_color(UnityAction<Color32> act_done,string s_color_default)
         {
-            this.act_box_list_color_done = act_done;
-            this.color_mix = color_show;
-            string s_color_mix = ColorUtility.ToHtmlStringRGBA(color_show);
+            this.Act_done = act_done;
+            string s_color_mix = s_color_default;
+            ColorUtility.TryParseHtmlString(s_color_mix,out this.color_mix);
             if (this.box_list != null) this.box_list.close();
             box_list = this.carrot.Create_Box("list_color");
             box_list.set_item_size(new Vector2(50f, 50f));
             box_list.set_icon(this.carrot.sp_icon_picker_color);
             box_list.set_title(this.carrot.lang.Val("setting_color", "Color Select"));
+
+            this.Header_menu_box(box_list);
 
             this.item_color_preview = this.box_list.create_item("preview");
             item_color_preview.set_icon(this.carrot.sp_icon_theme_color);
@@ -104,7 +155,7 @@ namespace Carrot
             item_color_preview.set_tip("Color preview");
             item_color_preview.set_type(Box_Item_Type.box_value_txt);
             item_color_preview.set_val("#" + s_color_mix);
-            item_color_preview.txt_val.color = this.get_color_by_string(s_color_mix);
+            item_color_preview.txt_val.color = this.Get_color_by_string(s_color_mix);
 
             this.item_color_r = this.box_list.create_item("R");
             this.item_color_r.set_icon(this.carrot.sp_icon_picker_color);
@@ -114,8 +165,8 @@ namespace Carrot
             this.item_color_r.slider_val.wholeNumbers = true;
             this.item_color_r.slider_val.maxValue = 255;
             this.item_color_r.slider_val.minValue = 0;
-            this.item_color_r.slider_val.value = color_show.r;
-            this.item_color_r.slider_val.onValueChanged.AddListener(change_val_color_mix);
+            this.item_color_r.slider_val.value = color_mix.r;
+            this.item_color_r.slider_val.onValueChanged.AddListener(Change_val_color_mix);
             item_color_r.set_tip("Red attribute");
 
             this.item_color_g = this.box_list.create_item("G");
@@ -126,8 +177,8 @@ namespace Carrot
             this.item_color_g.slider_val.wholeNumbers = true;
             this.item_color_g.slider_val.maxValue = 255;
             this.item_color_g.slider_val.minValue = 0;
-            this.item_color_g.slider_val.value = color_show.g;
-            this.item_color_g.slider_val.onValueChanged.AddListener(change_val_color_mix);
+            this.item_color_g.slider_val.value = color_mix.g;
+            this.item_color_g.slider_val.onValueChanged.AddListener(Change_val_color_mix);
             this.item_color_g.set_tip("Green attribute");
 
             this.item_color_b = this.box_list.create_item("B");
@@ -138,8 +189,8 @@ namespace Carrot
             this.item_color_b.slider_val.wholeNumbers = true;
             this.item_color_b.slider_val.maxValue = 255;
             this.item_color_b.slider_val.minValue = 0;
-            this.item_color_b.slider_val.value = color_show.b;
-            this.item_color_b.slider_val.onValueChanged.AddListener(change_val_color_mix);
+            this.item_color_b.slider_val.value = color_mix.b;
+            this.item_color_b.slider_val.onValueChanged.AddListener(Change_val_color_mix);
             this.item_color_b.set_tip("Blue attribute");
 
             Carrot_Box_Btn_Panel obj_panel_btn = this.box_list.create_panel_btn();
@@ -148,7 +199,7 @@ namespace Carrot
             Carrot_Button_Item obj_btn_done = obj_panel_btn.create_btn("btn_done");
             obj_btn_done.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
             obj_btn_done.set_bk_color(this.carrot.color_highlight);
-            obj_btn_done.set_act_click(act_done_color_mix);
+            obj_btn_done.set_act_click(Act_done_color_mix);
             obj_btn_done.set_label_color(Color.white);
             obj_btn_done.set_label(s_done_label_txt);
             obj_btn_done.set_icon(this.carrot.icon_carrot_done);
@@ -161,9 +212,10 @@ namespace Carrot
             obj_btn_cancel.set_label_color(Color.white);
             obj_btn_cancel.set_label(s_cancel_label_txt);
             obj_btn_cancel.set_icon(this.carrot.icon_carrot_cancel);
+            return box_list;
         }
 
-        private void change_val_color_mix(float f_data)
+        private void Change_val_color_mix(float f_data)
         {
             byte r = byte.Parse(this.item_color_r.get_val());
             byte g = byte.Parse(this.item_color_g.get_val());
@@ -174,19 +226,19 @@ namespace Carrot
             this.item_color_preview.txt_val.color = this.color_mix;
         }
 
-        private void act_done_color_mix()
+        private void Act_done_color_mix()
         {
-            if (this.act_box_list_color_done != null) this.act_box_list_color_done(this.color_mix);
+            this.Act_done?.Invoke(this.color_mix);
             if (this.box_list != null) this.box_list.close();
         }
 
         private void act_close_box()
         {
-            this.act_box_list_color_done = null;
+            this.Act_done = null;
             if (this.box_list != null) this.box_list.close();
         }
 
-        public Color32 get_color_by_string(string s_color)
+        public Color32 Get_color_by_string(string s_color)
         {
             Color newCol;
             if (!s_color.Contains("#")) s_color = "#" + s_color;
@@ -196,13 +248,31 @@ namespace Carrot
                 return this.carrot.color_highlight;
         }
 
-        public void onRewardedSuccess()
+        public void OnRewardedSuccess()
         {
             if (this.is_ads_rewarded)
             {
-                if (this.act_box_list_color_done != null) this.act_box_list_color_done(this.color_ads_rewarded);
+                this.Act_done?.Invoke(this.color_ads_rewarded);
                 this.is_ads_rewarded = false;
             }
+        }
+
+        private void Header_menu_box(Carrot_Box box)
+        {
+            Carrot_Box_Btn_Item btn_get_new_color = box_list.create_btn_menu_header(this.carrot.sp_icon_restore);
+            btn_get_new_color.set_act(() => this.Show_list_color(this.Act_done,this.type, "#FFFFFF"));
+
+            Carrot_Box_Btn_Item btn_menu_list = box.create_btn_menu_header(this.carrot.sp_icon_theme_color);
+            if (this.type == Carrot_Theme_List_Type.list) btn_menu_list.set_icon_color(carrot.color_highlight);
+            btn_menu_list.set_act(() => this.Show_list_color(this.Act_done, Carrot_Theme_List_Type.list, "#FFFFFF"));
+
+            Carrot_Box_Btn_Item btn_menu_mixer = box.create_btn_menu_header(this.carrot.sp_icon_mixer_color);
+            if (this.type == Carrot_Theme_List_Type.mix) btn_menu_mixer.set_icon_color(carrot.color_highlight);
+            btn_menu_mixer.set_act(() => this.Show_list_color(this.Act_done,Carrot_Theme_List_Type.mix, "#FFFFFF"));
+
+            Carrot_Box_Btn_Item btn_menu_table = box.create_btn_menu_header(this.carrot.sp_icon_table_color);
+            if (this.type == Carrot_Theme_List_Type.grid) btn_menu_table.set_icon_color(carrot.color_highlight);
+            btn_menu_table.set_act(() => this.Show_list_color(this.Act_done, Carrot_Theme_List_Type.grid, "#FFFFFF"));
         }
     }
 }

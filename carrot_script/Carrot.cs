@@ -175,6 +175,8 @@ namespace Carrot
         public Sprite sp_icon_vibrate_off;
         public Sprite sp_icon_theme_color;
         public Sprite sp_icon_picker_color;
+        public Sprite sp_icon_mixer_color;
+        public Sprite sp_icon_table_color;
         public AudioSource sound_click;
         Carrot_Box box_setting = null;
         Carrot_Box_Item item_setting_lang = null;
@@ -201,10 +203,10 @@ namespace Carrot
             this.shop.onCarrotPaySuccess += this.carrot_by_success;
             this.shop.onCarrotRestoreSuccess += this.carrot_restore_success;
             this.ads.On_load(this);
-            this.theme.on_load(this);
+            this.theme.On_load(this);
 
             if (this.type_app == TypeApp.Game) this.ads.onRewardedSuccess += this.game.OnRewardedSuccess;
-            this.ads.onRewardedSuccess += this.theme.onRewardedSuccess;
+            this.ads.onRewardedSuccess += this.theme.OnRewardedSuccess;
 
             this.carrot_list_app = new Carrot_list_app(this);
             this.list_Window = new List<GameObject>();

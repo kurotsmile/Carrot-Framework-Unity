@@ -52,17 +52,17 @@ namespace Carrot
             if (month_cur == 2) this.obj_hat_valentine.SetActive(true);
             if (month_cur == 10) this.obj_hat_halloween.SetActive(true);
             if (month_cur == 11|| month_cur == 12) this.obj_hat_noel.SetActive(true);
-            this.check_type_box();
+            this.Check_type_box();
             this.UI.set_theme(this.carrot.color_highlight);
         }
 
         public void set_type(Carrot_Box_Type type)
         {
             this.box_type = type;
-            this.check_type_box();
+            this.Check_type_box();
         }
 
-        private void check_type_box()
+        private void Check_type_box()
         {
             this.obj_list.SetActive(false);
             this.obj_grid.SetActive(false);
@@ -85,6 +85,12 @@ namespace Carrot
                 this.area_grid_contain.GetComponent<GridLayoutGroup>().cellSize= size_cell;
             else
                 foreach(Transform tr in this.area_all_item) tr.GetComponent<RectTransform>().sizeDelta = size_cell;
+        }
+
+        public void Set_grid_col(int col)
+        {
+            this.area_grid_contain.GetComponent<GridLayoutGroup>().constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            this.area_grid_contain.GetComponent<GridLayoutGroup>().constraintCount = col;
         }
 
         public void close()
