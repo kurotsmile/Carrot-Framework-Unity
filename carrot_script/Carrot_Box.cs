@@ -36,6 +36,7 @@ namespace Carrot
 
         [Header("Button Header")]
         public Transform area_btn_header;
+        public Transform area_btn_header_right;
         public GameObject box_btn_item_prefab;
 
 
@@ -149,14 +150,17 @@ namespace Carrot
             return item_group;
         }
 
-        public GameObject add_btn_header(GameObject item_obj)
+        private Carrot_Box_Btn_Item add_btn_header(GameObject item_obj,bool is_head_left=true)
         {
             GameObject item_btn_header = Instantiate(item_obj);
-            item_btn_header.transform.SetParent(this.area_btn_header);
+            if(is_head_left)
+                item_btn_header.transform.SetParent(this.area_btn_header);
+            else
+                item_btn_header.transform.SetParent(this.area_btn_header_right);
             item_btn_header.transform.localPosition = new Vector3(item_btn_header.transform.position.x, item_btn_header.transform.position.y, 0f);
             item_btn_header.transform.localScale = new Vector3(1f, 1f, 1f);
             item_btn_header.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            return item_btn_header;
+            return item_btn_header.GetComponent<Carrot_Box_Btn_Item>();
         }
 
         public Carrot_Box_Item create_item(string s_name="Item_Box")
@@ -220,9 +224,9 @@ namespace Carrot
             return this.act_close_change_parameter;
         }
 
-        public Carrot_Box_Btn_Item create_btn_menu_header(Sprite sp_icon)
+        public Carrot_Box_Btn_Item create_btn_menu_header(Sprite sp_icon,bool is_left=true)
         {
-            Carrot_Box_Btn_Item btn_header_item = this.add_btn_header(this.box_btn_item_prefab).GetComponent<Carrot_Box_Btn_Item>();
+            Carrot_Box_Btn_Item btn_header_item = this.add_btn_header(this.box_btn_item_prefab,is_left);
             btn_header_item.icon.sprite = sp_icon;
             return btn_header_item;
         }

@@ -259,7 +259,7 @@ namespace Carrot
 
         private void Header_menu_box(Carrot_Box box)
         {
-            Carrot_Box_Btn_Item btn_get_new_color = box_list.create_btn_menu_header(this.carrot.sp_icon_restore);
+            Carrot_Box_Btn_Item btn_get_new_color = box_list.create_btn_menu_header(this.carrot.sp_icon_restore,false);
             btn_get_new_color.set_act(() => this.Show_list_color(this.Act_done,this.type, "#FFFFFF"));
 
             Carrot_Box_Btn_Item btn_menu_list = box.create_btn_menu_header(this.carrot.sp_icon_theme_color);

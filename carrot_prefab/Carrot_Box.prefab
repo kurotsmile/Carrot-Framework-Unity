@@ -627,8 +627,8 @@ RectTransform:
   m_Children:
   - {fileID: 7730541928961648943}
   - {fileID: 29666303626759609}
-  - {fileID: 1967595260208735987}
   - {fileID: 8098016979444255622}
+  - {fileID: 8373242548593779649}
   - {fileID: 4305896813873008694}
   - {fileID: 3965612347649502010}
   - {fileID: 4226054608503756089}
@@ -878,6 +878,78 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &3661155570295595608
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8373242548593779649}
+  - component: {fileID: 4996550291782701396}
+  - component: {fileID: 1554493052254339625}
+  m_Layer: 5
+  m_Name: Panel_btn_extension_right
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8373242548593779649
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3661155570295595608}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1967595260208735987}
+  m_Father: {fileID: 8798284170849240371}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 30.500244}
+  m_SizeDelta: {x: 188.79999, y: 60.5}
+  m_Pivot: {x: 1, y: 1}
+--- !u!222 &4996550291782701396
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3661155570295595608}
+  m_CullTransparentMesh: 1
+--- !u!114 &1554493052254339625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3661155570295595608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 2
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 1
 --- !u!1 &3820755875745087929
 GameObject:
   m_ObjectHideFlags: 0
@@ -1603,7 +1675,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3728049217788753983
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1687,17 +1759,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6184367825932733311}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2515156468514544679}
-  m_Father: {fileID: 8798284170849240371}
+  m_Father: {fileID: 8373242548593779649}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 30.500244}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &2208839225900702455
@@ -2100,6 +2172,7 @@ MonoBehaviour:
   obj_hat_valentine: {fileID: 5717670244509263652}
   img_scroll_handl: {fileID: 3557059028725928375}
   area_btn_header: {fileID: 8098016979444255622}
+  area_btn_header_right: {fileID: 8373242548593779649}
   box_btn_item_prefab: {fileID: 5559646003889477871, guid: 542e39508b3c9ad4496476cd32e85384, type: 3}
 --- !u!114 &-4678870410672575355
 MonoBehaviour:
@@ -2138,7 +2211,7 @@ GameObject:
   - component: {fileID: 4824472852104201835}
   - component: {fileID: 3973952737631023967}
   m_Layer: 5
-  m_Name: Panel_box_list_btn
+  m_Name: Panel_btn_extension_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
