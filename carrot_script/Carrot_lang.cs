@@ -25,7 +25,7 @@ namespace Carrot
         {
             this.carrot = carrot;
             this.data_lang_offline = (IDictionary)Json.Deserialize("{}");
-            if(this.carrot.is_offline()) this.s_data_json_list_lang_offline = PlayerPrefs.GetString("s_data_json_list_lang_offline");
+            if (this.carrot.is_offline()) this.s_data_json_list_lang_offline = PlayerPrefs.GetString("s_data_json_list_lang_offline");
             this.s_lang_key = PlayerPrefs.GetString("lang", "en");
 
             this.Load_val_data_lang();
@@ -35,14 +35,14 @@ namespace Carrot
 
         private void Load_val_data_lang()
         {
-            string s_data_lang = PlayerPrefs.GetString("data_lang_value_" + this.s_lang_key,"");
+            string s_data_lang = PlayerPrefs.GetString("data_lang_value_" + this.s_lang_key, "");
             if (s_data_lang != "")
             {
                 Fire_Document fc = new(s_data_lang);
                 this.data_lang_value = fc.Get_IDictionary();
             }
 
-            if(this.data_lang_value!= null)
+            if (this.data_lang_value != null)
             {
                 string s_data_lang_customer = PlayerPrefs.GetString("data_lang_customer_value_" + this.s_lang_key, "");
                 if (s_data_lang_customer != "")
@@ -60,7 +60,7 @@ namespace Carrot
             if (this.carrot.emp_show_lang != null) for (int i = 0; i < this.carrot.emp_show_lang.List_img_change_icon_lang.Length; i++) this.carrot.emp_show_lang.List_img_change_icon_lang[i].sprite = sp_lang_icon;
         }
 
-        public Sprite get_sp_lang_cur()
+        public Sprite Get_sp_lang_cur()
         {
             Sprite sp_lang_icon = this.carrot.get_tool().get_sprite_to_playerPrefs("icon_" + this.s_lang_key);
             if (sp_lang_icon == null)
@@ -75,7 +75,7 @@ namespace Carrot
             this.carrot.play_sound_click();
             this.act_after_selecting_lang = null;
 
-            if (this.s_data_json_list_lang_offline== "")
+            if (this.s_data_json_list_lang_offline == "")
             {
                 StructuredQuery q = new("lang");
                 this.carrot.server.Get_doc(q.ToJson(), Get_doc_done, Get_doc_fail);
@@ -83,7 +83,7 @@ namespace Carrot
             else
             {
                 this.Load_list_lang_by_data(this.s_data_json_list_lang_offline);
-            }     
+            }
         }
 
         private void Get_doc_done(string s_data)
@@ -118,7 +118,7 @@ namespace Carrot
             this.carrot.show_msg(s_error);
         }
 
-        public void show_list_lang(UnityAction<string> fnc_after_sel_lang)
+        public void Show_list_lang(UnityAction<string> fnc_after_sel_lang)
         {
             this.show_list_lang();
             this.act_after_selecting_lang = fnc_after_sel_lang;
@@ -134,19 +134,14 @@ namespace Carrot
             if (data_lang["name"] != null) item_lang.set_title(data_lang["name"].ToString());
             item_lang.set_tip(s_key_lang);
 
-            if (this.carrot.os_app == OS.Web)
-            {
-                if (data_lang["icon"] != null) this.carrot.get_img(data_lang["icon"].ToString(), item_lang.img_icon);
-            }
+
+            string s_id_icon_lang = "icon_" + s_key_lang;
+            Sprite sp_icon_lang = this.carrot.get_tool().get_sprite_to_playerPrefs(s_id_icon_lang);
+            if (sp_icon_lang != null)
+                item_lang.set_icon_white(sp_icon_lang);
             else
-            {
-                string s_id_icon_lang = "icon_" + s_key_lang;
-                Sprite sp_icon_lang = this.carrot.get_tool().get_sprite_to_playerPrefs(s_id_icon_lang);
-                if (sp_icon_lang != null)
-                    item_lang.set_icon_white(sp_icon_lang);
-                else
-                    if (data_lang["icon"] != null) this.carrot.get_img_and_save_playerPrefs(data_lang["icon"].ToString(), item_lang.img_icon, s_id_icon_lang);
-            }
+                if (data_lang["icon"] != null) this.carrot.get_img_and_save_playerPrefs(data_lang["icon"].ToString(), item_lang.img_icon, s_id_icon_lang);
+
 
             if (s_key_lang == this.s_lang_key) item_lang.GetComponent<Image>().color = this.carrot.get_color_highlight_blur(50);
 
@@ -185,11 +180,11 @@ namespace Carrot
         {
             if (this.carrot.emp_show_lang != null)
             {
-                for (int i = 0; i < this.carrot.emp_show_lang.key.Length; i++) if(this.Val(this.carrot.emp_show_lang.key[i])!="") this.carrot.emp_show_lang.emp[i].text =this.Val(this.carrot.emp_show_lang.key[i]);
+                for (int i = 0; i < this.carrot.emp_show_lang.key.Length; i++) if (this.Val(this.carrot.emp_show_lang.key[i]) != "") this.carrot.emp_show_lang.emp[i].text = this.Val(this.carrot.emp_show_lang.key[i]);
             }
         }
 
-        public string get_key_lang()
+        public string Get_key_lang()
         {
             return this.s_lang_key;
         }
@@ -198,7 +193,7 @@ namespace Carrot
         {
             this.carrot.show_loading();
             this.s_key_lang_temp = s_key;
-            this.carrot.server.Get_doc_by_path("lang_app",this.s_key_lang_temp, Act_sel_lang_done, Act_load_and_sel_fail);
+            this.carrot.server.Get_doc_by_path("lang_app", this.s_key_lang_temp, Act_sel_lang_done, Act_load_and_sel_fail);
         }
 
         private void Act_sel_lang_done(string s_data)
@@ -227,7 +222,7 @@ namespace Carrot
 
         private void Select_lang_offline(string s_key)
         {
-            this.data_lang_value=(IDictionary)Json.Deserialize(this.data_lang_offline["lang_data_" + s_key].ToString());
+            this.data_lang_value = (IDictionary)Json.Deserialize(this.data_lang_offline["lang_data_" + s_key].ToString());
             if (this.carrot.collection_document_lang == "") this.Change_lang(s_key);
 
             if (this.carrot.collection_document_lang != "")
@@ -252,14 +247,15 @@ namespace Carrot
             PlayerPrefs.SetString("lang", this.s_lang_key);
         }
 
-        public string Val(string s_key,string s_default="")
+        public string Val(string s_key, string s_default = "")
         {
             if (data_lang_value != null)
             {
-                if (s_key=="")
+                if (s_key == "")
                 {
                     return "";
-                }else if (s_key == null)
+                }
+                else if (s_key == null)
                 {
                     return "";
                 }

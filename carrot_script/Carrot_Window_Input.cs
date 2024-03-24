@@ -27,7 +27,7 @@ namespace Carrot
             this.carrot = cr;
             this.UI.set_theme(cr.color_highlight);
             this.set_inp_type(Window_Input_value_Type.input_field);
-            this.GetComponent<Carrot_lang_show>().load_lang_emp();
+            this.GetComponent<Carrot_lang_show>().load_lang_emp(carrot.lang);
         }
 
         public void set_icon(Sprite sp_icon)

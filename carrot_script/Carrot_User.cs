@@ -282,7 +282,7 @@ namespace Carrot
             this.cur_window_user_login = window_login.GetComponent<Carrot_Window_User_Login>();
             this.cur_window_user_login.On_load(this.carrot);
             this.cur_window_user_login.act_after_login_success = act_login_success;
-            window_login.GetComponent<Carrot_lang_show>().load_lang_emp(this.carrot.lang.get_sp_lang_cur());
+            window_login.GetComponent<Carrot_lang_show>().load_lang_emp(this.carrot.lang.Get_sp_lang_cur(),carrot.lang);
             this.cur_window_user_login.Check_mode_login();
             if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.cur_window_user_login.UI.get_list_btn());
         }
@@ -341,7 +341,7 @@ namespace Carrot
         private void Act_done_lost_password()
         {
             this.carrot.show_loading();
-            StructuredQuery q = new("user-" + this.carrot.lang.get_key_lang());
+            StructuredQuery q = new("user-" + this.carrot.lang.Get_key_lang());
             if(this.item_email.get_val()!="")q.Add_where("email",Query_OP.EQUAL,this.item_email.get_val());
             if(this.item_phone.get_val()!="") q.Add_where("phone",Query_OP.EQUAL,this.item_phone.get_val());
             q.Set_limit(1);
@@ -682,7 +682,7 @@ namespace Carrot
                 phone = this.item_phone.get_val(),
                 address = this.user_address,
                 password = this.item_password.get_val(),
-                lang = this.carrot.lang.get_key_lang(),
+                lang = this.carrot.lang.Get_key_lang(),
                 status_share = this.item_status_share.get_val(),
                 avatar = this.item_avatar.get_val(),
                 date_create = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ")
@@ -696,7 +696,7 @@ namespace Carrot
                 user_id_new = this.s_id_user_login;
 
             this.data_user_temp= (IDictionary)Json.Deserialize(JsonConvert.SerializeObject(u));
-            this.carrot.server.Add_Document_To_Collection("user-" + this.carrot.lang.get_key_lang(), user_id_new, this.carrot.server.Convert_IDictionary_to_json(this.data_user_temp), Act_done_register_done, Act_done_register_fail);
+            this.carrot.server.Add_Document_To_Collection("user-" + this.carrot.lang.Get_key_lang(), user_id_new, this.carrot.server.Convert_IDictionary_to_json(this.data_user_temp), Act_done_register_done, Act_done_register_fail);
         }
 
         private void Act_done_register_done(string s_data)
@@ -757,7 +757,10 @@ namespace Carrot
         public string get_data_user_login(string key_data)
         {
             IDictionary data_user = (IDictionary)Json.Deserialize(this.s_data_user_login);
-            return data_user[key_data].ToString();
+            if (data_user[key_data] != null)
+                return data_user[key_data].ToString();
+            else
+                return "";
         }
 
         public string get_lang_user_login()

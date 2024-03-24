@@ -541,7 +541,7 @@ namespace Carrot
 
         public void show_list_lang(UnityAction<string> call_func)
         {
-            this.lang.show_list_lang(call_func);
+            this.lang.Show_list_lang(call_func);
         }
 
         public void buy_product(int index)
@@ -720,11 +720,11 @@ namespace Carrot
             if (this.setting_lang == Setting_Option.Show)
             {
                 this.item_setting_lang = box_setting.create_item("lang");
-                item_setting_lang.set_icon_white(this.lang.get_sp_lang_cur());
+                item_setting_lang.set_icon_white(this.lang.Get_sp_lang_cur());
                 item_setting_lang.set_title(lang.Val("sel_lang_app", "Change application language"));
-                item_setting_lang.set_tip(this.lang.get_key_lang());
+                item_setting_lang.set_tip(this.lang.Get_key_lang());
                 item_setting_lang.set_lang_data("sel_lang_app", "sel_lang_app_tip");
-                item_setting_lang.set_act(() => this.lang.show_list_lang(change_lang_in_setting));
+                item_setting_lang.set_act(() => this.lang.Show_list_lang(change_lang_in_setting));
             }
 
             if (this.setting_login == Setting_Option.Show)
@@ -960,8 +960,8 @@ namespace Carrot
 
         private void change_lang_in_setting(string s_data)
         {
-            this.item_setting_lang.set_tip(this.lang.get_key_lang());
-            this.item_setting_lang.set_icon_white(this.lang.get_sp_lang_cur());
+            this.item_setting_lang.set_tip(this.lang.Get_key_lang());
+            this.item_setting_lang.set_icon_white(this.lang.Get_sp_lang_cur());
             if (this.item_setting_lang != null) this.item_setting_lang.set_change_status(true);
             this.box_setting.set_title(lang.Val("setting", "Setting"));
             foreach (Transform tr in this.box_setting.area_all_item)

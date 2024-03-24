@@ -49,7 +49,7 @@ namespace Carrot
 
             if (this.carrot.auto_open_rate_store) this.app_rate();
             if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(UI.get_list_btn());
-            this.GetComponent<Carrot_lang_show>().load_lang_emp();
+            this.GetComponent<Carrot_lang_show>().load_lang_emp(carrot.lang);
             this.UI.set_theme(this.carrot.color_highlight);
         }
 
