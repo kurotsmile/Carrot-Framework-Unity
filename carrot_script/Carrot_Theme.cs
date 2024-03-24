@@ -20,11 +20,16 @@ namespace Carrot
         private Carrot_Box_Item item_color_b;
 
         private Color color_mix;
-        private Carrot_Theme_List_Type type;
+        private Carrot_Theme_List_Type type = Carrot_Theme_List_Type.list;
 
         public void On_load(Carrot cr)
         {
             this.carrot = cr;
+
+            string theme_box_color_type = PlayerPrefs.GetString("theme_box_color_type", "");
+            if (theme_box_color_type == "list") this.type = Carrot_Theme_List_Type.list;
+            if (theme_box_color_type == "grid") this.type = Carrot_Theme_List_Type.grid;
+            if (theme_box_color_type == "mix") this.type = Carrot_Theme_List_Type.mix;
         }
 
         public void show_list_theme()
@@ -32,9 +37,8 @@ namespace Carrot
             this.box_list = this.carrot.Create_Box("Theme");
         }
 
-        public Carrot_Box Show_list_color(UnityAction<Color32> act_done,Carrot_Theme_List_Type type=Carrot_Theme_List_Type.list,string s_color_default="#ffffff")
+        public Carrot_Box Show_box_change_color(UnityAction<Color32> act_done,string s_color_default="#ffffff")
         {
-            this.type = type;
             if (this.type == Carrot_Theme_List_Type.list)
                 return Show_box_list_item_color(act_done);
             else if (this.type == Carrot_Theme_List_Type.grid)
@@ -260,19 +264,26 @@ namespace Carrot
         private void Header_menu_box(Carrot_Box box)
         {
             Carrot_Box_Btn_Item btn_get_new_color = box_list.create_btn_menu_header(this.carrot.sp_icon_restore,false);
-            btn_get_new_color.set_act(() => this.Show_list_color(this.Act_done,this.type, "#FFFFFF"));
+            btn_get_new_color.set_act(() =>this.Show_box_change_color(this.Act_done));
 
             Carrot_Box_Btn_Item btn_menu_list = box.create_btn_menu_header(this.carrot.sp_icon_theme_color);
             if (this.type == Carrot_Theme_List_Type.list) btn_menu_list.set_icon_color(carrot.color_highlight);
-            btn_menu_list.set_act(() => this.Show_list_color(this.Act_done, Carrot_Theme_List_Type.list, "#FFFFFF"));
+            btn_menu_list.set_act(() => this.Act_head_btn_change_type_show( Carrot_Theme_List_Type.list));
 
             Carrot_Box_Btn_Item btn_menu_mixer = box.create_btn_menu_header(this.carrot.sp_icon_mixer_color);
             if (this.type == Carrot_Theme_List_Type.mix) btn_menu_mixer.set_icon_color(carrot.color_highlight);
-            btn_menu_mixer.set_act(() => this.Show_list_color(this.Act_done,Carrot_Theme_List_Type.mix, "#FFFFFF"));
+            btn_menu_mixer.set_act(() => this.Act_head_btn_change_type_show(Carrot_Theme_List_Type.mix));
 
             Carrot_Box_Btn_Item btn_menu_table = box.create_btn_menu_header(this.carrot.sp_icon_table_color);
             if (this.type == Carrot_Theme_List_Type.grid) btn_menu_table.set_icon_color(carrot.color_highlight);
-            btn_menu_table.set_act(() => this.Show_list_color(this.Act_done, Carrot_Theme_List_Type.grid, "#FFFFFF"));
+            btn_menu_table.set_act(() => this.Act_head_btn_change_type_show(Carrot_Theme_List_Type.grid));
+        }
+
+        private void Act_head_btn_change_type_show(Carrot_Theme_List_Type type)
+        {
+            this.type = type;
+            PlayerPrefs.SetString("theme_box_color_type", this.type.ToString());
+            this.Show_box_change_color(this.Act_done, "#FFFFFF");
         }
     }
 }
