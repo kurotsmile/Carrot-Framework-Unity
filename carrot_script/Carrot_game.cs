@@ -335,7 +335,7 @@ namespace Carrot
             {
                 PlayerPrefs.SetInt("is_buy_bk_" +this.id_buy_bk_music_temp, 1);
                 this.act_change_bk_music_game(this.id_buy_bk_music_temp,this.index_buy_music_link_temp);
-                this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("buy_bk_success", "Buy background music successfully!"), Msg_Icon.Success);
+                this.carrot.Show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("buy_bk_success", "Buy background music successfully!"), Msg_Icon.Success);
                 this.id_buy_bk_music_temp = "";
             }
         }
@@ -348,7 +348,7 @@ namespace Carrot
                 {
                     Debug.Log("buy music:" + this.id_buy_bk_music_temp.ToString());
                     this.act_change_bk_music_game(this.id_buy_bk_music_temp, this.index_buy_music_link_temp);
-                    this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), "You have received the background music reward!", Msg_Icon.Success);
+                    this.carrot.Show_msg(this.carrot.lang.Val("shop", "Shop"), "You have received the background music reward!", Msg_Icon.Success);
                     this.id_buy_bk_music_temp = "";
                 }
 
@@ -784,7 +784,7 @@ namespace Carrot
 
         private void Act_update_scores_fail(string s_error)
         {
-            this.carrot.show_msg(this.carrot.lang.Val("top_player", "Player rankings"), s_error, Msg_Icon.Error);
+            this.carrot.Show_msg(this.carrot.lang.Val("top_player", "Player rankings"), s_error, Msg_Icon.Error);
         }
         #endregion
     }

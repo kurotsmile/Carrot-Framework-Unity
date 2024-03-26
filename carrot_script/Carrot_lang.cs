@@ -35,23 +35,8 @@ namespace Carrot
 
         private void Load_val_data_lang()
         {
-            string s_data_lang = PlayerPrefs.GetString("data_lang_value_" + this.s_lang_key, "");
-            if (s_data_lang != "")
-            {
-                Fire_Document fc = new(s_data_lang);
-                this.data_lang_value = fc.Get_IDictionary();
-            }
-
-            if (this.data_lang_value != null)
-            {
-                string s_data_lang_customer = PlayerPrefs.GetString("data_lang_customer_value_" + this.s_lang_key, "");
-                if (s_data_lang_customer != "")
-                {
-                    Fire_Document fc = new(s_data_lang_customer);
-                    IDictionary lang_data_customer = fc.Get_IDictionary();
-                    foreach (var key in lang_data_customer.Keys) this.data_lang_value[key.ToString()] = lang_data_customer[key.ToString()].ToString();
-                }
-            }
+            string s_data_lang = PlayerPrefs.GetString("db_lang_value_" + this.s_lang_key, "");
+            if (s_data_lang != "") this.data_lang_value = (IDictionary)Json.Deserialize(s_data_lang);
         }
 
         private void Load_icon_lang()
@@ -193,16 +178,38 @@ namespace Carrot
         {
             this.carrot.show_loading();
             this.s_key_lang_temp = s_key;
-            this.carrot.server.Get_doc_by_path("lang_app", this.s_key_lang_temp, Act_sel_lang_done, Act_load_and_sel_fail);
+
+            StructuredQuery q = new("lang_data");
+            q.Add_select(s_key);
+            q.set_type_where("OR");
+            q.Add_where("id", Query_OP.EQUAL, "lang_app");
+            if(carrot.collection_document_lang!="") q.Add_where("id", Query_OP.EQUAL,carrot.collection_document_lang);
+            q.Set_limit(2);
+            carrot.server.Get_doc(q.ToJson(), Act_sel_lang_done, Act_load_and_sel_fail);
         }
 
         private void Act_sel_lang_done(string s_data)
         {
-            PlayerPrefs.SetString("data_lang_value_" + this.s_key_lang_temp, s_data);
-            Fire_Document data_lang = new(s_data);
-            this.data_lang_value = data_lang.Get_IDictionary();
-            this.data_lang_offline["lang_data_" + this.s_key_lang_temp] = Json.Serialize(this.data_lang_value);
-            if (this.carrot.collection_document_lang != "") this.carrot.server.Get_doc_by_path(this.carrot.collection_document_lang, this.s_key_lang_temp, Act_sel_lang_customer_done);
+            Fire_Collection fc = new(s_data);
+            if (!fc.is_null)
+            {
+                this.data_lang_value=(IDictionary) Json.Deserialize("{}");
+                for(int i = 0; i < fc.fire_document.Length; i++)
+                {
+                    IDictionary data_item = fc.fire_document[i].Get_IDictionary();
+                    IDictionary data_item_lang = (IDictionary) data_item[this.s_key_lang_temp];
+                    foreach (var key in data_item_lang.Keys) this.data_lang_value[key.ToString()] = data_item_lang[key.ToString()].ToString();
+                }
+                string s_data_json= Json.Serialize(this.data_lang_value);
+                this.data_lang_offline["lang_data_" + this.s_key_lang_temp] = s_data_json;
+                PlayerPrefs.SetString("db_lang_value_" + this.s_key_lang_temp, s_data_json);
+                this.Change_lang(this.s_key_lang_temp);
+                Debug.Log(s_data_json);
+            }
+            else
+            {
+                this.Change_lang(this.s_key_lang_temp);
+            }
         }
 
         private void Act_load_and_sel_fail(string s_error)
@@ -210,30 +217,12 @@ namespace Carrot
             this.Change_lang(this.s_key_lang_temp);
         }
 
-        private void Act_sel_lang_customer_done(string s_data)
-        {
-            PlayerPrefs.SetString("data_lang_customer_value_" + this.s_key_lang_temp, s_data);
-            Fire_Document data_lang = new(s_data);
-            IDictionary lang_data_customer = data_lang.Get_IDictionary();
-            foreach (var key in lang_data_customer.Keys) this.data_lang_value[key.ToString()] = lang_data_customer[key.ToString()].ToString();
-            this.Change_lang(this.s_key_lang_temp);
-            this.data_lang_offline["lang_data_customer_" + this.s_key_lang_temp] = Json.Serialize(lang_data_customer);
-        }
 
         private void Select_lang_offline(string s_key)
         {
             this.data_lang_value = (IDictionary)Json.Deserialize(this.data_lang_offline["lang_data_" + s_key].ToString());
             if (this.carrot.collection_document_lang == "") this.Change_lang(s_key);
-
-            if (this.carrot.collection_document_lang != "")
-            {
-                if (this.data_lang_offline["lang_data_customer_" + s_key] != null)
-                {
-                    IDictionary lang_data_customer = (IDictionary)Json.Deserialize(this.data_lang_offline["lang_data_customer_" + s_key].ToString());
-                    foreach (var key in lang_data_customer.Keys) this.data_lang_value[key.ToString()] = lang_data_customer[key.ToString()];
-                }
-                this.Change_lang(s_key);
-            }
+            this.Change_lang(s_key);
         }
 
         private void Change_lang(string s_key_new)

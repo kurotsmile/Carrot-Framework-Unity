@@ -703,10 +703,10 @@ namespace Carrot
         {
             this.carrot.hide_loading();
             if (this.s_id_user_login == "")
-                this.carrot.show_msg(this.carrot.lang.Val("register", "Register Account"), this.carrot.lang.Val("register_success", "Account registration is successful!"), Msg_Icon.Success);
+                this.carrot.Show_msg(this.carrot.lang.Val("register", "Register Account"), this.carrot.lang.Val("register_success", "Account registration is successful!"), Msg_Icon.Success);
             else
             {
-                this.carrot.show_msg(this.carrot.lang.Val("register", "Register Account"), this.carrot.lang.Val("acc_edit_success", "Successful account information update!"), Msg_Icon.Success);
+                this.carrot.Show_msg(this.carrot.lang.Val("register", "Register Account"), this.carrot.lang.Val("acc_edit_success", "Successful account information update!"), Msg_Icon.Success);
                 this.data_user_temp["user_id"] = this.s_id_user_login;
                 this.set_data_user_login(this.data_user_temp);
             }
@@ -739,13 +739,13 @@ namespace Carrot
             if (data_user!=null)
                 this.Show_info_user_by_data(data_user);
             else
-                this.carrot.show_msg(this.carrot.lang.Val("acc_info", "Account Information"), "Account not found", Msg_Icon.Alert);
+                this.carrot.Show_msg(this.carrot.lang.Val("acc_info", "Account Information"), "Account not found", Msg_Icon.Alert);
         }
 
         private void Act_show_user_by_id_fail(string s_error)
         {
             this.carrot.hide_loading();
-            this.carrot.show_msg(this.carrot.lang.Val("acc_info", "Account Information"), "The operation failed, please try again next time!", Msg_Icon.Error);
+            this.carrot.Show_msg(this.carrot.lang.Val("acc_info", "Account Information"), "The operation failed, please try again next time!", Msg_Icon.Error);
         }
 
         public void show_user_by_id(string s_id_user, string s_lang_user, UnityAction<IDictionary> act_after)

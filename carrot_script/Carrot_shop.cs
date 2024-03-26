@@ -115,9 +115,9 @@ namespace Carrot
         void OnTransactionsRestored(bool success)
         {
             if (success)
-                this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_restore_success", "Successful recovery!"), Msg_Icon.Success);
+                this.carrot.Show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_restore_success", "Successful recovery!"), Msg_Icon.Success);
             else
-                this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_restore_fail", "Restore failed!"), Msg_Icon.Error);
+                this.carrot.Show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_restore_fail", "Restore failed!"), Msg_Icon.Error);
         }
 
         public string get_id_by_index(int index)
@@ -142,7 +142,7 @@ namespace Carrot
         void IStoreListener.OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
         {
             this.carrot.hide_loading();
-            this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_buy_fail", "Purchase failed, Please check your account balance, or try again at another time"), Msg_Icon.Error);
+            this.carrot.Show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_buy_fail", "Purchase failed, Please check your account balance, or try again at another time"), Msg_Icon.Error);
         }
 
         void IStoreListener.OnInitialized(IStoreController controller, IExtensionProvider exten)
@@ -299,14 +299,14 @@ namespace Carrot
             }
             else
             {
-                carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), "You have not purchased any products yet!", Msg_Icon.Alert);
+                carrot.Show_msg(this.carrot.lang.Val("shop", "Shop"), "You have not purchased any products yet!", Msg_Icon.Alert);
             }
         }
 
         private void Act_server_fail(string s_error)
         {
             carrot.hide_loading();
-            carrot.show_msg("Error", s_error, Msg_Icon.Error);
+            carrot.Show_msg("Error", s_error, Msg_Icon.Error);
         }
 
         private void Close_box_carrot_pay()
@@ -358,7 +358,7 @@ namespace Carrot
             }
             else
             {
-                this.carrot.show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_buy_fail", "Purchase failed, Please check your account balance, or try again at another time"), Msg_Icon.Error);
+                this.carrot.Show_msg(this.carrot.lang.Val("shop", "Shop"), this.carrot.lang.Val("shop_buy_fail", "Purchase failed, Please check your account balance, or try again at another time"), Msg_Icon.Error);
                 if (box_shop == null) this.Reset_session_carrot_pay();
             }
         }

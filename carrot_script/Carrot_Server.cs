@@ -502,6 +502,8 @@ namespace Carrot
         private string collectionId = "";
         private string s_where = "";
         private string s_order = "";
+        private string s_type_where = "AND";
+
         private int limit = -1;
         private readonly List<string> list_select = new();
         private readonly List<string> list_where = new();
@@ -509,6 +511,11 @@ namespace Carrot
         public StructuredQuery(string s_collectionId)
         {
             this.collectionId = s_collectionId;
+        }
+
+        public void set_type_where(string s_type)
+        {
+            this.s_type_where = s_type;
         }
 
         public void Set_from(string s_collectionId)
@@ -564,7 +571,7 @@ namespace Carrot
             {
                 if (this.list_where.Count > 0)
                 {
-                    string s_q_where = ",\"where\":{\"compositeFilter\":{\"op\":\"AND\",\"filters\":[";
+                    string s_q_where = ",\"where\":{\"compositeFilter\":{\"op\":\""+this.s_type_where+"\",\"filters\":[";
                     for (int i = 0; i < this.list_where.Count; i++)
                     {
                         s_q_where += this.list_where[i];

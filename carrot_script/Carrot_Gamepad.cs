@@ -387,13 +387,13 @@ namespace Carrot
             if (this.is_use_gamepad)
             {
                 this.is_use_gamepad = false;
-                this.carrot.show_msg("Gamepad", "Disabled and do not use this handle!", Msg_Icon.Alert);
+                this.carrot.Show_msg("Gamepad", "Disabled and do not use this handle!", Msg_Icon.Alert);
                 item_btn_extension.set_icon(this.carrot.icon_carrot_gamepad_on);
             }
             else
             {
                 this.is_use_gamepad = true;
-                this.carrot.show_msg("Gamepad", "Enabled and used this gamepad!", Msg_Icon.Alert);
+                this.carrot.Show_msg("Gamepad", "Enabled and used this gamepad!", Msg_Icon.Alert);
                 item_btn_extension.set_icon(this.carrot.icon_carrot_gamepad_off);
             }
         }

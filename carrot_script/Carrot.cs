@@ -53,8 +53,7 @@ namespace Carrot
         private Carrot_list_app carrot_list_app;
         private Carrot_tool tool;
         private List<GameObject> list_Window;
-        private Carrot_Window_Msg msg_lost_interne;
-        private Carrot_Window_Msg msg_delete_all_data;
+        private Carrot_Window_Msg msg;
         private Carrot_Window_Loading loading;
         private List<string> list_log;
         private int count_change_model_app = 0;
@@ -186,9 +185,9 @@ namespace Carrot
         public UnityAction act_check_exit_app;
         public UnityAction act_after_close_all_box;
         public UnityAction act_after_delete_all_data;
-
+        private UnityAction act_result_msg_config;
         private bool is_ready = false;
-
+        
         public void Load_Carrot()
         {
             this.list_log = new List<string>();
@@ -328,21 +327,35 @@ namespace Carrot
             return msg;
         }
 
-        public Carrot_Window_Msg show_msg(string s_title, string s_msg, Msg_Icon icon)
+        public Carrot_Window_Msg Show_msg(string s_title, string s_msg, Msg_Icon icon)
         {
             Carrot_Window_Msg msg = show_msg(s_title, s_msg);
             msg.set_icon(icon);
             return msg;
         }
 
-        public Carrot_Window_Msg show_msg(string s_title, string s_msg, UnityAction act_msg_yes, UnityAction act_msg_no)
+        public Carrot_Window_Msg Show_msg(string s_title, string s_msg, UnityAction act_msg_yes)
         {
-            Carrot_Window_Msg msg = show_msg(s_title, s_msg);
+            this.act_result_msg_config = act_msg_yes;
+            this.msg = show_msg(s_title, s_msg);
             msg.set_icon(Msg_Icon.Question);
-            msg.add_btn_msg(lang.Val("msg_yes", "Yes"), act_msg_yes);
-            msg.add_btn_msg(lang.Val("cancel", "No"), act_msg_no);
+            msg.add_btn_msg(lang.Val("msg_yes", "Yes"), Act_msg_config_yes);
+            msg.add_btn_msg(lang.Val("cancel", "No"), Act_msg_config_no);
             msg.update_btns_gamepad_console();
             return msg;
+        }
+
+        private void Act_msg_config_yes()
+        {
+            play_sound_click();
+            this.act_result_msg_config?.Invoke();
+            if (this.msg != null) this.msg.close();
+        }
+
+        private void Act_msg_config_no()
+        {
+            play_sound_click();
+            if (this.msg != null) this.msg.close();
         }
 
         public Carrot_Window_Loading show_loading()
@@ -457,13 +470,12 @@ namespace Carrot
         public void delete_all_data()
         {
             this.play_sound_click();
-            this.msg_delete_all_data = this.show_msg(lang.Val("delete_all_data", "Clear all application data"), lang.Val("delete_all_data_tip", "Confirm erase all data and set up")+"?", this.act_delete_all_data_yes, this.act_delete_all_data_no);
+            this.msg = this.Show_msg(lang.Val("delete_all_data", "Clear all application data"), lang.Val("delete_all_data_tip", "Confirm erase all data and set up")+"?", act_delete_all_data_yes);
         }
 
         private void act_delete_all_data_yes()
         {
-            this.msg_delete_all_data.close();
-            this.msg_delete_all_data = this.show_msg(lang.Val("delete_all_data", "Clear all application data"), lang.Val("delete_all_data_success", "Erase all settings settings and app data successfully!"), Msg_Icon.Success);
+            this.msg = this.Show_msg(lang.Val("delete_all_data", "Clear all application data"), lang.Val("delete_all_data_success", "Erase all settings settings and app data successfully!"), Msg_Icon.Success);
             this.user.delete_data_user_login();
             PlayerPrefs.DeleteAll();
             this.get_tool().delete_file("lang_icon");
@@ -474,7 +486,7 @@ namespace Carrot
 
         private void Restart_app()
         {
-            this.msg_delete_all_data.close();
+            this.msg.close();
             this.close_all_window();
             this.Load_Carrot(this.act_check_exit_app);
             this.act_after_delete_all_data?.Invoke();
@@ -482,7 +494,7 @@ namespace Carrot
 
         private void act_delete_all_data_no()
         {
-            this.msg_delete_all_data.close();
+            this.msg.close();
             if (model_app == ModelApp.Develope) this.log("Cancel Delete All Data!");
         }
 
@@ -500,7 +512,7 @@ namespace Carrot
                 if (www.result != UnityWebRequest.Result.Success)
                 {
                     this.hide_loading();
-                    if (model_app == ModelApp.Develope) this.show_msg("Error", www.error, Msg_Icon.Error);
+                    if (model_app == ModelApp.Develope) this.Show_msg("Error", www.error, Msg_Icon.Error);
                     if (fail_func != null) fail_func(www.error);
                 }
                 else
@@ -635,11 +647,11 @@ namespace Carrot
             if (status_internet_offline)
             {
                 if (this.carrot_lost_internet != null) this.carrot_lost_internet.carrot = this;
-                this.msg_lost_interne = this.create_msg();
-                msg_lost_interne.set_title(lang.Val("lost_connect", "Lost Internet connection"));
-                msg_lost_interne.set_msg(lang.Val("lost_connect_msg", "Please check your network connection, currently the app cannot access the Internet"));
-                msg_lost_interne.set_icon_customer(this.icon_lost_internet);
-                msg_lost_interne.add_btn_msg(lang.Val("lost_connect_try", "Try checking again!"), act_try_connect_internet);
+                this.msg = this.create_msg();
+                msg.set_title(lang.Val("lost_connect", "Lost Internet connection"));
+                msg.set_msg(lang.Val("lost_connect_msg", "Please check your network connection, currently the app cannot access the Internet"));
+                msg.set_icon_customer(this.icon_lost_internet);
+                msg.add_btn_msg(lang.Val("lost_connect_try", "Try checking again!"), act_try_connect_internet);
                 this.carrot_lost_internet.try_connect();
             }
             if (this.carrot_lost_internet != null) this.carrot_lost_internet.set_model_by_status_internet(status_internet_offline);
@@ -647,7 +659,8 @@ namespace Carrot
 
         private void act_try_connect_internet()
         {
-            this.msg_lost_interne.close();
+            play_sound_click();
+            this.msg.close();
         }
 
         public void delay_function(float timer, UnityAction act_func)
@@ -1081,7 +1094,7 @@ namespace Carrot
         {
             if (item_setting_ads) Destroy(item_setting_ads.gameObject);
             this.ads.remove_ads();
-            this.show_msg(lang.Val("shop", "Shop"), lang.Val("ads_remove_success", "Ad removal successful!"), Msg_Icon.Success);
+            this.Show_msg(lang.Val("shop", "Shop"), lang.Val("ads_remove_success", "Ad removal successful!"), Msg_Icon.Success);
         }
 
         public void play_sound_click()
@@ -1153,7 +1166,7 @@ namespace Carrot
                 this.model_app = ModelApp.Publish;
                 this.ads.set_status_ads(true);
             }
-            this.show_msg("Change Model App Success!!!", this.model_app.ToString(), Msg_Icon.Success);
+            this.Show_msg("Change Model App Success!!!", this.model_app.ToString(), Msg_Icon.Success);
         }
 
         public Carrot_Button_Item create_button(string s_text)
