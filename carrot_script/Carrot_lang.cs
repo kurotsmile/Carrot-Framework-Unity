@@ -17,7 +17,7 @@ namespace Carrot
         private Carrot_Box box_lang;
         private IDictionary data_lang_offline;
         private IDictionary data_lang_value = null;
-        public string s_data_json_list_lang_offline;
+        public string s_data_json_list_lang_offline = "";
 
         private Transform tr_item_lang_systemLanguage = null;
 
@@ -25,7 +25,7 @@ namespace Carrot
         {
             this.carrot = carrot;
             this.data_lang_offline = (IDictionary)Json.Deserialize("{}");
-            if (this.carrot.is_offline()) this.s_data_json_list_lang_offline = PlayerPrefs.GetString("s_data_json_list_lang_offline");
+            if (this.carrot.is_offline()) this.s_data_json_list_lang_offline = PlayerPrefs.GetString("s_data_json_list_lang_offline","");
             this.s_lang_key = PlayerPrefs.GetString("lang", "en");
 
             this.Load_val_data_lang();
@@ -54,7 +54,7 @@ namespace Carrot
                 return sp_lang_icon;
         }
 
-        public void show_list_lang()
+        public void Show_list_lang()
         {
             this.carrot.show_loading();
             this.carrot.play_sound_click();
@@ -105,7 +105,7 @@ namespace Carrot
 
         public void Show_list_lang(UnityAction<string> fnc_after_sel_lang)
         {
-            this.show_list_lang();
+            this.Show_list_lang();
             this.act_after_selecting_lang = fnc_after_sel_lang;
         }
 
@@ -204,7 +204,6 @@ namespace Carrot
                 this.data_lang_offline["lang_data_" + this.s_key_lang_temp] = s_data_json;
                 PlayerPrefs.SetString("db_lang_value_" + this.s_key_lang_temp, s_data_json);
                 this.Change_lang(this.s_key_lang_temp);
-                Debug.Log(s_data_json);
             }
             else
             {
@@ -216,7 +215,6 @@ namespace Carrot
         {
             this.Change_lang(this.s_key_lang_temp);
         }
-
 
         private void Select_lang_offline(string s_key)
         {

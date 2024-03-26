@@ -233,6 +233,7 @@ namespace Carrot
         public void clear_contain(Transform area_body) { foreach (Transform child in area_body) { Destroy(child.gameObject); } }
         public void show_login() { this.user.show_login(); }
         public void show_user_register() { this.user.show_user_register(); }
+        public string L(string s_key, string s_default = ""){ return lang.Val(s_key,s_default); }
         public Carrot_tool get_tool() { return this.tool; }
 
         private void Update()
@@ -548,7 +549,7 @@ namespace Carrot
 
         public void show_list_lang()
         {
-            this.lang.show_list_lang();
+            this.lang.Show_list_lang();
         }
 
         public void show_list_lang(UnityAction<string> call_func)
