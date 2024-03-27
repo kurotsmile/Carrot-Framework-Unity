@@ -553,6 +553,15 @@ namespace Carrot
         {
             this.act_handle_detection = act;
         }
+
+        public void Destroy_all_gamepad()
+        {
+            if (this.list_gamepad != null)
+            {
+                for (int i = 0; i < this.list_gamepad.Count; i++) Destroy(this.list_gamepad[i].gameObject);
+            }
+            this.list_gamepad = new();
+        }
         #endregion
 
         #region Top_Player

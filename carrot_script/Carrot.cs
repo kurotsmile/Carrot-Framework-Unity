@@ -472,35 +472,30 @@ namespace Carrot
         }
 
         [ContextMenu("Delete All Data")]
-        public void delete_all_data()
+        public void Delete_all_data()
         {
             this.play_sound_click();
-            this.msg = this.Show_msg(lang.Val("delete_all_data", "Clear all application data"), lang.Val("delete_all_data_tip", "Confirm erase all data and set up")+"?", act_delete_all_data_yes);
-        }
-
-        private void act_delete_all_data_yes()
-        {
-            this.msg = this.Show_msg(lang.Val("delete_all_data", "Clear all application data"), lang.Val("delete_all_data_success", "Erase all settings settings and app data successfully!"), Msg_Icon.Success);
-            this.user.delete_data_user_login();
-            PlayerPrefs.DeleteAll();
-            this.get_tool().delete_file("lang_icon");
-            if (type_app == TypeApp.Game) this.get_tool().delete_file("music_bk");
-            if (model_app == ModelApp.Develope) Debug.Log("Delete All Data Success!!!");
-            this.delay_function(1f, this.Restart_app);
+            this.msg = this.Show_msg(L("delete_all_data", "Clear all application data"), L("delete_all_data_tip", "Confirm erase all data and set up") + "?", () =>
+            {
+                if (this.msg != null) this.msg.close();
+                this.user.delete_data_user_login();
+                PlayerPrefs.DeleteAll();
+                if (this.type_control != TypeControl.None) game.Destroy_all_gamepad();
+                this.get_tool().delete_file("music_bk");
+                if (model_app == ModelApp.Develope) Debug.Log("Delete All Data Success!!!");
+                this.msg = this.Show_msg(L("delete_all_data", "Clear all application data"), L("delete_all_data_success", "Erase all settings settings and app data successfully!"), Msg_Icon.Success);
+                this.delay_function(2f, ()=>this.Restart_app());
+            });
         }
 
         private void Restart_app()
         {
-            this.msg.close();
-            this.close_all_window();
-            this.Load_Carrot(this.act_check_exit_app);
-            this.act_after_delete_all_data?.Invoke();
-        }
-
-        private void act_delete_all_data_no()
-        {
-            this.msg.close();
-            if (model_app == ModelApp.Develope) this.log("Cancel Delete All Data!");
+            if(this.msg!=null) this.msg.close();
+            close_all_window();
+            if(this.act_after_delete_all_data!=null)
+                this.act_after_delete_all_data.Invoke();
+            else
+                this.Load_Carrot(this.act_check_exit_app);
         }
 
         public Carrot_Window_Loading send(string url, WWWForm frm, UnityAction<string> done_func = null, UnityAction<string> fail_func = null)
@@ -905,7 +900,7 @@ namespace Carrot
             item_setting_del_data.set_title(lang.Val("delete_all_data", "Clear all application data"));
             item_setting_del_data.set_tip(lang.Val("delete_all_data_tip", "Erase all data and reinstall the app"));
             item_setting_del_data.set_lang_data("delete_all_data", "delete_all_data_tip");
-            item_setting_del_data.set_act(this.delete_all_data);
+            item_setting_del_data.set_act(this.Delete_all_data);
             return box_setting;
         }
 
