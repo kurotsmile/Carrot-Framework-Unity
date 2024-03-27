@@ -935,6 +935,8 @@ namespace Carrot
 
         private void Show_Support()
         {
+            play_sound_click();
+
             Carrot_Box box_support = Create_Box();
             box_support.set_icon(icon_carrot_support);
             box_support.set_title(L("support", "Support"));
