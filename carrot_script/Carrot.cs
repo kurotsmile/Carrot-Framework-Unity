@@ -252,20 +252,24 @@ namespace Carrot
                 {
                     int index_box_check = this.list_Window.Count - 1;
 
-                    if (this.list_Window[index_box_check].name == "window_ads") return;
-
-                    if (this.list_Window[index_box_check].name == "window_exit")
-                    {
-                        this.app_exit();
-                        return;
-                    }
-
                     if (this.list_Window[index_box_check] != null)
                     {
-                        this.close_window(index_box_check);
-                        return;
+                        if (this.list_Window[index_box_check].name == "window_ads") return;
+
+                        if (this.list_Window[index_box_check].name == "window_exit")
+                        {
+                            this.app_exit();
+                            return;
+                        }
+
+                        if (this.list_Window[index_box_check] != null)
+                        {
+                            this.close_window(index_box_check);
+                            return;
+                        }
                     }
                 }
+
                 this.carrot_list_app.show_list_app_where_exit();
             }
         }
@@ -1044,11 +1048,14 @@ namespace Carrot
             {
                 if (this.type_control != TypeControl.None)
                 {
-                    Carrot_UI window_last = this.list_Window[this.list_Window.Count - 1].GetComponent<Carrot_UI>();
-                    if (window_last != null)
+                    if(this.list_Window[this.list_Window.Count - 1] != null)
                     {
-                        this.game.set_list_button_gamepad_console(window_last.get_list_btn());
-                        if (window_last.scrollRect != null) this.game.set_scrollRect_gamepad_consoles(window_last.scrollRect);
+                        Carrot_UI window_last = this.list_Window[this.list_Window.Count - 1].GetComponent<Carrot_UI>();
+                        if (window_last != null)
+                        {
+                            this.game.set_list_button_gamepad_console(window_last.get_list_btn());
+                            if (window_last.scrollRect != null) this.game.set_scrollRect_gamepad_consoles(window_last.scrollRect);
+                        }
                     }
                 }
             }
