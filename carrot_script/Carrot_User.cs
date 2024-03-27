@@ -459,7 +459,7 @@ namespace Carrot
                     this.user_login_item_setting.set_lang_data("acc_info", "acc_edit_tip");
                 }
 
-                this.user_login_item_setting.set_act(() => this.show_login(this.carrot.reload_setting));
+                this.user_login_item_setting.set_act(() => this.show_login(this.carrot.Reload_setting));
                 this.load_avatar_user_login(this.user_login_item_setting.img_icon);
             }
         }

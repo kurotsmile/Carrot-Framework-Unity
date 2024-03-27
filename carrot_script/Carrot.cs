@@ -154,13 +154,7 @@ namespace Carrot
         public Sprite icon_carrot_database;
         public Sprite icon_carrot_buy;
         public Sprite icon_carrot_price;
-
-        [Header("Lost Internet")]
-        public Carrot_lost_internet carrot_lost_internet;
-        private bool is_online_internet = true;
-        public Sprite icon_lost_internet;
-
-        [Header("Setting Carrot")]
+        public Sprite icon_carrot_support;
         public Sprite sp_icon_sound_on;
         public Sprite sp_icon_sound_off;
         public Sprite sp_icon_rate;
@@ -176,6 +170,15 @@ namespace Carrot
         public Sprite sp_icon_picker_color;
         public Sprite sp_icon_mixer_color;
         public Sprite sp_icon_table_color;
+        public Sprite icon_carrot_donation;
+        public Sprite icon_carrot_facebook;
+
+        [Header("Lost Internet")]
+        public Carrot_lost_internet carrot_lost_internet;
+        private bool is_online_internet = true;
+        public Sprite icon_lost_internet;
+
+        [Header("Setting Carrot")]
         public AudioSource sound_click;
         Carrot_Box box_setting = null;
         Carrot_Box_Item item_setting_lang = null;
@@ -798,7 +801,7 @@ namespace Carrot
                         btn_del_bk_music.set_icon(this.sp_icon_del_data);
                         btn_del_bk_music.GetComponent<Button>().onClick.RemoveAllListeners();
                         btn_del_bk_music.GetComponent<Button>().onClick.AddListener(() => this.game.delete_bk_music());
-                        btn_del_bk_music.GetComponent<Button>().onClick.AddListener(() => this.reload_setting());
+                        btn_del_bk_music.GetComponent<Button>().onClick.AddListener(() => this.Reload_setting());
                     }
                 }
             }
@@ -901,10 +904,14 @@ namespace Carrot
             item_setting_del_data.set_tip(lang.Val("delete_all_data_tip", "Erase all data and reinstall the app"));
             item_setting_del_data.set_lang_data("delete_all_data", "delete_all_data_tip");
             item_setting_del_data.set_act(this.Delete_all_data);
+
+            Carrot_Box_Btn_Item btn_support = box_setting.create_btn_menu_header(icon_carrot_support);
+            btn_support.set_act(Show_Support);
+
             return box_setting;
         }
 
-        public void reload_setting()
+        public void Reload_setting()
         {
             if (this.user.get_cur_window_user_login() != null) this.user.get_cur_window_user_login().close();
             if (this.box_setting != null) this.box_setting.close();
@@ -924,6 +931,63 @@ namespace Carrot
             {
                 this.box_setting = this.Create_Setting();
             }
+        }
+
+        private void Show_Support()
+        {
+            Carrot_Box box_support = Create_Box();
+            box_support.set_icon(icon_carrot_support);
+            box_support.set_title(L("support", "Support"));
+
+            Carrot_Box_Item item_donnation = box_support.create_item();
+            item_donnation.set_icon(icon_carrot_donation);
+            item_donnation.set_title("Donate");
+            item_donnation.set_tip(L("donate_tip","Please contribute to the cost of maintaining the server and developing tools to serve everyone"));
+            item_donnation.set_act(() =>
+            {
+                play_sound_click();
+                Application.OpenURL("https://www.paypal.com/paypalme/kurotsmile");
+            });
+
+            Carrot_Box_Item item_mail = box_support.create_item();
+            item_mail.set_icon(this.icon_carrot_mail);
+            item_mail.set_title("Email");
+            item_mail.set_tip(L("email_dev", "Email contact the developer"));
+            item_mail.set_act(() =>
+            {
+                play_sound_click();
+                Application.OpenURL("mailto:tranthienthanh93@gmail.com");
+            });
+
+            Carrot_Box_Item item_whatapp = box_support.create_item();
+            item_whatapp.set_icon(this.icon_carrot_app);
+            item_whatapp.set_title("WhatsApp");
+            item_whatapp.set_tip(L("whatsapp_dev", "Call or text to talk directly with the developer"));
+            item_whatapp.set_act(() =>
+            {
+                play_sound_click();
+                Application.OpenURL("https://api.whatsapp.com/send?phone=+8409786515778&text=hello");
+            });
+
+            Carrot_Box_Item item_fb = box_support.create_item();
+            item_fb.set_icon(this.icon_carrot_facebook);
+            item_fb.set_title("Facebook");
+            item_fb.set_tip(L("facebook_dev", "Follow the developer's news page on social network Facebook"));
+            item_fb.set_act(() =>
+            {
+                play_sound_click();
+                Application.OpenURL("https://www.facebook.com/virtuallover/");
+            });
+
+            Carrot_Box_Item item_x = box_support.create_item();
+            item_x.set_icon(this.icon_carrot_cancel);
+            item_x.set_title("X");
+            item_x.set_tip(L("x_dev","Follow the developer's news page on social network X"));
+            item_x.set_act(() =>
+            {
+                play_sound_click();
+                Application.OpenURL("https://twitter.com/carrotstore1");
+            });
         }
 
         public void Change_status_sound(Carrot_Box_Item item_status_sound)

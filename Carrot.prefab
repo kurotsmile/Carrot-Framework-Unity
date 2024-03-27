@@ -405,8 +405,7 @@ MonoBehaviour:
   icon_carrot_database: {fileID: 21300000, guid: 58edc83812032a14399057ee06a50fc3, type: 3}
   icon_carrot_buy: {fileID: 21300000, guid: 14d9cfee3bc91d74091d7370486c78f9, type: 3}
   icon_carrot_price: {fileID: 21300000, guid: 8a903a2320992ef4ab1e2539b952200e, type: 3}
-  carrot_lost_internet: {fileID: 0}
-  icon_lost_internet: {fileID: 21300000, guid: d2201876ae5060e48babd277eb80364d, type: 3}
+  icon_carrot_support: {fileID: 21300000, guid: 312e5766b0a4b244f875f7f9c5c72bbf, type: 3}
   sp_icon_sound_on: {fileID: 21300000, guid: 092f5fc30a7cf2347b2617fc9a203ebc, type: 3}
   sp_icon_sound_off: {fileID: 21300000, guid: ab93f6b2b56464a4f930ae97811fe4eb, type: 3}
   sp_icon_rate: {fileID: 21300000, guid: 5cc0fd50727cafa499771e568cabf7a7, type: 3}
@@ -422,6 +421,10 @@ MonoBehaviour:
   sp_icon_picker_color: {fileID: 21300000, guid: 0a382b6beac8e7f43a80a538c365428f, type: 3}
   sp_icon_mixer_color: {fileID: 21300000, guid: 6e5c319bd909a8b45a76b79b09c4d7ad, type: 3}
   sp_icon_table_color: {fileID: 21300000, guid: 64bb4451566672a4786416bf9bfa9eb4, type: 3}
+  icon_carrot_donation: {fileID: 21300000, guid: 40acfd82149b2d44ab6ec251629a6ca4, type: 3}
+  icon_carrot_facebook: {fileID: 21300000, guid: a81b655be664d824fae332ded21127b8, type: 3}
+  carrot_lost_internet: {fileID: 0}
+  icon_lost_internet: {fileID: 21300000, guid: d2201876ae5060e48babd277eb80364d, type: 3}
   sound_click: {fileID: 7774974848483370864}
 --- !u!114 &292901969
 MonoBehaviour:

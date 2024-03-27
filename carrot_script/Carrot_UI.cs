@@ -21,13 +21,12 @@ namespace Carrot
 
         public List<GameObject> get_list_btn()
         {
-            List<GameObject> list_btn = new List<GameObject>();
-            for(int i = 0; i < area_btns.Length; i++) 
-                foreach (Transform btn in this.area_btns[i]) 
+            List<GameObject> list_btn = new();
+            for (int i = 0; i < area_btns.Length; i++)
+                foreach (Transform btn in this.area_btns[i])
                     list_btn.Add(btn.gameObject);
-           
-            for(int i=0;i<this.obj_gamepad.Length;i++) list_btn.Add(this.obj_gamepad[i]);
 
+            for (int i=0;i<this.obj_gamepad.Length;i++) list_btn.Add(this.obj_gamepad[i]);
             return list_btn;
         }
 
