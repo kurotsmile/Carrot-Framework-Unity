@@ -16,7 +16,7 @@ namespace Carrot
 
         private string s_data_json_share_offline = "";
 
-        public void load(Carrot carrot)
+        public void Load(Carrot carrot)
         {
             this.carrot = carrot;
 
@@ -25,50 +25,51 @@ namespace Carrot
             this.txt_share_tip.text = this.carrot.lang.Val("share_tip", "Choose the platform below to share this great app with your friends or others");
             this.UI.set_theme(this.carrot.color_highlight);
             if (this.carrot.type_control != TypeControl.None) this.carrot.game.set_list_button_gamepad_console(this.UI.get_list_btn());
-            this.get_and_load_list_share();
+            this.Get_and_load_list_share();
         }
 
-        public void show_list_app_share(string link_customer, string s_share_tip)
+        public void Show_list_app_share(string link_customer, string s_share_tip)
         {
             if (s_share_tip != "") this.txt_share_tip.text = s_share_tip;
             this.inp_link_share.text = link_customer;
-            this.get_and_load_list_share();
+            this.Get_and_load_list_share();
         }
 
-        private void get_and_load_list_share()
+        private void Get_and_load_list_share()
         {
             if (this.s_data_json_share_offline == "")
             {
                 StructuredQuery q = new("share");
-                this.carrot.server.Get_doc(q.ToJson(), get_list_share_done, get_list_share_fail);
+                this.carrot.server.Get_doc(q.ToJson(), Get_list_share_done, Get_list_share_fail);
             }
             else
-                this.load_list_share(s_data_json_share_offline);
+                this.Load_list_share(s_data_json_share_offline);
         }
 
-        private void get_list_share_done(string s_data)
+        private void Get_list_share_done(string s_data)
         {
             PlayerPrefs.SetString("s_data_json_share_offline", s_data);
             this.s_data_json_share_offline = s_data;
-            this.load_list_share(s_data);
+            this.Load_list_share(s_data);
         }
 
-        private void get_list_share_fail(string s_error)
+        private void Get_list_share_fail(string s_error)
         {
-            if (this.s_data_json_share_offline != "") this.load_list_share(this.s_data_json_share_offline);
+            if (this.s_data_json_share_offline != "") this.Load_list_share(this.s_data_json_share_offline);
         }
 
-        public Carrot_Box_Btn_Item create_btn(Sprite sp_icon)
+        public Carrot_Box_Btn_Item Create_btn()
         {
             GameObject item_btn_header = Instantiate(this.box_btn_item_prefab);
             item_btn_header.transform.SetParent(this.area_all_item_share);
             item_btn_header.transform.localPosition = new Vector3(item_btn_header.transform.position.x, item_btn_header.transform.position.y, 0f);
             item_btn_header.transform.localScale = new Vector3(1f, 1f, 1f);
             item_btn_header.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            item_btn_header.GetComponent<Image>().color = carrot.get_color_highlight_blur(50);
             return item_btn_header.GetComponent<Carrot_Box_Btn_Item>();
         }
 
-        private void load_list_share(string s_data)
+        private void Load_list_share(string s_data)
         {
             Fire_Collection fc = new(s_data);
             if (!fc.is_null)
@@ -79,7 +80,7 @@ namespace Carrot
                     IDictionary data_share = fc.fire_document[i].Get_IDictionary();
                     string s_id_share = data_share["id"].ToString();
                     data_share["id"] = s_id_share;
-                    Carrot_Box_Btn_Item btn_share_item = create_btn(this.carrot.sp_icon_share);
+                    Carrot_Box_Btn_Item btn_share_item = Create_btn();
                     btn_share_item.set_icon(this.carrot.sp_icon_share);
                     string s_link_share = "";
                     if (data_share[s_os_app] != null) s_link_share = data_share[s_os_app].ToString();

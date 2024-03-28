@@ -293,14 +293,14 @@ namespace Carrot
         {
             this.play_sound_click();
             GameObject window_share = this.create_window(this.window_share_prefab);
-            window_share.GetComponent<Carrot_Window_Share>().load(this);
+            window_share.GetComponent<Carrot_Window_Share>().Load(this);
             window_share.GetComponent<Carrot_Window_Share>().inp_link_share.text = this.mainhost + "?p=app&id=" + this.Carrotstore_AppId;
         }
 
         public void show_share(string link_customer, string s_share_tip)
         {
             GameObject window_share = this.create_window(this.window_share_prefab);
-            window_share.GetComponent<Carrot_Window_Share>().load(this);
+            window_share.GetComponent<Carrot_Window_Share>().Load(this);
             window_share.GetComponent<Carrot_Window_Share>().txt_share_tip.text = s_share_tip;
             window_share.GetComponent<Carrot_Window_Share>().inp_link_share.text = link_customer;
         }
