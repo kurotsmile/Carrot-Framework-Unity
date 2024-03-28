@@ -1013,8 +1013,8 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 45, y: 45}
-  m_Spacing: {x: 9, y: 9}
+  m_CellSize: {x: 50, y: 50}
+  m_Spacing: {x: 10, y: 10}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!1 &8931901680464516206
@@ -1169,7 +1169,7 @@ MonoBehaviour:
   txt_share_tip: {fileID: 7692790863265225790}
   inp_link_share: {fileID: 7041287984952460974}
   area_all_item_share: {fileID: 5451318343780214707}
-  item_share_prefab: {fileID: 661862537998642643, guid: 54c6acd300b0f7e4a8a8ebcd623941b5, type: 3}
+  box_btn_item_prefab: {fileID: 5559646003889477871, guid: 542e39508b3c9ad4496476cd32e85384, type: 3}
 --- !u!114 &2536227654892582903
 MonoBehaviour:
   m_ObjectHideFlags: 0

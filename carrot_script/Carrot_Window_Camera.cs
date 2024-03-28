@@ -63,7 +63,7 @@ namespace Carrot
             if (this.isCameraRotation) photo.SetPixels(ImageRotator.RotateImage(photo, 90).GetPixels());
             if (this.isCameraMirror) photo.SetPixels(this.FlipTexture(photo).GetPixels());
             photo.Apply();
-            this.carrot.camera_pro.add_photo(photo);
+            this.carrot.camera_pro.Add_photo(photo);
             this.check_show_btn_libary();
             if (this.act_after_take_photo != null) this.act_after_take_photo(photo);
             this.close();
@@ -71,7 +71,7 @@ namespace Carrot
 
         public void btn_show_list_photo()
         {
-            this.carrot.camera_pro.show_list_img(this.act_done_select_photo_in_list);
+            this.carrot.camera_pro.Show_list_img(this.act_done_select_photo_in_list);
         }
 
         private void act_done_select_photo_in_list(Texture2D photo)
