@@ -353,6 +353,17 @@ namespace Carrot
             return msg;
         }
 
+
+        public Carrot_Window_Msg Show_msg(string s_title, string s_msg, UnityAction act_msg_yes, UnityAction act_msg_no)
+        {
+            this.msg = show_msg(s_title, s_msg);
+            msg.set_icon(Msg_Icon.Question);
+            msg.add_btn_msg(lang.Val("msg_yes", "Yes"), act_msg_yes);
+            msg.add_btn_msg(lang.Val("cancel", "No"), act_msg_no);
+            msg.update_btns_gamepad_console();
+            return msg;
+        }
+
         private void Act_msg_config_yes()
         {
             play_sound_click();
