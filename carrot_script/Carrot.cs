@@ -312,7 +312,7 @@ namespace Carrot
             if (this.act_after_close_all_box != null) this.act_after_close_all_box();
         }
 
-        private Carrot_Window_Msg create_msg()
+        private Carrot_Window_Msg Create_msg()
         {
             GameObject window_msg = this.create_window(this.window_msg_prefab);
             window_msg.name = "Window Msg";
@@ -320,24 +320,24 @@ namespace Carrot
             return window_msg.GetComponent<Carrot_Window_Msg>();
         }
 
-        public Carrot_Window_Msg show_msg(string s_msg)
+        public Carrot_Window_Msg Show_msg(string s_msg)
         {
-            Carrot_Window_Msg msg = this.create_msg();
+            Carrot_Window_Msg msg = this.Create_msg();
             msg.set_msg(s_msg);
             msg.update_btns_gamepad_console();
             return msg;
         }
 
-        public Carrot_Window_Msg show_msg(string s_title, string s_msg)
+        public Carrot_Window_Msg Show_msg(string s_title, string s_msg)
         {
-            Carrot_Window_Msg msg = this.show_msg(s_msg);
+            Carrot_Window_Msg msg = this.Show_msg(s_msg);
             msg.set_title(s_title);
             return msg;
         }
 
         public Carrot_Window_Msg Show_msg(string s_title, string s_msg, Msg_Icon icon)
         {
-            Carrot_Window_Msg msg = show_msg(s_title, s_msg);
+            Carrot_Window_Msg msg = Show_msg(s_title, s_msg);
             msg.set_icon(icon);
             return msg;
         }
@@ -345,7 +345,7 @@ namespace Carrot
         public Carrot_Window_Msg Show_msg(string s_title, string s_msg, UnityAction act_msg_yes)
         {
             this.act_result_msg_config = act_msg_yes;
-            this.msg = show_msg(s_title, s_msg);
+            this.msg = Show_msg(s_title, s_msg);
             msg.set_icon(Msg_Icon.Question);
             msg.add_btn_msg(lang.Val("msg_yes", "Yes"), Act_msg_config_yes);
             msg.add_btn_msg(lang.Val("cancel", "No"), Act_msg_config_no);
@@ -356,7 +356,7 @@ namespace Carrot
 
         public Carrot_Window_Msg Show_msg(string s_title, string s_msg, UnityAction act_msg_yes, UnityAction act_msg_no)
         {
-            this.msg = show_msg(s_title, s_msg);
+            this.msg = Show_msg(s_title, s_msg);
             msg.set_icon(Msg_Icon.Question);
             msg.add_btn_msg(lang.Val("msg_yes", "Yes"), act_msg_yes);
             msg.add_btn_msg(lang.Val("cancel", "No"), act_msg_no);
@@ -661,7 +661,7 @@ namespace Carrot
             if (status_internet_offline)
             {
                 if (this.carrot_lost_internet != null) this.carrot_lost_internet.carrot = this;
-                this.msg = this.create_msg();
+                this.msg = this.Create_msg();
                 msg.set_title(lang.Val("lost_connect", "Lost Internet connection"));
                 msg.set_msg(lang.Val("lost_connect_msg", "Please check your network connection, currently the app cannot access the Internet"));
                 msg.set_icon_customer(this.icon_lost_internet);

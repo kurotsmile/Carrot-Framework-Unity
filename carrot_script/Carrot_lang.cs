@@ -100,7 +100,7 @@ namespace Carrot
 
         private void Get_doc_fail(string s_error)
         {
-            this.carrot.show_msg(s_error);
+            this.carrot.Show_msg(s_error);
         }
 
         public void Show_list_lang(UnityAction<string> fnc_after_sel_lang)

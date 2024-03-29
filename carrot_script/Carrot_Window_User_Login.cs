@@ -80,14 +80,14 @@ namespace Carrot
             }
             else
             {
-                this.carrot.show_msg(this.carrot.lang.Val("login", "Login"), this.carrot.lang.Val("acc_no", "This account information is not in the system!"));
+                this.carrot.Show_msg(this.carrot.lang.Val("login", "Login"), this.carrot.lang.Val("acc_no", "This account information is not in the system!"));
             }
         }
 
         private void Act_user_login_fail(string s_error)
         {
             this.carrot.hide_loading();
-            this.carrot.show_msg(this.carrot.lang.Val("login", "Login"), this.carrot.lang.Val("login_fail", "Login failed, please try again!"));
+            this.carrot.Show_msg(this.carrot.lang.Val("login", "Login"), this.carrot.lang.Val("login_fail", "Login failed, please try again!"));
         }
 
         public void close()

@@ -355,19 +355,19 @@ namespace Carrot
             if (!fc.is_null)
             {
                 string password =fc.fire_document[0].Get_val("password").ToString();
-                if (password!=null) this.carrot.show_msg(this.carrot.lang.Val("pass_acc_msg", "The password for the account is:")+password);
+                if (password!=null) this.carrot.Show_msg(this.carrot.lang.Val("pass_acc_msg", "The password for the account is:")+password);
                 return;
             }
             else
             {
-                this.carrot.show_msg(this.carrot.lang.Val("forgot_password", "Forgot password"), this.carrot.lang.Val("acc_no", "This account information is not in the system!"));
+                this.carrot.Show_msg(this.carrot.lang.Val("forgot_password", "Forgot password"), this.carrot.lang.Val("acc_no", "This account information is not in the system!"));
             }
         }
 
         private void Act_done_lost_password_fail(string s_error)
         {
             this.carrot.hide_loading();
-            this.carrot.show_msg(this.carrot.lang.Val("forgot_password", "Forgot password"), this.carrot.lang.Val("acc_no", "This account information is not in the system!"));
+            this.carrot.Show_msg(this.carrot.lang.Val("forgot_password", "Forgot password"), this.carrot.lang.Val("acc_no", "This account information is not in the system!"));
         }
 
         public void set_data_user_login(IDictionary data_user)
@@ -657,19 +657,19 @@ namespace Carrot
 
             if (this.item_name.get_val().Trim().Length<3)
             {
-                this.carrot.show_msg(s_title, this.carrot.lang.Val("error_name", "The account name cannot be empty and be greater than 5 characters"));
+                this.carrot.Show_msg(s_title, this.carrot.lang.Val("error_name", "The account name cannot be empty and be greater than 5 characters"));
                 return;
             }
 
             if (this.item_password.get_val().Trim().Length < 3)
             {
-                this.carrot.show_msg(s_title, this.carrot.lang.Val("error_password", "Password cannot be blank and be greater than 6 characters"));
+                this.carrot.Show_msg(s_title, this.carrot.lang.Val("error_password", "Password cannot be blank and be greater than 6 characters"));
                 return;
             }
 
             if (this.item_password.get_val().Trim()!=this.item_rep_password.get_val().Trim())
             {
-                this.carrot.show_msg(s_title, this.carrot.lang.Val("error_rep_password", "Re-enter the password does not match."));
+                this.carrot.Show_msg(s_title, this.carrot.lang.Val("error_rep_password", "Re-enter the password does not match."));
                 return;
             }
 
@@ -715,7 +715,7 @@ namespace Carrot
 
         private void Act_done_register_fail(string s_error)
         {
-            this.carrot.show_msg(s_error);
+            this.carrot.Show_msg(s_error);
         }
 
         public string get_id_user_login()

@@ -182,7 +182,7 @@ namespace Carrot
             }
             else
             {
-                this.carrot.show_msg("Background music games", "There are no songs in the list");
+                this.carrot.Show_msg("Background music games", "There are no songs in the list");
             }
         }
 
@@ -696,12 +696,12 @@ namespace Carrot
                 }
                 else
                 {
-                    this.carrot.show_msg(this.carrot.lang.Val("top_player", "Player rankings"), carrot.lang.Val("top_player_none", "No player scores have been ranked yet, log in and play to add points to the rankings!"));
+                    this.carrot.Show_msg(this.carrot.lang.Val("top_player", "Player rankings"), carrot.lang.Val("top_player_none", "No player scores have been ranked yet, log in and play to add points to the rankings!"));
                 }
             }
             else
             {
-                this.carrot.show_msg(this.carrot.lang.Val("top_player", "Player rankings"), carrot.lang.Val("top_player_none", "No player scores have been ranked yet, log in and play to add points to the rankings!"));
+                this.carrot.Show_msg(this.carrot.lang.Val("top_player", "Player rankings"), carrot.lang.Val("top_player_none", "No player scores have been ranked yet, log in and play to add points to the rankings!"));
             }
         }
 

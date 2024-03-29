@@ -206,7 +206,7 @@ namespace Carrot
         private void Act_Load_rate_by_user_fail(string s_error)
         {
             this.carrot.hide_loading();
-            this.carrot.show_msg(s_error);
+            this.carrot.Show_msg(s_error);
         }
 
         public void close()
