@@ -560,12 +560,12 @@ namespace Carrot
             }
         }
 
-        public void show_list_lang()
+        public void Show_list_lang()
         {
             this.lang.Show_list_lang();
         }
 
-        public void show_list_lang(UnityAction<string> call_func)
+        public void Show_list_lang(UnityAction<string> call_func)
         {
             this.lang.Show_list_lang(call_func);
         }
