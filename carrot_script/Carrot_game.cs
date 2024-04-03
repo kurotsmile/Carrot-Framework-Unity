@@ -25,6 +25,12 @@ namespace Carrot
         public Sprite icon;
     }
 
+    public enum Carrot_game_rank_order
+    {
+        Descending,
+        Ascending
+    }
+
     public class Carrot_game : MonoBehaviour
     {
         private Carrot carrot;
@@ -63,6 +69,7 @@ namespace Carrot
         private int index_edit_rank = -1;
         private int rank_scores_temp = 0;
         private int rank_type_temp = 0;
+        private Carrot_game_rank_order order_top_player = Carrot_game_rank_order.Descending;
         private List<carrot_game_rank_type> list_rank_type;
 
         public void Load_carrot_game()
@@ -707,13 +714,21 @@ namespace Carrot
 
         IList<IDictionary> SortListByScoresKey(IList<IDictionary> list)
         {
-            return list.OrderByDescending(dict => int.Parse(dict["scores"].ToString())).ToList();
+            if(this.order_top_player==Carrot_game_rank_order.Ascending)
+                return list.OrderBy(dict => int.Parse(dict["scores"].ToString())).ToList();
+            else
+                return list.OrderByDescending(dict => int.Parse(dict["scores"].ToString())).ToList();
         }
 
         private void Act_get_List_Top_player_fail(string s_error)
         {
             this.carrot.hide_loading();
             if (this.s_data_offline_rank_player != "") this.Act_get_List_Top_player_done(this.s_data_offline_rank_player);
+        }
+
+        public void Set_Order_By_Top_player(Carrot_game_rank_order order)
+        {
+            this.order_top_player = order;
         }
 
         [ContextMenu("Test update_scores_player")]
