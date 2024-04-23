@@ -75,8 +75,11 @@ namespace Carrot
                 u["user_id"] = u["id"].ToString();
                 this.carrot.user.set_data_user_login(u);
                 this.close();
-                this.carrot.user.Show_info_user_by_data(u);
-                if (this.act_after_login_success != null) this.act_after_login_success();
+                
+                if (this.act_after_login_success != null) 
+                    this.act_after_login_success();
+                else
+                    this.carrot.user.Show_info_user_by_data(u);
             }
             else
             {
