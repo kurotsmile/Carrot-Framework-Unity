@@ -11,9 +11,8 @@ namespace Carrot
     {
         public Carrot_UI UI;
 
-        public Text title;
+        public Carrot_Box box;
         public Text tip;
-        public Image img_icon;
         public InputField inp_text;
         public Slider inp_slider;
 
@@ -32,12 +31,12 @@ namespace Carrot
 
         public void set_icon(Sprite sp_icon)
         {
-            this.img_icon.sprite = sp_icon;
+            this.box.set_icon(sp_icon);
         }
 
         public void set_title(string s_title)
         {
-            this.title.text = s_title;
+            this.box.set_title(s_title);
         }
 
         public void set_tip(string s_tip)

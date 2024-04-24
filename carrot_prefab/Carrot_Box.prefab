@@ -2166,10 +2166,20 @@ MonoBehaviour:
   box_item_panel_btn_prefab: {fileID: 428795718057345318, guid: b481e4b26f50df54483bd9c26594e5f3, type: 3}
   btn_close: {fileID: 8446183075526789839}
   UI: {fileID: -4678870410672575355}
-  obj_hat_noel: {fileID: 1984511778250282461}
-  obj_hat_halloween: {fileID: 2145346448067147244}
-  obj_hat_new_year: {fileID: 3446017346362045938}
-  obj_hat_valentine: {fileID: 5717670244509263652}
+  obj_hat_theme:
+  - {fileID: 3446017346362045938}
+  - {fileID: 3446017346362045938}
+  - {fileID: 5717670244509263652}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 2145346448067147244}
+  - {fileID: 1984511778250282461}
+  - {fileID: 1984511778250282461}
   img_scroll_handl: {fileID: 3557059028725928375}
   area_btn_header: {fileID: 8098016979444255622}
   area_btn_header_right: {fileID: 8373242548593779649}
