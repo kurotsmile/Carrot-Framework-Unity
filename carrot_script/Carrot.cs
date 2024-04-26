@@ -367,14 +367,15 @@ namespace Carrot
         private void Act_msg_config_yes()
         {
             play_sound_click();
+            this.msg?.close();
             this.act_result_msg_config?.Invoke();
-            if (this.msg != null) this.msg.close();
+            
         }
 
         private void Act_msg_config_no()
         {
             play_sound_click();
-            if (this.msg != null) this.msg.close();
+            this.msg?.close();
         }
 
         public Carrot_Window_Loading show_loading()
