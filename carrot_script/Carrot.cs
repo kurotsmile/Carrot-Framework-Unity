@@ -322,7 +322,7 @@ namespace Carrot
 
         public Carrot_Window_Msg Show_msg(string s_msg)
         {
-            Carrot_Window_Msg msg = this.Create_msg();
+            msg= this.Create_msg();
             msg.set_msg(s_msg);
             msg.update_btns_gamepad_console();
             return msg;
@@ -330,14 +330,14 @@ namespace Carrot
 
         public Carrot_Window_Msg Show_msg(string s_title, string s_msg)
         {
-            Carrot_Window_Msg msg = this.Show_msg(s_msg);
+            msg= this.Show_msg(s_msg);
             msg.set_title(s_title);
             return msg;
         }
 
         public Carrot_Window_Msg Show_msg(string s_title, string s_msg, Msg_Icon icon)
         {
-            Carrot_Window_Msg msg = Show_msg(s_title, s_msg);
+            msg = Show_msg(s_title, s_msg);
             msg.set_icon(icon);
             return msg;
         }
@@ -367,9 +367,9 @@ namespace Carrot
         private void Act_msg_config_yes()
         {
             play_sound_click();
-            this.msg?.close();
             this.act_result_msg_config?.Invoke();
-            
+            this.msg?.close();
+
         }
 
         private void Act_msg_config_no()

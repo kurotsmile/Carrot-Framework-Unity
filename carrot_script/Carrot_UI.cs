@@ -40,7 +40,7 @@ namespace Carrot
         {
             if (!GameObject.Find("Carrot").GetComponent<Carrot>().close_window(this.index_window))
             {
-               if(!this.GetComponent<Carrot_Gamepad>())Destroy(this.gameObject);
+                if (!this.GetComponent<Carrot_Gamepad>()) Destroy(this.gameObject);
             }
         }
     }
