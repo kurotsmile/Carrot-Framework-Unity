@@ -28,6 +28,11 @@ namespace Carrot
         private string id_ads_Banner_admob;
         private string id_ads_Rewarded_admob;
 
+        //Ads Unity config
+        private string id_ads_app_unity;
+        private string id_ads_Interstitial_unity;
+        private string id_ads_Banner_unity;
+        private string id_ads_Rewarded_unity;
         //Event Customer
         public UnityAction onRewardedSuccess;
 
@@ -42,19 +47,19 @@ namespace Carrot
             else
                 this.is_ads = false;
 
-            this.set_enable_all_emp_btn_removeads(this.is_ads);
+            this.Set_enable_all_emp_btn_removeads(this.is_ads);
 
             if (this.carrot.type_ads == TypeAds.Admod_Unity_Carrot || this.carrot.type_ads == TypeAds.Unity_Admob_Carrot)
             {
 #if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
-                this.setup_ads_Admob();
+                Setup_ads_Admob();
 #endif
             }
 
             if (this.carrot.type_ads == TypeAds.Admod_Unity_Carrot || this.carrot.type_ads == TypeAds.Unity_Admob_Carrot)
             {
 #if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
-                Advertisement.Initialize(carrot.id_ads_unity_App_android, carrot.ads_uniy_test_mode, this);
+                Setup_ads_unity();
 #endif
             }
 
@@ -64,7 +69,7 @@ namespace Carrot
             }
         }
 
-        private void set_enable_all_emp_btn_removeads(bool is_show_ads)
+        private void Set_enable_all_emp_btn_removeads(bool is_show_ads)
         {
             for (int i = 0; i < this.carrot.emp_btn_remove_ads.Length; i++)
             {
@@ -124,7 +129,7 @@ namespace Carrot
             this.Destroy_Interstitial_Ad();
             PlayerPrefs.SetInt("is_ads", 1);
             this.is_ads = false;
-            this.set_enable_all_emp_btn_removeads(this.is_ads);
+            this.Set_enable_all_emp_btn_removeads(this.is_ads);
         }
 
         public bool get_status_ads()
@@ -269,7 +274,7 @@ namespace Carrot
         #endregion
 
         #region Admob Ads
-        private void setup_ads_Admob()
+        private void Setup_ads_Admob()
         {
 
 #if UNITY_ANDROID
@@ -521,12 +526,30 @@ namespace Carrot
         #endregion
 
         #region Unity Ads
+
+        private void Setup_ads_unity()
+        {
+#if UNITY_ANDROID
+            this.id_ads_app_unity = this.carrot.id_ads_unity_App_android;
+            this.id_ads_Interstitial_unity = this.carrot.id_ads_unity_Interstitial_android;
+            this.id_ads_Banner_unity = this.carrot.id_ads_unity_Banner_android;
+            this.id_ads_Rewarded_unity = this.carrot.id_ads_unity_Rewarded_android;
+#elif UNITY_IOS
+            this.id_ads_app_unity = this.carrot.id_ads_unity_App_ios;
+            this.id_ads_Interstitial_unity = this.carrot.id_ads_unity_Interstitial_ios;
+            this.id_ads_Banner_unity = this.carrot.id_ads_unity_Banner_ios;
+            this.id_ads_Rewarded_unity = this.carrot.id_ads_unity_Rewarded_ios;
+#endif
+
+            Advertisement.Initialize(this.id_ads_app_unity, carrot.ads_uniy_test_mode, this);
+        }
+
         public void Unity_ShowBannerAd()
         {
-            if (this.carrot.id_ads_unity_Banner_android != "")
+            if (this.id_ads_Banner_unity != "")
             {
                 Advertisement.Banner.SetPosition(BannerPosition.TOP_CENTER);
-                Advertisement.Banner.Show(this.carrot.id_ads_unity_Banner_android);
+                Advertisement.Banner.Show(this.id_ads_Banner_unity);
             }
         }
 
@@ -537,18 +560,18 @@ namespace Carrot
 
         public void Unity_ShowVideoAd()
         {
-            if(this.carrot.id_ads_unity_Interstitial_android!="") Advertisement.Show(this.carrot.id_ads_unity_Interstitial_android, this);
+            if(this.id_ads_Interstitial_unity != "") Advertisement.Show(this.id_ads_Interstitial_unity, this);
         }
 
         public void Unity_ShowRewardedAd()
         {
-            if(this.carrot.id_ads_unity_Rewarded_android!="") Advertisement.Show(carrot.id_ads_unity_Rewarded_android, this);
+            if(this.id_ads_Rewarded_unity != "") Advertisement.Show(this.id_ads_Rewarded_unity, this);
         }
 
         public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
         {
             Debug.Log("Unity Ads show fail:" + placementId + " ->" + message);
-            if (placementId == this.carrot.id_ads_unity_Interstitial_android)
+            if (placementId == id_ads_Interstitial_unity)
             {
                 if (carrot.type_ads == TypeAds.Unity_Admob_Carrot)
                     this.Admob_Show_InterstitialAd();
@@ -556,7 +579,7 @@ namespace Carrot
                     this.show_carrot_ads();
             }
 
-            if (placementId == this.carrot.id_ads_unity_Rewarded_android)
+            if (placementId == id_ads_Rewarded_unity)
             {
                 if (carrot.type_ads == TypeAds.Unity_Admob_Carrot)
                     this.Admob_ShowRewardedAd();
@@ -564,7 +587,7 @@ namespace Carrot
                     this.show_carrot_ads();
             }
 
-            if (placementId == this.carrot.id_ads_unity_Banner_android)
+            if (placementId == id_ads_Banner_unity)
             {
                 if (carrot.type_ads == TypeAds.Unity_Admob_Carrot)
                 {
@@ -586,7 +609,7 @@ namespace Carrot
         public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
         {
             Debug.Log("Unity Ads show complete:" + placementId);
-            if (placementId == this.carrot.id_ads_unity_Rewarded_android)
+            if (placementId == id_ads_Rewarded_unity)
             {
                 if (showCompletionState == UnityAdsShowCompletionState.COMPLETED) onRewardedSuccess?.Invoke();
             }
@@ -594,9 +617,9 @@ namespace Carrot
 
         public void OnInitializationComplete()
         {
-            Advertisement.Load(this.carrot.id_ads_unity_Banner_android, this);
-            Advertisement.Load(this.carrot.id_ads_unity_Interstitial_android, this);
-            Advertisement.Load(this.carrot.id_ads_unity_Rewarded_android, this);
+            Advertisement.Load(this.id_ads_Banner_unity, this);
+            Advertisement.Load(this.id_ads_Interstitial_unity, this);
+            Advertisement.Load(this.id_ads_Rewarded_unity, this);
             Debug.Log("Unity Ads setup success!");
         }
 
@@ -613,7 +636,7 @@ namespace Carrot
         public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
         {
             Debug.Log("Unity Ads Load fail:" + placementId + " ->" + message);
-            if (placementId == this.carrot.id_ads_unity_Banner_android)
+            if (placementId == this.id_ads_Banner_unity)
             {
                 if (this.carrot.type_ads == TypeAds.Unity_Admob_Carrot) this.Admob_CreateBannerView();
             }

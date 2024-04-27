@@ -90,12 +90,20 @@ namespace Carrot
         public string id_ads_Banner_ios = "unused";
         public string id_ads_Rewarded_ios = "unused";
 
-        [Header("Unity Ads Android config")]
+        [Header("Unity Ads")]
         public bool ads_uniy_test_mode;
+
+        [Header("Unity Ads Android config")]
         public string id_ads_unity_App_android;
         public string id_ads_unity_Interstitial_android;
         public string id_ads_unity_Banner_android;
         public string id_ads_unity_Rewarded_android;
+
+        [Header("Unity Ads Ios config")]
+        public string id_ads_unity_App_ios;
+        public string id_ads_unity_Interstitial_ios;
+        public string id_ads_unity_Banner_ios;
+        public string id_ads_unity_Rewarded_ios;
 
         [Header("Carrot Obj")]
         public Carrot_lang lang;
