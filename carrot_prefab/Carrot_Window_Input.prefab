@@ -1479,7 +1479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   txt_title: {fileID: 8768427303572442013}
-  img_icon: {fileID: 4130386985121520602, guid: 3da1e2ad199493144a25cd7c1a4766c1, type: 3}
+  img_icon: {fileID: 8768427303834009485}
   obj_list: {fileID: 0}
   obj_grid: {fileID: 0}
   area_list_contain: {fileID: 0}
