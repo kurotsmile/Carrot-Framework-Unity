@@ -20,6 +20,7 @@ namespace Carrot
         public string s_data_json_list_lang_offline = "";
 
         private Transform tr_item_lang_systemLanguage = null;
+        private bool is_load_emp_after_sel_lang = true;
 
         public void On_load(Carrot carrot)
         {
@@ -106,6 +107,14 @@ namespace Carrot
         public void Show_list_lang(UnityAction<string> fnc_after_sel_lang)
         {
             this.Show_list_lang();
+            this.is_load_emp_after_sel_lang = true;
+            this.act_after_selecting_lang = fnc_after_sel_lang;
+        }
+
+        public void Show_list_lang(UnityAction<string> fnc_after_sel_lang,bool load_lang)
+        {
+            this.Show_list_lang();
+            this.is_load_emp_after_sel_lang = load_lang;
             this.act_after_selecting_lang = fnc_after_sel_lang;
         }
 
@@ -176,16 +185,25 @@ namespace Carrot
 
         public void Select_lang(string s_key)
         {
-            this.carrot.show_loading();
-            this.s_key_lang_temp = s_key;
+            if (this.is_load_emp_after_sel_lang)
+            {
+                this.carrot.show_loading();
+                this.s_key_lang_temp = s_key;
 
-            StructuredQuery q = new("lang_data");
-            q.Add_select(s_key);
-            q.set_type_where("OR");
-            q.Add_where("id", Query_OP.EQUAL, "lang_app");
-            if(carrot.collection_document_lang!="") q.Add_where("id", Query_OP.EQUAL,carrot.collection_document_lang);
-            q.Set_limit(2);
-            carrot.server.Get_doc(q.ToJson(), Act_sel_lang_done, Act_load_and_sel_fail);
+                StructuredQuery q = new("lang_data");
+                q.Add_select(s_key);
+                q.set_type_where("OR");
+                q.Add_where("id", Query_OP.EQUAL, "lang_app");
+                if (carrot.collection_document_lang != "") q.Add_where("id", Query_OP.EQUAL, carrot.collection_document_lang);
+                q.Set_limit(2);
+                carrot.server.Get_doc(q.ToJson(), Act_sel_lang_done, Act_load_and_sel_fail);
+            }
+            else
+            {
+                this.act_after_selecting_lang?.Invoke(s_key);
+                this.box_lang?.close();
+            }
+
         }
 
         private void Act_sel_lang_done(string s_data)
@@ -226,12 +244,19 @@ namespace Carrot
         private void Change_lang(string s_key_new)
         {
             this.carrot.hide_loading();
-            this.s_lang_key = s_key_new;
-            this.Load_icon_lang();
-            this.Load_lang_emp();
-            act_after_selecting_lang?.Invoke(this.s_lang_key);
+            act_after_selecting_lang?.Invoke(s_key_new);
+
+            Debug.Log("Emp load status:" + this.is_load_emp_after_sel_lang);
+
+            if (this.is_load_emp_after_sel_lang)
+            {    
+                this.s_lang_key = s_key_new;
+                this.Load_icon_lang();
+                this.Load_lang_emp();
+                PlayerPrefs.SetString("lang", this.s_lang_key);
+            }
             if (this.box_lang != null) this.box_lang.close();
-            PlayerPrefs.SetString("lang", this.s_lang_key);
+            
         }
 
         public string Val(string s_key, string s_default = "")
